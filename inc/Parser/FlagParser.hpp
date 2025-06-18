@@ -1,5 +1,8 @@
 #pragma once
 
+# ifndef FLAG_PARSER_HPP
+#  define FLAG_PARSER_HPP
+
 # include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
@@ -44,5 +47,7 @@ void			print_parsed_flags(t_flag_parser *parser);
 void			cleanup_parser(t_flag_parser *parser);
 
 int				check_short_flag(t_flag_parser *parser, char short_flag);
-int				check_long_flag(t_flag_parser *parser, char *long_flag);
-int				check_flag(t_flag_parser *parser, char short_flag, char *long_flag);
+int				check_long_flag(t_flag_parser *parser, const char *long_flag);
+int				check_flag(t_flag_parser *parser, char short_flag, const char *long_flag);
+
+#endif
