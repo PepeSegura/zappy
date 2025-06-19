@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TCPServer/TCPServer.hpp"
+#include "TCPServer.hpp"
 
 int main(int argc, char **argv) {
 	(void) argc;

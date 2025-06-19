@@ -27,7 +27,7 @@ SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
 OBJS := $(SRCS:$(SRC_DIR)%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:.o=.d)
 
-INC := $(INC_DIR) $(INC_DIR)User $(INC_DIR)Server $(INC_DIR)Channel $(INC_DIR)Message $(INC_DIR)Cmd
+INC := $(INC_DIR) $(INC_DIR)User $(INC_DIR)TCPServer $(INC_DIR)Channel $(INC_DIR)Message $(INC_DIR)Cmd
 INC_FLAGS := $(addprefix -I , $(INC))
 
 CPPFLAGS := $(INC_FLAGS) -MMD -MP $(CPPFLAGS_EXTRA)

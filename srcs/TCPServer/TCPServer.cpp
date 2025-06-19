@@ -1,4 +1,4 @@
-#include "TCPServer/TCPServer.hpp"
+#include "TCPServer.hpp"
 
 TCPServer::TCPServer(int port) {
 	createBindSocket(port);
@@ -71,6 +71,7 @@ void	TCPServer::readClientData(size_t *idx) {
 
 	if (readBytes < 0) { //closed
 		std::cerr << "Error: server: Socket " << pollFds[*idx].fd << " is closed.\n";
+		disconnectClient(idx);
 	} else if (readBytes == 0) { //disconnected
 		disconnectClient(idx);
 	} else { //data received
