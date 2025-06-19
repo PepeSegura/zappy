@@ -2,6 +2,7 @@
 
 # include <iostream>
 # include <vector>
+# include <string>
 
 # include "FlagParser.hpp"
 
@@ -10,15 +11,23 @@ typedef std::vector<std::string> t_teams_names;
 class Parser {
 	private:
 		int				port;
-		int				x;
-		int				y;
-		int				authorized_clients;
-		int				time_div;
+		int				x; // width
+		int				y; // height
 		t_teams_names	teams_names;
+		int				teams_members_limit;
+		int				time_freq;
 
 	public:
 		Parser(int argc, char **argv);
 		~Parser();
+
+		void setPort(t_flag_parser *flags, int pos_flag);
+		void setWidth(t_flag_parser *flags, int pos_flag);
+		void setHeight(t_flag_parser *flags, int pos_flag);
+		void setTeamsMembersLimit(t_flag_parser *flags, int pos_flag);
+		void setTeams(t_flag_parser *flags, int pos_flag);
+		void setTimeFreq(t_flag_parser *flags, int pos_flag);
+
 		void settersParser(t_flag_parser *flags);
 };
 

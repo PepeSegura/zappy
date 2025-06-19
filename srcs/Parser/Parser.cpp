@@ -1,49 +1,153 @@
 #include "Parser.hpp"
 
-// #include "FlagParser.hpp"
-
-
-void Parser::settersParser(t_flag_parser *flags)
-{
-	int pos_flag = -1;
-
-	if 	 ((pos_flag = check_flag(flags, 0, "help")) != -1)		{
-		std::cout << USAGE << std::endl;
+void Parser:: setPort(t_flag_parser *flags, int pos_flag) {
+	if (flags->flags[pos_flag].args_count != 1) {
+		std::cerr << "server: invalid number of ports" << std::endl;
 		cleanup_parser(flags);
-		exit(EXIT_SUCCESS);
-	} if ((pos_flag = check_flag(flags, 'p', "port")) != -1)	{
-		this->port = std::atoi(flags->flags[pos_flag].args[0]);
-		if (this->port <= 0)
-		{
-			dprintf(2, "server: invalid port '%s'\n", flags->flags[pos_flag].args[0]);
-			cleanup_parser(flags);
-			exit(EXIT_FAILURE);
-		}
-	} if ((pos_flag = check_flag(flags, 'x', "width")) != -1)	{
-		this->x = std::atoi(flags->flags[pos_flag].args[0]);
-	} if ((pos_flag = check_flag(flags, 'y', "height")) != -1)	{
-		this->y = std::atoi(flags->flags[pos_flag].args[0]);
-	} if ((pos_flag = check_flag(flags, 'n', "names")) != -1)	{
-		int count = flags->flags[pos_flag].args_count;
-		for (int i = 0; i < count; i++)
-			this->teams_names.push_back(flags->flags[pos_flag].args[i]);
-	} if ((pos_flag = check_flag(flags, 'c', "clients")) != -1){
-		this->authorized_clients = std::atoi(flags->flags[pos_flag].args[0]);
-	} if ((pos_flag = check_flag(flags, 't', "time")) != -1)	{
-		this->time_div = std::atoi(flags->flags[pos_flag].args[0]);
+		exit(EXIT_FAILURE);
 	}
-
-	if (flags->extra_args_count != 0)
-	{
-		std::cout << USAGE << std::endl;
+	try {
+		this->port = std::stoi(flags->flags[pos_flag].args[0]);
+	}
+	catch (const std::exception &e) {
+		std::cerr << "server: invalid port '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	if (this->port < 0 || this->port > 65535) {
+		std::cerr << "server: invalid port '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+}
+void Parser:: setWidth(t_flag_parser *flags, int pos_flag) {
+	if (flags->flags[pos_flag].args_count != 1) {
+		std::cerr << "server: only 1 map width is allowed" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	try {
+		this->x = std::stoi(flags->flags[pos_flag].args[0]);
+	}
+	catch (const std::exception &e) {
+		std::cerr << "server: invalid width '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	if (this->x < 1 || this->x > 1024) {
+		std::cerr << "server: invalid width '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+}
+void Parser:: setHeight(t_flag_parser *flags, int pos_flag) {
+	if (flags->flags[pos_flag].args_count != 1) {
+		std::cerr << "server: only 1 map height is allowed" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	try {
+		this->y = std::stoi(flags->flags[pos_flag].args[0]);
+	}
+	catch (const std::exception &e) {
+		std::cerr << "server: invalid height '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	if (this->y < 1 || this->y > 1024) {
+		std::cerr << "server: invalid height '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+}
+void Parser:: setTeamsMembersLimit(t_flag_parser *flags, int pos_flag) {
+	if (flags->flags[pos_flag].args_count != 1) {
+		std::cerr << "server: only 1 number of clients authorized is allowed" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	try {
+		this->teams_members_limit = std::stoi(flags->flags[pos_flag].args[0]);
+	}
+	catch (const std::exception &e) {
+		std::cerr << "server: invalid number of clients authorized '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	if (this->teams_members_limit < 1) {
+		std::cerr << "server: invalid number of clients authorized '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+}
+void Parser:: setTeams(t_flag_parser *flags, int pos_flag) {
+	size_t count = flags->flags[pos_flag].args_count;
+	for (size_t i = 0; i < count; i++)
+		this->teams_names.push_back(flags->flags[pos_flag].args[i]);
+}
+void Parser:: setTimeFreq(t_flag_parser *flags, int pos_flag) {
+	if (flags->flags[pos_flag].args_count != 1) {
+		std::cerr << "server: only 1 time unit divider is allowed" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	try {
+		this->time_freq = std::stoi(flags->flags[pos_flag].args[0]);
+	}
+	catch (const std::exception &e) {
+		std::cerr << "server: invalid time unit divider '" << flags->flags[pos_flag].args[0] << "'" << std::endl;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+	if (this->time_freq < 1 || this->time_freq > 1000) {
+		std::cerr << "server: invalid time unit divider '" << flags->flags[pos_flag].args[0] << "' try 1-1000" << std::endl;
 		cleanup_parser(flags);
 		exit(EXIT_FAILURE);
 	}
 }
 
-Parser::Parser(int argc, char **argv) : port(-1), x(-1), y(-1), authorized_clients(-1), time_div(-1) {
-	std::cout << "Init parser\n";
+void Parser::settersParser(t_flag_parser *flags) {
+	if (flags->extra_args_count != 0)
+	{
+		std::cout << USAGE;
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
 
+	int pos_flag = -1;
+
+	if ((pos_flag = check_flag(flags, 0, "help")) != -1)		{
+		std::cout << USAGE;
+		cleanup_parser(flags);
+		exit(EXIT_SUCCESS);
+	} if ((pos_flag = check_flag(flags, 'p', "port")) != -1)	{
+		setPort(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 'x', "width")) != -1)	{
+		setWidth(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 'y', "height")) != -1)	{
+		setHeight(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 'n', "names")) != -1)	{
+		setTeams(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 'c', "clients")) != -1)	{
+		setTeamsMembersLimit(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 't', "time")) != -1)	{
+		setTimeFreq(flags, pos_flag);
+	}
+
+	if (this->port == -1 ||
+		this->x == -1 || this->y == -1 ||
+		this->teams_names.empty() ||
+		this->teams_members_limit == -1 ||
+		this->time_freq == -1
+	) {
+		std::cerr << "server: missing arguments"<< std::endl;
+        dprintf(2, "Try '%s --help' or '%s --usage' for more information.\n", flags->argv[0], flags->argv[0]);
+		cleanup_parser(flags);
+		exit(EXIT_FAILURE);
+	}
+}
+
+Parser::Parser(int argc, char **argv) : port(-1), x(-1), y(-1), teams_names(), teams_members_limit(-1), time_freq(-1) {
 	t_flag available_flags[] = {
 		INIT_FLAG(0,	"help",		NO_ARG,		SINGLE_ARG),
 		INIT_FLAG('p',	"port",		NEED_ARG,	SINGLE_ARG),
@@ -55,21 +159,12 @@ Parser::Parser(int argc, char **argv) : port(-1), x(-1), y(-1), authorized_clien
 	};
 
 	t_flag_parser flags = parser_init(available_flags, FLAGS_COUNT(available_flags), argc, argv);
+
 	parse(&flags);
 	print_parsed_flags(&flags);
-
 	settersParser(&flags);
-
 	cleanup_parser(&flags);
-
-	std::cout << "Port:    " << this->port << std::endl;
-	std::cout << "Size:    X:" << this->x << " Y:" << this->y <<std::endl;
-	std::cout << "Players: " << this->authorized_clients << std::endl;
-	std::cout << "TimeDiv: " << this->time_div << std::endl;
-	for (size_t pos = 0; pos < this->teams_names.size(); pos++)
-		std::cout << "Team["<< pos <<"]: "<< this->teams_names[pos] << std::endl;
 }
 
 Parser::~Parser() {
-	std::cout << "Closing parser\n";
 }
