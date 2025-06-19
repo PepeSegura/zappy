@@ -1,12 +1,10 @@
 #include <iostream>
+#include "Parser.hpp"
 #include "TCPServer.hpp"
 
 int main(int argc, char **argv) {
-	(void) argc;
-	(void) argv;
-	//parser
-	//create tcpsocket-poll
-	TCPServer server(8080); //cambiar de 8080 al puerto
+	Parser parser(argc, argv);
+	TCPServer server(parser.getPort()); //cambiar de 8080 al puerto
 	//init gameLogic
 	/*while !exit {
 		TCPinputOutput
