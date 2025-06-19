@@ -168,3 +168,28 @@ Parser::Parser(int argc, char **argv) : port(-1), x(-1), y(-1), teams_names(), t
 
 Parser::~Parser() {
 }
+
+int Parser::getPort(void) const {
+	return (this->port);
+}
+
+int Parser::getWidth(void) const {
+	return (this->x);
+}
+
+int Parser::getHeight(void) const {
+	return (this->y);
+}
+
+int Parser::getTeamsMembersLimit(void) const {
+	return (this->teams_members_limit);
+}
+
+int Parser::getTimeFreq(void) const {
+	return (this->time_freq);
+}
+
+t_teams_names Parser::getTeamsNames(void) const {
+	return (this->teams_names);
+}
+

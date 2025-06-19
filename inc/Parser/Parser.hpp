@@ -29,6 +29,13 @@ class Parser {
 		void setTimeFreq(t_flag_parser *flags, int pos_flag);
 
 		void settersParser(t_flag_parser *flags);
+
+		int getPort(void) const;
+		int getWidth(void) const;
+		int getHeight(void) const;
+		int getTeamsMembersLimit(void) const;
+		int getTimeFreq(void) const;
+		t_teams_names getTeamsNames(void) const;
 };
 
 
