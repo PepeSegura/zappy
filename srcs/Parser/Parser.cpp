@@ -20,6 +20,7 @@ void Parser:: setPort(t_flag_parser *flags, int pos_flag) {
 		exit(EXIT_FAILURE);
 	}
 }
+
 void Parser:: setWidth(t_flag_parser *flags, int pos_flag) {
 	if (flags->flags[pos_flag].args_count != 1) {
 		std::cerr << "server: only 1 map width is allowed" << std::endl;
@@ -40,6 +41,7 @@ void Parser:: setWidth(t_flag_parser *flags, int pos_flag) {
 		exit(EXIT_FAILURE);
 	}
 }
+
 void Parser:: setHeight(t_flag_parser *flags, int pos_flag) {
 	if (flags->flags[pos_flag].args_count != 1) {
 		std::cerr << "server: only 1 map height is allowed" << std::endl;
@@ -60,6 +62,7 @@ void Parser:: setHeight(t_flag_parser *flags, int pos_flag) {
 		exit(EXIT_FAILURE);
 	}
 }
+
 void Parser:: setTeamsMembersLimit(t_flag_parser *flags, int pos_flag) {
 	if (flags->flags[pos_flag].args_count != 1) {
 		std::cerr << "server: only 1 number of clients authorized is allowed" << std::endl;
@@ -80,11 +83,13 @@ void Parser:: setTeamsMembersLimit(t_flag_parser *flags, int pos_flag) {
 		exit(EXIT_FAILURE);
 	}
 }
+
 void Parser:: setTeams(t_flag_parser *flags, int pos_flag) {
 	size_t count = flags->flags[pos_flag].args_count;
 	for (size_t i = 0; i < count; i++)
 		this->teams_names.push_back(flags->flags[pos_flag].args[i]);
 }
+
 void Parser:: setTimeFreq(t_flag_parser *flags, int pos_flag) {
 	if (flags->flags[pos_flag].args_count != 1) {
 		std::cerr << "server: only 1 time unit divider is allowed" << std::endl;
@@ -192,4 +197,3 @@ int Parser::getTimeFreq(void) const {
 t_teams_names Parser::getTeamsNames(void) const {
 	return (this->teams_names);
 }
-
