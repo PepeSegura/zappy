@@ -2,7 +2,7 @@ MAKEFLAGS	= --no-print-directory --silent
 
 NAME := server
 
-CXX := c++ -std=c++98
+CXX := c++
 
 CXXFLAGS := -Wall -Wextra -Werror
 DEBUG := -g3 -fsanitize=address
@@ -20,6 +20,7 @@ INC_DIR := inc/
 
 PRESRC := 							\
 			main.cpp				\
+			TCPServer/TCPServer.cpp
 
 SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
 
