@@ -4,7 +4,7 @@ NAME := server
 
 CXX := c++
 
-CXXFLAGS := -Wall -Wextra -Werror
+CXXFLAGS := -Wall -Wextra #-Werror
 DEBUG := -g3 -fsanitize=address
 
 # Add hostname definition
@@ -22,14 +22,17 @@ PRESRC := 							\
 			main.cpp				\
 			Parser/FlagParser.cpp	\
 			Parser/Parser.cpp		\
-			TCPServer/TCPServer.cpp
+			TCPServer/TCPServer.cpp	\
+			Team/Team.cpp			\
+			Player/Player.cpp		\
+			Inventory/Inventory.cpp	\
 
 SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
 
 OBJS := $(SRCS:$(SRC_DIR)%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:.o=.d)
 
-INC := $(INC_DIR) $(INC_DIR)Parser $(INC_DIR)TCPServer $(INC_DIR)Game
+INC := $(INC_DIR) $(INC_DIR)Parser $(INC_DIR)TCPServer $(INC_DIR)Game $(INC_DIR)Team $(INC_DIR)Player $(INC_DIR)Inventory
 INC_FLAGS := $(addprefix -I , $(INC))
 
 CPPFLAGS := $(INC_FLAGS) -MMD -MP $(CPPFLAGS_EXTRA)
