@@ -21,5 +21,6 @@ class Player
 		/* data */
 	public:
 		Player();
+		Player(std::string);
 		~Player();
 };
