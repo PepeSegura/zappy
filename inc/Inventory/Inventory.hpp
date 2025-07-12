@@ -1,13 +1,17 @@
 #pragma once
 
 # include <ostream>
+# include <iostream>
 
 class Inventory
 {
 	private:
+		/* food */
 		int nourriture;
+
+		/* minerals */
 		int linemate;
-		int draumere;
+		int deraumere;
 		int sibur;
 		int mendiane;
 		int phiras;
@@ -16,16 +20,24 @@ class Inventory
 	public:
 		Inventory();
 		~Inventory();
-		Inventory&  operator=(Inventory const &other);
-		Inventory&  operator+(Inventory const &other);
+		Inventory(const Inventory& other) = default; // shallow copy
+		Inventory&  operator=(const Inventory &other) = default;
 
 		int get_nourriture() const;
 		int get_linemate() const;
-		int get_draumere() const;
+		int get_deraumere() const;
 		int get_sibur() const;
 		int get_mendiane() const;
 		int get_phiras() const;
 		int get_thystame() const;
+
+		void add_nourriture(int);
+		void add_linemate(int);
+		void add_deraumere(int);
+		void add_sibur(int);
+		void add_mendiane(int);
+		void add_phiras(int);
+		void add_thystame(int);
 };
 	
 std::ostream& operator<<(std::ostream &out, Inventory const &other);

@@ -8,7 +8,7 @@ class Team
 {
 	private:
 		std::vector<Player*> players;
-		/* data */
+
 	public:
 		Team();
 		~Team();

@@ -4,7 +4,7 @@ NAME := server
 
 CXX := c++
 
-CXXFLAGS := -Wall -Wextra #-Werror
+CXXFLAGS := -Wall -Wextra -Werror
 DEBUG := -g3 -fsanitize=address
 
 # Add hostname definition
@@ -38,7 +38,6 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) -c $< -o $@ && printf "Compiling: $(notdir $<)\n"
 
-
 clean:
 	@$(RM) $(BUILD_DIR)
 
@@ -48,6 +47,6 @@ fclean: clean
 re:: fclean
 re:: $(NAME)
 
-.PHONY: all clean fclean re valgrind bonus
+.PHONY: all clean fclean re
 
 -include $(DEPS)
