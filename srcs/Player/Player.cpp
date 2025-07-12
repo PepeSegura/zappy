@@ -37,7 +37,7 @@ std::string	Player::get_team_name() const
 	return (this->team_name);
 }
 
-Inventory	Player::get_inv() const
+Inventory&	Player::get_inv()
 {
 	return (this->inv);
 }

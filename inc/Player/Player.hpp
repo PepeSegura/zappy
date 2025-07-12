@@ -26,7 +26,7 @@ class Player
 		Player&  operator=(const Player &other);
 
 		std::string	get_team_name() const;
-		Inventory	get_inv() const;
+		Inventory&	get_inv();
 		int			get_level() const;
 		int			get_x() const;
 		int			get_y() const;
