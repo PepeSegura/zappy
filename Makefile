@@ -18,23 +18,16 @@ BUILD_DIR := .objs/
 SRC_DIR := srcs/
 INC_DIR := inc/
 
-PRESRC := 							\
-			main.cpp				\
-			Parser/FlagParser.cpp	\
-			Parser/Parser.cpp		\
-			Messages/Messages.cpp		\
-			TCPServer/TCPServer.cpp
-
-SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
+SRCS := $(shell find $(SRC_DIR) -name '*.cpp')
 
 OBJS := $(SRCS:$(SRC_DIR)%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:.o=.d)
 
-INC := $(INC_DIR) $(INC_DIR)Parser $(INC_DIR)TCPServer $(INC_DIR)Game $(INC_DIR)Messages
+INC := $(shell find $(INC_DIR) -type d)
+
 INC_FLAGS := $(addprefix -I , $(INC))
 
 CPPFLAGS := $(INC_FLAGS) -MMD -MP $(CPPFLAGS_EXTRA)
-
 
 all: $(NAME)
 
@@ -45,7 +38,6 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEBUG) -c $< -o $@ && printf "Compiling: $(notdir $<)\n"
 
-
 clean:
 	@$(RM) $(BUILD_DIR)
 
@@ -55,6 +47,6 @@ fclean: clean
 re:: fclean
 re:: $(NAME)
 
-.PHONY: all clean fclean re valgrind bonus
+.PHONY: all clean fclean re
 
 -include $(DEPS)
