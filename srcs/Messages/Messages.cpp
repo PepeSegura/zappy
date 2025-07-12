@@ -2,8 +2,8 @@
 
 Messages::Messages() {
 	std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
 	switch (dist2048(rng) % 15) {
 		case Avance:
 		case Droite:
@@ -51,8 +51,8 @@ Messages::Messages(const std::string &cmd, void *player, void *map, bool success
 	(void) player;
 	(void) map;
 	std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
 	switch (hashString(cmd)) {
 		case Avance:
 		case Droite:
