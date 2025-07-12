@@ -40,14 +40,14 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 			} else if (pollFds[i].revents & POLLOUT){ //write event
 				Messages msg;
 				send(pollFds[i].fd, msg.getMessageStr().c_str(), msg.getMessageStr().length(), 0);
-				usleep(100 * 1000);
 			}
 			/* else if (pollFds[i].revents & POLLOUT){ //write event
-				if (clients[pollFds[i].fd].responseOnBuffer()) {
-					send(pollFds[i].fd, clients[pollFds[i].fd].responseBuffer, sizeof(clients[fds[i].fd].responseBuffer), 0);
-					clear client response buffer
+			if (clients[pollFds[i].fd].responseOnBuffer()) {
+				send(pollFds[i].fd, clients[pollFds[i].fd].responseBuffer, sizeof(clients[fds[i].fd].responseBuffer), 0);
+				clear client response buffer
 				}
-			} */
+				} */
+			usleep(100 * 1000);
 		}
 	}
 }
