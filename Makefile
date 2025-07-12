@@ -22,6 +22,7 @@ PRESRC := 							\
 			main.cpp				\
 			Parser/FlagParser.cpp	\
 			Parser/Parser.cpp		\
+			Messages/Messages.cpp		\
 			TCPServer/TCPServer.cpp
 
 SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
@@ -29,7 +30,7 @@ SRCS := $(addprefix $(SRC_DIR), $(PRESRC))
 OBJS := $(SRCS:$(SRC_DIR)%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:.o=.d)
 
-INC := $(INC_DIR) $(INC_DIR)Parser $(INC_DIR)TCPServer $(INC_DIR)Game
+INC := $(INC_DIR) $(INC_DIR)Parser $(INC_DIR)TCPServer $(INC_DIR)Game $(INC_DIR)Messages
 INC_FLAGS := $(addprefix -I , $(INC))
 
 CPPFLAGS := $(INC_FLAGS) -MMD -MP $(CPPFLAGS_EXTRA)

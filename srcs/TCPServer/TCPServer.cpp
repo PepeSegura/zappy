@@ -1,4 +1,5 @@
 #include "TCPServer.hpp"
+#include "Messages.hpp"
 
 TCPServer::TCPServer(int port) {
 	createBindSocket(port);
@@ -36,7 +37,12 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 				} else { //received client message
 					readClientData(&i);
 				}
-			} /* else if (pollFds[i].revents & POLLOUT){ //write event
+			} else if (pollFds[i].revents & POLLOUT){ //write event
+				Messages msg;
+				send(pollFds[i].fd, msg.getMessageStr().c_str(), msg.getMessageStr().length(), 0);
+				usleep(100 * 1000);
+			}
+			/* else if (pollFds[i].revents & POLLOUT){ //write event
 				if (clients[pollFds[i].fd].responseOnBuffer()) {
 					send(pollFds[i].fd, clients[pollFds[i].fd].responseBuffer, sizeof(clients[fds[i].fd].responseBuffer), 0);
 					clear client response buffer
