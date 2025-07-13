@@ -9,7 +9,8 @@
 
 int main(int argc, char **argv) {
 	Parser parser(argc, argv);
-	TCPServer server(parser.getPort());
+	Game game;
+	TCPServer server(parser.getPort(), game);
 
 	while (true) {
 		server.inputOutputComms();

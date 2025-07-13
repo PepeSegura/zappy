@@ -1,7 +1,7 @@
 #include "TCPServer.hpp"
-#include "Messages.hpp"
 
-TCPServer::TCPServer(int port) {
+TCPServer::TCPServer(int port, Game &game): game(game), players(game.get_players_map()){
+
 	createBindSocket(port);
 
 	addToPoll(socketFd, POLLIN);
@@ -30,6 +30,7 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 	{
 		//std::cout << "Poll timeout. No events\n";
 	} else {
+		players = game.get_players_map();
 		for (size_t i = 0; i < pollFds.size(); i++) {
 			if (pollFds[i].revents & POLLIN){ //read event
 				if (pollFds[i].fd == socketFd) { //new connection
@@ -38,15 +39,12 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 					readClientData(&i);
 				}
 			} else if (pollFds[i].revents & POLLOUT){ //write event
-				Messages msg;
-				send(pollFds[i].fd, msg.getMessageStr().c_str(), msg.getMessageStr().length(), 0);
-			}
-			/* else if (pollFds[i].revents & POLLOUT){ //write event
-			if (clients[pollFds[i].fd].responseOnBuffer()) {
-				send(pollFds[i].fd, clients[pollFds[i].fd].responseBuffer, sizeof(clients[fds[i].fd].responseBuffer), 0);
-				clear client response buffer
+				if (players[pollFds[i].fd]->get_send_buffer().length()) {
+					send(pollFds[i].fd, players[pollFds[i].fd]->get_send_buffer().c_str(), players[pollFds[i].fd]->get_send_buffer().length(), 0);
+					std::string tmp = "";
+					players[pollFds[i].fd]->set_send_buffer(tmp);
 				}
-				} */
+			}
 			usleep(100 * 1000);
 		}
 	}
@@ -57,16 +55,19 @@ void	TCPServer::acceptClient() {
 					
 	if (clientFd < 0) {
 		perror("accept");
-		//discuss: how to handle??
-	} else {
-		if (pollFds.size() < MAX_CLIENTS) {
-			addToPoll(clientFd, POLLIN | POLLOUT);
-			std::cout << "Client with fd " << clientFd << " accepted.\n";
-		} else {
-			std::cerr << "Error: server: too many clients.\n";
-			close(clientFd);
-		}
+		return ;
 	}
+	if (pollFds.size() < MAX_CLIENTS) {
+		addToPoll(clientFd, POLLIN | POLLOUT);	
+		std::cout << "Client with fd " << clientFd << " accepted.\n";
+		game.add_player_to_map(clientFd, new Player());
+		players = game.get_players_map();
+		std::string tmp = "BIENVENUE\n";
+		players[clientFd]->set_send_buffer(tmp);
+		return ;
+	}
+	std::cerr << "Error: server: too many clients.\n";
+	close(clientFd);
 }
 
 void	TCPServer::readClientData(size_t *idx) {
@@ -83,11 +84,14 @@ void	TCPServer::readClientData(size_t *idx) {
 	} else { //data received
 		std::cout << "Received from clientFd "
 			<< pollFds[*idx].fd << ": [[" << buffer << "]]\n";
+		std::string tmp = buffer;
+		players[pollFds[*idx].fd]->set_recv_buffer(tmp);
 	}
 }
 
 void	TCPServer::disconnectClient(size_t *idx) {
 	std::cout << "Client " << pollFds[*idx].fd << " disconnected.\n";
+	//call remove player from game
 	close(pollFds[*idx].fd);
 	poll_iterator it_poll = pollFds.begin();
 	pollFds.erase(it_poll + *idx);
