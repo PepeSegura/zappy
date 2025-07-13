@@ -11,6 +11,9 @@ class Game
 	private:
 		std::vector<std::vector<Tile>>	map;
 		std::map<std::string, Team>		teams;
+
+
+		Inventory world_resources;
 		
 		void init_map(Parser *);
 		void init_teams(Parser *);

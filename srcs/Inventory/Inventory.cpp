@@ -15,6 +15,18 @@ Inventory::~Inventory()
 {
 }
 
+Inventory&  Inventory::operator+(const Inventory &other)
+{
+	this->nourriture = this->nourriture + other.nourriture;
+	this->linemate = this->linemate + other.linemate;
+	this->deraumere = this->deraumere + other.deraumere;
+	this->sibur = this->sibur + other.sibur;
+	this->mendiane = this->mendiane + other.mendiane;
+	this->phiras = this->phiras + other.phiras;
+	this->thystame = this->thystame + other.thystame;
+	return (*this);
+}
+
 
 /*_________GETTERS__________*/
 
