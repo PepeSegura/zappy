@@ -2,7 +2,6 @@
 
 Inventory::Inventory()
 {
-	std::cout << "Inventory()\n";
 	this->nourriture = 0;
 	this->linemate = 0;
 	this->deraumere = 0;
@@ -14,7 +13,6 @@ Inventory::Inventory()
 
 Inventory::~Inventory()
 {
-	std::cout << "~Inventory()\n";
 }
 
 
@@ -97,7 +95,7 @@ std::ostream& operator<<(std::ostream &out, Inventory const &other)
 {
     out << "Nourriture: " << other.get_nourriture() << std::endl
 		<< "Linemate:   " << other.get_linemate()   << std::endl
-		<< "deraumere:   " << other.get_deraumere() << std::endl
+		<< "deraumere:  " << other.get_deraumere() << std::endl
 		<< "Sibur:      " << other.get_sibur()      << std::endl
 		<< "Mendiane:   " << other.get_mendiane()   << std::endl
 		<< "Phiras:     " << other.get_phiras()     << std::endl
