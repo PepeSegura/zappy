@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 	game.add_player("hola", &a);
 
 	game.remove_player(&a);
+
 	while (true) {
 		server.inputOutputComms();
 	}

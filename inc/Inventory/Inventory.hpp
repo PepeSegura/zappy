@@ -22,6 +22,7 @@ class Inventory
 		~Inventory();
 		Inventory(const Inventory& other) = default; // shallow copy
 		Inventory&  operator=(const Inventory &other) = default;
+		Inventory&  operator+(const Inventory &other);
 
 		int get_nourriture() const;
 		int get_linemate() const;

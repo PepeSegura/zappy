@@ -16,6 +16,14 @@ void Game::init_map(Parser *parser)
 	this->map.reserve(height);
 	for (int i = 0; i < height; ++i)
 		this->map.emplace_back(width);
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			this->map[i][j].gen_resources();
+			this->world_resources = this->world_resources + this->map[i][j].get_inv();
+		}
+	}
+	std::cout << "Total World resources\n" << this->world_resources;
 }
 
 void Game::init_teams(Parser *parser)
