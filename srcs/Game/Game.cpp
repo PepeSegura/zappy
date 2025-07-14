@@ -66,10 +66,14 @@ void Game::add_player_to_team(std::string team_name, Player *p)
 
 void Game::remove_player(Player *p)
 {
-	playersfd_map[p->get_sock_fd()] = nullptr;
+	if (playersfd_map.find(p->get_sock_fd()) != playersfd_map.end())
+		playersfd_map.erase(p->get_sock_fd());
 
+	//remove player from tile
+	
 	for (auto& [name, team] : teams)
 		team.remove_player(p);
 	
 	delete p;
+	//std::cout << "Player deleted\n";
 }

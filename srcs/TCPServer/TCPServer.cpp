@@ -62,6 +62,7 @@ void	TCPServer::acceptClient() {
 		std::cout << "Client with fd " << clientFd << " accepted.\n";
 		game.add_player_to_fdmap(clientFd, new Player());
 		players = game.get_players_map();
+		players[clientFd]->set_sock_fd(clientFd);
 		std::string tmp = "BIENVENUE\n";
 		players[clientFd]->set_send_buffer(tmp);
 		return ;
