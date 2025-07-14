@@ -18,6 +18,7 @@ class Player
 		int			sock_fd;
 		int			state;
 		std::string	send_buffer;
+		std::string msg_to_parse;
 		std::string	recv_buffer;
 
 
@@ -27,6 +28,9 @@ class Player
 		~Player();
 
 		Player&  operator=(const Player &other);
+
+		void		add_buffer_or_parse_msg(std::string);
+		void		parse_msg(void);
 
 		std::string	get_team_name() const;
 		Inventory&	get_inv();

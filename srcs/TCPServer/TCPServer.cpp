@@ -32,7 +32,7 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 	} else {
 		players = game.get_players_map();
 		for (size_t i = 0; i < pollFds.size(); i++) {
-			if (pollFds[i].revents & POLLIN){ //read event
+			if (pollFds[i].revents & POLLIN) { //read event
 				if (pollFds[i].fd == socketFd) { //new connection
 					acceptClient();
 				} else { //received client message
@@ -83,10 +83,9 @@ void	TCPServer::readClientData(size_t *idx) {
 	} else if (readBytes == 0) { //disconnected
 		disconnectClient(idx);
 	} else { //data received
-		std::cout << "Received from clientFd "
-			<< pollFds[*idx].fd << ": [[" << buffer << "]]\n";
-		std::string tmp = buffer;
-		players[pollFds[*idx].fd]->set_recv_buffer(tmp);
+		// std::cout << "Received from clientFd " << pollFds[*idx].fd << ": [[" << buffer << "]]\n";
+		players[pollFds[*idx].fd]->add_buffer_or_parse_msg(std::string(buffer));
+		// players[pollFds[*idx].fd]->set_recv_buffer(tmp);
 	}
 }
 
