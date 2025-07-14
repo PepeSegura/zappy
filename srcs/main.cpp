@@ -10,15 +10,15 @@
 
 int main(int argc, char **argv) {
 	Parser parser(argc, argv);
-	TCPServer server(parser.getPort());
-
 	Game	game(&parser);
 
-	Player a;
+	TCPServer server(parser.getPort(), game);
 
-	game.add_player("hola", &a);
+	Player *a = new Player();
 
-	game.remove_player(&a);
+	game.add_player_to_team("hola", a);
+
+	game.remove_player(a);
 
 	while (true) {
 		server.inputOutputComms();

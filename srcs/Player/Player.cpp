@@ -3,6 +3,7 @@
 Player::Player()
 {
 	this->inv = Inventory();
+	this->handshake_finished = false;
 }
 
 Player::~Player()
@@ -12,6 +13,7 @@ Player::~Player()
 Player::Player(std::string team)
 {
 	this->team_name = team;
+	this->handshake_finished = false;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -32,6 +34,16 @@ Player&  Player::operator=(const Player &other)
 std::string	Player::get_team_name() const
 {
 	return (this->team_name);
+}
+
+std::string	Player::get_recv_buffer() const
+{
+	return (this->recv_buffer);
+}
+
+std::string	Player::get_send_buffer() const
+{
+	return (this->send_buffer);
 }
 
 Inventory&	Player::get_inv()
@@ -64,6 +76,11 @@ int	Player::get_state() const
 	return (this->state);
 }
 
+bool	Player::get_handshake() const
+{
+	return (this->handshake_finished);
+}
+
 /*_____SETTERS_____*/
 
 void	Player::set_level(int new_level)
@@ -89,4 +106,24 @@ void	Player::set_sock_fd(int new_sock_fd)
 void	Player::set_state(int new_state)
 {
 	this->state = new_state;
+}
+
+void	Player::set_team_name(std::string &team_name)
+{
+	this->team_name = team_name;
+}
+
+void	Player::set_recv_buffer(std::string &buffer)
+{
+	this->recv_buffer = buffer;
+}
+
+void	Player::set_send_buffer(std::string &buffer)
+{
+	this->send_buffer = buffer;
+}
+
+void	Player::set_handshake(bool &status)
+{
+	this->handshake_finished = status;
 }

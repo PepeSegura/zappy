@@ -10,6 +10,7 @@ class Game
 {
 	private:
 		std::vector<std::vector<Tile>>	map;
+		std::map<int, Player *>			playersfd_map; //key=client_fd
 		std::map<std::string, Team>		teams;
 
 
@@ -23,6 +24,9 @@ class Game
 		Game(Parser *parser);
 		~Game();
 
-		void add_player(std::string, Player *);
-		void remove_player(Player *);
+		std::map<int, Player *>	&get_players_map();
+
+		void					add_player_to_fdmap(int, Player *);
+		void					add_player_to_team(std::string, Player *);
+		void					remove_player(Player *);
 };
