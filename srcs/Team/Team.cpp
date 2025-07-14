@@ -4,11 +4,16 @@ Team::Team()
 {
 }
 
+Team::Team(std::string _name)
+{
+	this->name = _name;
+}
+
 Team::~Team()
 {
 }
 
-void	Team::addPlayer(Player* player)
+void	Team::add_player(Player* player)
 {
 	if (player == nullptr)
 		return ;
@@ -17,10 +22,10 @@ void	Team::addPlayer(Player* player)
 	if (it != this->players.end())
 		return ;
 	this->players.push_back(player);
-	std::cout << "Team_size: " << this->players.size() << std::endl;
+	std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
 }
 
-void	Team::removePlayer(Player* player)
+void	Team::remove_player(Player* player)
 {
 	if (player == nullptr)
 		return ;
@@ -29,5 +34,10 @@ void	Team::removePlayer(Player* player)
 	if (it == this->players.end())
 		return ;
 	this->players.erase(it);
-	std::cout << "Team_size: " << this->players.size() << std::endl;
+	std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
+}
+
+std::string	Team::get_name() const
+{
+	return (this->name);
 }

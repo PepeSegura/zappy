@@ -2,19 +2,16 @@
 
 Player::Player()
 {
-	std::cout << "Player()\n";
 	this->inv = Inventory();
 	this->handshake_finished = false;
 }
 
 Player::~Player()
 {
-	std::cout << "~Player()\n";
 }
 
 Player::Player(std::string team)
 {
-	std::cout << "~Player(std::string name)\n";
 	this->team_name = team;
 	this->handshake_finished = false;
 }

@@ -60,7 +60,7 @@ void	TCPServer::acceptClient() {
 	if (pollFds.size() < MAX_CLIENTS) {
 		addToPoll(clientFd, POLLIN | POLLOUT);	
 		std::cout << "Client with fd " << clientFd << " accepted.\n";
-		game.add_player_to_map(clientFd, new Player());
+		game.add_player_to_fdmap(clientFd, new Player());
 		players = game.get_players_map();
 		std::string tmp = "BIENVENUE\n";
 		players[clientFd]->set_send_buffer(tmp);
@@ -91,7 +91,7 @@ void	TCPServer::readClientData(size_t *idx) {
 
 void	TCPServer::disconnectClient(size_t *idx) {
 	std::cout << "Client " << pollFds[*idx].fd << " disconnected.\n";
-	//call remove player from game
+	game.remove_player(game.get_players_map()[pollFds[*idx].fd]);
 	close(pollFds[*idx].fd);
 	poll_iterator it_poll = pollFds.begin();
 	pollFds.erase(it_poll + *idx);
