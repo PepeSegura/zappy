@@ -31,7 +31,11 @@ Player&  Player::operator=(const Player &other)
 
 void Player::parse_msg()
 {
-	std::cout << "Parsing: [" << this->msg_to_parse << "]\n";
+	if (!this->msg_to_parse.empty() && this->msg_to_parse.back() == '\n')
+		this->msg_to_parse.pop_back();
+	std::cout << "Adding: [" << this->msg_to_parse << "]\n";
+
+	// this->add_command(this->msg_to_parse);
 	this->msg_to_parse.clear();
 }
 
