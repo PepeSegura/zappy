@@ -14,11 +14,11 @@ int main(int argc, char **argv) {
 
 	TCPServer server(parser.getPort(), game);
 
-	Player a;
+	Player *a = new Player();
 
-	game.add_player_to_team("hola", &a);
+	game.add_player_to_team("hola", a);
 
-	game.remove_player(&a);
+	game.remove_player(a);
 
 	while (true) {
 		server.inputOutputComms();

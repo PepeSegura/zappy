@@ -4,8 +4,13 @@ Game::Game()
 {
 }
 
-Game::~Game()
-{
+Game::~Game() {
+	for (auto& [fd, p] : playersfd_map) {
+		if (p)
+			delete p;
+	}
+
+	playersfd_map.clear();
 }
 
 std::map<int, Player *> &Game::get_players_map() {
@@ -13,7 +18,7 @@ std::map<int, Player *> &Game::get_players_map() {
 }
 
 void	Game::add_player_to_fdmap(int fd, Player *player) {
-	playersfd_map[fd] = player;
+	playersfd_map.insert_or_assign(fd, player);
 }
 
 void Game::init_map(Parser *parser)
@@ -65,4 +70,6 @@ void Game::remove_player(Player *p)
 
 	for (auto& [name, team] : teams)
 		team.remove_player(p);
+	
+	delete p;
 }
