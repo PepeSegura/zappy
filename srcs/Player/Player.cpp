@@ -29,6 +29,33 @@ Player&  Player::operator=(const Player &other)
 	return (*this);
 }
 
+void Player::parse_msg()
+{
+	if (!this->msg_to_parse.empty() && this->msg_to_parse.back() == '\n')
+		this->msg_to_parse.pop_back();
+	std::cout << "Adding: [" << this->msg_to_parse << "]\n";
+
+	// this->add_command(this->msg_to_parse);
+	this->msg_to_parse.clear();
+}
+
+void	Player::add_buffer_or_parse_msg(std::string buffer)
+{
+	size_t nl_pos = buffer.find("\n");
+	if (nl_pos == std::string::npos) // newline not found == ADD_BUFFER
+	{
+		this->recv_buffer += buffer;
+		return ;
+	}
+	this->recv_buffer += buffer.substr(0, nl_pos + 1); // append to buffer until nl
+	this->msg_to_parse = this->recv_buffer; // copy msg to msg_to_parse
+	this->recv_buffer.clear();
+	this->parse_msg();
+	buffer = buffer.substr(nl_pos + 1);
+	this->add_buffer_or_parse_msg(buffer);
+}
+
+
 /*_____GETTERS_____*/
 
 std::string	Player::get_team_name() const
