@@ -25,12 +25,13 @@ enum Command {
 class Messages {
 	private:
 		std::string messageStr;
-		Command	hashString(const std::string &str) const;
-
-	public:
+		
+		public:
 		Messages();
 		Messages(const std::string &cmd, void *player, void *map, bool success); //player: change from (void *) to (Player *)
 		~Messages();
-
+		
 		std::string	getMessageStr() const;
 };
+
+Command	hashString(const std::string &str);

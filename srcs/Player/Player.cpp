@@ -127,3 +127,20 @@ void	Player::set_handshake(bool &status)
 {
 	this->handshake_finished = status;
 }
+
+void	Player::add_command(std::string trimmed_cmd) {
+	if (command_queue.size() < 10) {
+		size_t pos = trimmed_cmd.find(" ");
+		Command_Data tmp;
+		if (pos < trimmed_cmd.length()){
+			tmp.args = trimmed_cmd.substr(pos + 1);
+			trimmed_cmd = trimmed_cmd.substr(0, pos);
+		}
+		tmp.cmd = hashString(trimmed_cmd);
+		command_queue.emplace_back(tmp);
+	}
+	std::cout << "After adding: \n";
+	for (auto action : command_queue){
+		std::cout << action.cmd << ";" << action.args << std::endl;
+	}
+}

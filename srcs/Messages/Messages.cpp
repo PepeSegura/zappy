@@ -102,7 +102,7 @@ std::string	Messages::getMessageStr() const {
 	return messageStr;
 }
 
-Command	Messages::hashString(const std::string &str) const{
+Command	hashString(const std::string &str) {
 	if (str == "avance") return Command::Avance;
 	if (str == "droite") return Command::Droite;
 	if (str == "gauche") return Command::Gauche;

@@ -1,9 +1,17 @@
 #pragma once
 
 # include <iostream>
+# include <deque>
+
+# include "Messages.hpp"
 # include "Inventory.hpp"
 
 class Inventory;
+
+struct Command_Data {
+	Command		cmd;
+	std::string	args;
+};
 
 class Player
 {
@@ -20,6 +28,7 @@ class Player
 		std::string	send_buffer;
 		std::string	recv_buffer;
 
+		std::deque<Command_Data> command_queue;
 
 	public:
 		Player();
@@ -48,4 +57,5 @@ class Player
 		void		set_send_buffer(std::string &);
 		void		set_team_name(std::string &);
 		void		set_handshake(bool &);
+		void		add_command(std::string);
 };
