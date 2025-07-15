@@ -18,18 +18,6 @@ int main(int argc, char **argv) {
 
 	game.add_player_to_team("hola", a);
 
-	a->add_command("dasfas");
-	a->add_command("avance");
-	a->add_command("droite");
-	a->add_command("pose nourriture");
-	a->add_command(" ");
-	a->add_command("");
-	a->add_command("dasfas");
-	a->add_command("avance");
-	a->add_command("fork");
-	a->add_command("broadcast pepepepe");
-	a->add_command("avance");
-
 	game.remove_player(a);
 
 	while (true) {
