@@ -47,11 +47,32 @@ void Game::init_teams(Parser *parser)
 		this->teams[name] = Team(name);
 }
 
+void Game::init_action_time_map() {
+	action_time_table[Avance] = 7;
+	action_time_table[Droite] = 7;
+	action_time_table[Gauche] = 7;
+	action_time_table[Voir] = 7;
+	action_time_table[Inventaire] = 1;
+	action_time_table[Prend] = 7;
+	action_time_table[Pose] = 7;
+	action_time_table[Expulse] = 7;
+	action_time_table[Broadcast] = 7;
+	action_time_table[IncantationBgn] = 300;
+	action_time_table[IncantationEnd] = 0;
+	action_time_table[Fork] = 42;
+	action_time_table[ConnectNbr] = 0;
+	action_time_table[Mort] = 0;
+	action_time_table[Unknown] = 0;
+}
+
 Game::Game(Parser *parser)
 {
 	init_map(parser);
 	init_teams(parser);
-
+	init_action_time_map();
+	
+	end = false;
+	tick_millis = 1000 / parser->getTimeFreq();
 	// for (const auto& [name, team] : teams) {
 	// 	std::cout << name << " -> " << team.get_name() << std::endl;
 	// }
@@ -76,4 +97,43 @@ void Game::remove_player(Player *p)
 	
 	delete p;
 	//std::cout << "Player deleted\n";
+}
+
+bool Game::get_end() const {
+	return this->end;
+}
+
+void Game::run_tick() {
+	auto now = std::chrono::system_clock::now();
+	auto duration = now.time_since_epoch();
+	auto curr_millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
+		//std::cout << std::to_string(curr_millis) << std::endl;
+		for (auto& [fd, player] : playersfd_map) { // for each team
+			if (player->get_state() == Player_States::Free) {
+				if (player->has_queued_actions()) {
+					player->set_last_start_time(curr_millis);
+					player->set_state(Player_States::ExecutingAction);
+				}
+			}
+			if (player->get_state() == Player_States::ExecutingAction) {
+				if (action_time_table[player->get_current_command().cmd] >= player->get_last_start_time() - curr_millis) { //action ended, call handlers
+					std::cout << "Call handler :P\n";
+				}
+				continue; 
+			}
+			if (player->get_state() == Player_States::Handshake) {
+				std::cout << "Still in handshake :P\n";
+			}
+		}
+		last_tick = curr_millis; // update last_tick timestamp
+	}
+}
+
+void	Game::set_tick_millis(int64_t t) {
+	if (t < 1 || t > 1000) {
+		std::cerr << "Invalid freq; allowed values [1, 1000]\n";
+		return ;
+	}
+	this->tick_millis = 1000 / t;
 }

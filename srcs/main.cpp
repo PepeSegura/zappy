@@ -20,8 +20,10 @@ int main(int argc, char **argv) {
 
 	game.remove_player(a);
 
-	while (true) {
+	while (!game.get_end()) {
 		server.inputOutputComms();
+		game.run_tick();
 	}
+	
 	return 0;
 }
