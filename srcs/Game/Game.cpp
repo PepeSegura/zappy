@@ -6,7 +6,7 @@ Game::Game()
 
 Game::~Game() {
 	for (auto& [fd, p] : playersfd_map) {
-		if (p && !p->get_handshake())
+		if (p)
 			delete p;
 	}
 
