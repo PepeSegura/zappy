@@ -1,4 +1,5 @@
 # include "Tile.hpp"
+# include <algorithm>
 
 Inventory& Tile::get_inv(void)
 {
@@ -50,4 +51,20 @@ void Tile::gen_resources(void)
 	gen_item(Item::MENDIANE);
 	gen_item(Item::PHIRAS);
 	gen_item(Item::THYSTAME);
+}
+
+void	Tile::remove_player_from_team(Player *p)
+{
+	auto it = std::find(this->players.begin(), this->players.end(), p);
+
+	if (it != this->players.end())
+		this->players.erase(it);
+}
+
+void	Tile::add_player_to_team(Player *p)
+{
+	auto it = std::find(this->players.begin(), this->players.end(), p);
+
+	if (it == this->players.end())
+		this->players.push_back(p);
 }

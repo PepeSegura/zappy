@@ -20,6 +20,7 @@ class Team
 		std::string	get_name() const;
 		uint32_t	get_conns_nbr() const;
 		uint32_t	get_max_conns() const;
+		uint32_t	get_avail_conns() const;
 		void		add_player(Player* player);
 		void		remove_player(Player* player);
 		void		init_eggs(int , int);

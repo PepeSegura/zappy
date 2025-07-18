@@ -91,7 +91,7 @@ Messages::Messages(Command cmd, void *player, void *map, bool success) {
 			messageStr = "mort\n";
 			break;
 		case Unknown:
-			messageStr = "unknown\n";
+			messageStr = "ko\n";
 			break;
 	}
 }
