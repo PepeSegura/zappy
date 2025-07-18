@@ -1,30 +1,71 @@
 #include "Player.hpp"
+#include "Game.hpp"
 
-Player::Player()
+int random_03(void)
 {
-	this->inv = Inventory();
-	this->handshake_finished = false;
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
+	return (dist4(rng) % 4);
+}
 
-	this->state = Player_States::Handshake;
+Player::Player() // NOT USING ANYMORE
+{
+	std::cout << "PLAYER()\n";
+
+	this->game_ptr = nullptr;
+	this->inv = Inventory();
+	this->handshake_finished = true; // put in FALSE
+
+	this->state = Player_States::Free; // put in Handshake
 	last_action_start_time = 0;
 	this->dead = false;
+	this->x = 0;
+	this->y = 0;
+	this->dir = "NSWE"[random_03()];
 }
 
 Player::~Player()
 {
 }
 
+Player::Player(Game *game)
+{
+	std::cout << "PLAYER(Game *game)\n";
+	this->game_ptr = game;
+	this->team_name = "hola";
+	this->inv = Inventory();
+
+	this->handshake_finished = true; // put in false
+	this->state = Player_States::Free; // put in Handshake
+	last_action_start_time = 0;
+
+	this->dead = false;
+	this->x = 0;
+	this->y = 0;
+	this->dir = "NSWE"[random_03()];
+}
+
 Player::Player(std::string team)
 {
+	std::cout << "PLAYER(std::string team)\n";
+	this->game_ptr = nullptr;
 	this->team_name = team;
+	this->inv = Inventory();
+
 	this->handshake_finished = false;
 	this->state = Player_States::Handshake;
 	last_action_start_time = 0;
+	
 	this->dead = false;
+	this->x = 0;
+	this->y = 0;
+	this->dir = "NSWE"[random_03()];
 }
 
 Player&  Player::operator=(const Player &other)
 {
+	this->game_ptr = other.game_ptr;
 	this->team_name = other.team_name;
 	this->inv = other.inv;
 	this->level = other.level;
@@ -70,6 +111,12 @@ void	Player::add_buffer_or_parse_msg(std::string buffer)
 	this->add_buffer_or_parse_msg(buffer);
 }
 
+void	Player::pop_command() {
+	if (this->command_queue.empty())
+		return ;
+	this->command_queue.pop_front();
+}
+
 void	Player::Eat()
 {
 	if (this->inv.get_nourriture() == 0)
@@ -79,20 +126,50 @@ void	Player::Eat()
 
 void	Player::Avance()
 {
+	if (this->game_ptr == nullptr)
+	{
+		std::cerr << "Game PTR not set\n";
+		return ;
+	}
+	std::cout << "Avance towards: " << this->dir << std::endl;
+
+	int map_width = this->game_ptr->get_map_width();
+	int map_height = this->game_ptr->get_map_height();
+
 	switch (this->dir)
 	{
 		case 'N':
-			this->y--;
+		{
+			if (this->y - 1 == -1)
+				this->y = map_height - 1;
+			else
+				this->y--;
 			break;		
+		}
 		case 'S':
-			this->y++;
-			break;
+		{
+			if (this->y + 1 == map_height)
+				this->y = 0;
+			else
+				this->y++;
+			break;		
+		}
 		case 'W':
-			this->x--;
-			break;
+		{
+			if (this->x - 1 == -1)
+				this->x = map_width - 1;
+			else
+				this->x--;
+			break;		
+		}
 		case 'E':
-			this->x++;
-			break;
+		{
+			if (this->x + 1 == map_width)
+				this->x = 0;
+			else
+				this->x++;
+			break;		
+		}
 		default:
 			break;
 	}

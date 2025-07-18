@@ -40,5 +40,7 @@ class Tile {
 
 		Inventory&	get_inv(void);
 		void		gen_resources(void);
+		void		remove_player_from_team(Player*);
+		void		add_player_to_team(Player*);
 };
 
