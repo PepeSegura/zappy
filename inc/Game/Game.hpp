@@ -48,6 +48,7 @@ class Game
 		void					run_tick();
 
 		void					set_tick_millis(int64_t);
+		void					try2handshake(Player *);
 
 		int		get_map_width() const { return (this->map_width); };
 		int		get_map_height() const { return (this->map_height); };

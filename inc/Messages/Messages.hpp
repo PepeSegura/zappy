@@ -28,10 +28,10 @@ class Messages {
 		
 		public:
 		Messages();
-		Messages(const std::string &cmd, void *player, void *map, bool success); //player: change from (void *) to (Player *)
+		Messages(Command cmd, void *player, void *map, bool success); //player: change from (void *) to (Player *)
 		~Messages();
 		
-		std::string	getMessageStr() const;
+		std::string	&getMessageStr();
 };
 
 Command	hashString(const std::string &str);

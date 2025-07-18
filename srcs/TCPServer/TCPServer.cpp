@@ -45,7 +45,7 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 					players[pollFds[i].fd]->set_send_buffer(tmp);
 				}
 			}
-			usleep(100 * 1000);
+			usleep(500);
 		}
 	}
 }

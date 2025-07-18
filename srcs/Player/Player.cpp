@@ -15,9 +15,9 @@ Player::Player() // NOT USING ANYMORE
 
 	this->game_ptr = nullptr;
 	this->inv = Inventory();
-	this->handshake_finished = true; // put in FALSE
+	this->handshake_finished = false;
 
-	this->state = Player_States::Free; // put in Handshake
+	this->state = Player_States::Handshake;
 	last_action_start_time = 0;
 	this->dead = false;
 	this->x = 0;
@@ -33,11 +33,10 @@ Player::Player(Game *game)
 {
 	std::cout << "PLAYER(Game *game)\n";
 	this->game_ptr = game;
-	this->team_name = "hola";
 	this->inv = Inventory();
 
-	this->handshake_finished = true; // put in false
-	this->state = Player_States::Free; // put in Handshake
+	this->handshake_finished = false;
+	this->state = Player_States::Handshake;
 	last_action_start_time = 0;
 
 	this->dead = false;
@@ -385,12 +384,13 @@ void	Player::add_command(std::string trimmed_cmd) {
 			tmp.args = trimmed_cmd.substr(pos + 1);
 			trimmed_cmd = trimmed_cmd.substr(0, pos);
 		}
-		tmp.cmd = hashString(trimmed_cmd);
+		tmp.cmd_name = trimmed_cmd;
+		tmp.cmd = hashString(tmp.cmd_name);
 		command_queue.emplace_back(tmp);
 	}
 	std::cout << "After adding: \n";
 	for (auto action : command_queue){
-		std::cout << action.cmd << ";" << action.args << std::endl;
+		std::cout << action.cmd << "(" << action.cmd_name << ")" << ";" << action.args << std::endl;
 	}
 }
 
@@ -404,4 +404,11 @@ bool	Player::has_queued_actions() const {
 
 Command_Data	Player::get_current_command() const {
 	return command_queue.front();
+}
+
+void	Player::handshake(Player *connected_player) {
+	this->sock_fd = connected_player->sock_fd;
+	this->state = Player_States::Free;
+	this->handshake_finished = true;
+	this->game_ptr = connected_player->game_ptr;
 }

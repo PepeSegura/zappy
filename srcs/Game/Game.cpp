@@ -45,8 +45,10 @@ void Game::init_teams(Parser *parser)
 {
 	t_teams_names teamNames = parser->getTeamsNames();
 
-	for (const auto& name : teamNames)
-		this->teams[name] = Team(name);
+	for (const auto& name : teamNames) {
+		this->teams[name] = Team(name, parser->getTeamsMembersLimit());
+		this->teams[name].init_eggs(parser->getHeight(), parser->getWidth());
+	}
 }
 
 void Game::init_action_time_map() {
@@ -73,18 +75,24 @@ void Game::_Avance(Player *p)
 	this->map[p->get_x()][p->get_y()].remove_player_from_team(p);
 	p->Avance();
 	this->map[p->get_x()][p->get_y()].add_player_to_team(p);
+	Messages rsp = Messages(Command::Avance, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
 }
 
 void Game::_Droite(Player *p)
 {
 	std::cout << "EXECUTING DROITE\n";
 	p->Droite();
+	Messages rsp = Messages(Command::Droite, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
 }
 
 void Game::_Gauche(Player *p)
 {
 	std::cout << "EXECUTING GAUCHE\n";
 	p->Gauche();
+	Messages rsp = Messages(Command::Gauche, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
 }
 
 void Game::_Voir(Player *p)
@@ -156,7 +164,8 @@ void Game::_Mort(Player *p)
 void Game::_Unknown(Player *p)
 {
 	std::cout << "IGNORING UNKNOWN COMMAND\n";
-	(void)p;
+	Messages rsp = Messages(Command::Unknown, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
 }
 
 
@@ -211,7 +220,8 @@ void Game::remove_player(Player *p)
 	for (auto& [name, team] : teams)
 		team.remove_player(p);
 	
-	delete p;
+	if (!p->get_handshake())
+		delete p;
 	//std::cout << "Player deleted\n";
 }
 
@@ -241,7 +251,7 @@ void Game::run_tick() {
 				continue; 
 			}
 			if (player->get_state() == Player_States::Handshake) {
-				// std::cout << "Still in handshake :P\n";
+				try2handshake(player);
 			}
 		}
 		last_tick = curr_millis; // update last_tick timestamp
@@ -254,4 +264,30 @@ void	Game::set_tick_millis(int64_t t) {
 		return ;
 	}
 	this->tick_millis = 1000 / t;
+}
+
+void	Game::try2handshake(Player *p) {
+	if (!p->has_queued_actions())
+		return ;
+	if (teams.find(p->get_current_command().cmd_name) == teams.end()) {
+		std::cerr << "Client " << std::to_string(p->get_sock_fd()) << ": Invalid teamname in handshake\n";
+		Messages resp = Messages(Command::Unknown, (void *) p, (void *) &map, false);
+		
+		p->set_send_buffer(resp.getMessageStr());
+		p->pop_command();
+		return ;
+	}
+	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
+		Player *connected_player = teams[p->get_current_command().cmd_name].player2egg(p);
+		playersfd_map[connected_player->get_sock_fd()] = connected_player;
+		
+		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns())
+			+ "\n" + std::to_string(connected_player->get_x()) + " " + std::to_string(connected_player->get_y()) + "\n";
+		delete p;
+		connected_player->set_send_buffer(response);
+		return ;
+	}
+	std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
+	p->set_send_buffer(response);
+	p->pop_command();
 }

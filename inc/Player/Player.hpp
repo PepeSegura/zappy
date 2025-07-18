@@ -11,8 +11,10 @@
 class Game;
 class Inventory;
 
+
 struct Command_Data {
 	Command		cmd;
+	std::string	cmd_name;
 	std::string	args;
 };
 
@@ -94,4 +96,5 @@ class Player
 		void		Pose(std::string item);
 		void		IncantationBgn();
 		void		IncantationEnd();
+		void		handshake(Player *);
 };
