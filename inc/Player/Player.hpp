@@ -27,8 +27,10 @@ class Player
 		std::string team_name;
 		Inventory	inv;
 		int			level;
+		uint8_t		dir; // N, S, W, E
 		int			x;
 		int			y;
+		bool		dead;
 		bool		handshake_finished;
 
 		int			sock_fd;
@@ -77,4 +79,14 @@ class Player
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
+
+		void		Eat();
+		void		Avance();
+		void		Droite();
+		void		Gauche();
+		std::string	Inventaire();
+		void		Prend(std::string item);
+		void		Pose(std::string item);
+		void		IncantationBgn();
+		void		IncantationEnd();
 };

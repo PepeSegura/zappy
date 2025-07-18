@@ -18,7 +18,7 @@ Messages::Messages() {
 			break;
 		case Inventaire:
 			//inventary logic from players inv
-			messageStr = "{phiras 3, sibur 2}\n";
+			messageStr = "{nourriture 0, linemate 0, deraumere 10, sibur 2, mendiane 0, phiras 0, thystame 0}\n";
 			break;
 		case Prend:
 		case Pose:
