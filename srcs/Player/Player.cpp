@@ -4,6 +4,7 @@ Player::Player()
 {
 	this->inv = Inventory();
 	this->handshake_finished = false;
+	this->dead = false;
 }
 
 Player::~Player()
@@ -14,6 +15,7 @@ Player::Player(std::string team)
 {
 	this->team_name = team;
 	this->handshake_finished = false;
+	this->dead = false;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -21,11 +23,19 @@ Player&  Player::operator=(const Player &other)
 	this->team_name = other.team_name;
 	this->inv = other.inv;
 	this->level = other.level;
+	this->dir = other.dir;
 	this->x = other.x;
 	this->y = other.y;
+	this->dead = other.dead;
+	this->handshake_finished = other.handshake_finished;
 
 	this->sock_fd = other.sock_fd;
 	this->state = other.state;
+
+	this->send_buffer = other.send_buffer;
+	this->msg_to_parse = other.msg_to_parse;
+	this->recv_buffer = other.recv_buffer;
+	this->command_queue = other.command_queue;
 	return (*this);
 }
 
@@ -55,7 +65,14 @@ void	Player::add_buffer_or_parse_msg(std::string buffer)
 	this->add_buffer_or_parse_msg(buffer);
 }
 
-void		Player::Avance()
+void	Player::Eat()
+{
+	if (this->inv.get_nourriture() == 0)
+		this->dead = true;
+	this->inv.add_nourriture(-1);
+}
+
+void	Player::Avance()
 {
 	switch (this->dir)
 	{
@@ -76,7 +93,7 @@ void		Player::Avance()
 	}
 }
 
-void		Player::Droite()
+void	Player::Droite()
 {
 	switch (this->dir)
 	{
@@ -97,7 +114,7 @@ void		Player::Droite()
 	}
 }
 
-void		Player::Gauche()
+void	Player::Gauche()
 {
 	switch (this->dir)
 	{
@@ -105,7 +122,7 @@ void		Player::Gauche()
 			this->dir = 'W';
 			break;		
 		case 'S':
-			this->dir = 'W';
+			this->dir = 'E';
 			break;
 		case 'W':
 			this->dir = 'S';
@@ -118,7 +135,7 @@ void		Player::Gauche()
 	}
 }
 
-static std::string aux_inv(std::string key, int value)
+static	std::string aux_inv(std::string key, int value)
 {
 	return (key + std::to_string(value) + ", ");
 }
@@ -143,7 +160,7 @@ std::string	Player::Inventaire()
 	return (inv_str += "}");
 }
 
-void		Player::Prend(std::string item)
+void	Player::Prend(std::string item)
 {
 	if (item == "nourriture")	this->inv.add_nourriture(1);
 	if (item == "linemate")		this->inv.add_linemate(1);
@@ -154,7 +171,7 @@ void		Player::Prend(std::string item)
 	if (item == "thystame")		this->inv.add_thystame(1);
 }
 
-void		Player::Pose(std::string item)
+void	Player::Pose(std::string item)
 {
 	if (item == "nourriture")	this->inv.add_nourriture(-1);
 	if (item == "linemate")		this->inv.add_linemate(-1);
@@ -165,12 +182,12 @@ void		Player::Pose(std::string item)
 	if (item == "thystame")		this->inv.add_thystame(-1);
 }
 
-void		Player::IncantationBgn()
+void	Player::IncantationBgn()
 {
 	/* set flag so he cannot move?? */
 }
 
-void		Player::IncantationEnd()
+void	Player::IncantationEnd()
 {
 	this->level++;
 }

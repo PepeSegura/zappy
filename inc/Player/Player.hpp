@@ -22,6 +22,7 @@ class Player
 		uint8_t		dir; // N, S, W, E
 		int			x;
 		int			y;
+		bool		dead;
 		bool		handshake_finished;
 
 		int			sock_fd;
@@ -65,6 +66,7 @@ class Player
 		void		add_command(std::string);
 
 
+		void		Eat();
 		void		Avance();
 		void		Droite();
 		void		Gauche();

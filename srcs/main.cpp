@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 	Inventory &inv = a->get_inv();
 
 	inv.add_deraumere(10);
+	inv.add_nourriture(1);
 	inv.add_sibur(2);
 	inv.add_linemate(-2);
 
