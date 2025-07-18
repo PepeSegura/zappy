@@ -55,6 +55,125 @@ void	Player::add_buffer_or_parse_msg(std::string buffer)
 	this->add_buffer_or_parse_msg(buffer);
 }
 
+void		Player::Avance()
+{
+	switch (this->dir)
+	{
+		case 'N':
+			this->y--;
+			break;		
+		case 'S':
+			this->y++;
+			break;
+		case 'W':
+			this->x--;
+			break;
+		case 'E':
+			this->x++;
+			break;
+		default:
+			break;
+	}
+}
+
+void		Player::Droite()
+{
+	switch (this->dir)
+	{
+		case 'N':
+			this->dir = 'E';
+			break;		
+		case 'S':
+			this->dir = 'W';
+			break;
+		case 'W':
+			this->dir = 'N';
+			break;
+		case 'E':
+			this->dir = 'S';
+			break;
+		default:
+			break;
+	}
+}
+
+void		Player::Gauche()
+{
+	switch (this->dir)
+	{
+		case 'N':
+			this->dir = 'W';
+			break;		
+		case 'S':
+			this->dir = 'W';
+			break;
+		case 'W':
+			this->dir = 'S';
+			break;
+		case 'E':
+			this->dir = 'N';
+			break;
+		default:
+			break;
+	}
+}
+
+static std::string aux_inv(std::string key, int value)
+{
+	return (key + std::to_string(value) + ", ");
+}
+
+std::string	Player::Inventaire()
+{
+	std::string inv_str = "{";
+
+	inv_str += aux_inv("nourriture ", this->inv.get_nourriture());
+	inv_str += aux_inv("linemate ", this->inv.get_linemate());
+	inv_str += aux_inv("deraumere ", this->inv.get_deraumere());
+	inv_str += aux_inv("sibur ", this->inv.get_sibur());
+	inv_str += aux_inv("mendiane ", this->inv.get_mendiane());
+	inv_str += aux_inv("phiras ", this->inv.get_phiras());
+	inv_str += aux_inv("thystame ", this->inv.get_thystame());
+
+	if (inv_str.size() > 1)
+	{
+		inv_str.erase(inv_str.end() - 1);
+		inv_str.erase(inv_str.end() - 1);
+	}
+	return (inv_str += "}");
+}
+
+void		Player::Prend(std::string item)
+{
+	if (item == "nourriture")	this->inv.add_nourriture(1);
+	if (item == "linemate")		this->inv.add_linemate(1);
+	if (item == "deraumere")	this->inv.add_deraumere(1);
+	if (item == "sibur")		this->inv.add_sibur(1);
+	if (item == "mendiane")		this->inv.add_mendiane(1);
+	if (item == "phiras")		this->inv.add_phiras(1);
+	if (item == "thystame")		this->inv.add_thystame(1);
+}
+
+void		Player::Pose(std::string item)
+{
+	if (item == "nourriture")	this->inv.add_nourriture(-1);
+	if (item == "linemate")		this->inv.add_linemate(-1);
+	if (item == "deraumere")	this->inv.add_deraumere(-1);
+	if (item == "sibur")		this->inv.add_sibur(-1);
+	if (item == "mendiane")		this->inv.add_mendiane(-1);
+	if (item == "phiras")		this->inv.add_phiras(-1);
+	if (item == "thystame")		this->inv.add_thystame(-1);
+}
+
+void		Player::IncantationBgn()
+{
+	/* set flag so he cannot move?? */
+}
+
+void		Player::IncantationEnd()
+{
+	this->level++;
+}
 
 /*_____GETTERS_____*/
 

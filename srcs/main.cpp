@@ -16,6 +16,13 @@ int main(int argc, char **argv) {
 
 	Player *a = new Player();
 
+	Inventory &inv = a->get_inv();
+
+	inv.add_deraumere(10);
+	inv.add_sibur(2);
+	inv.add_linemate(-2);
+
+	std::cout << a->Inventaire() << std::endl;
 	game.add_player_to_team("hola", a);
 
 	game.remove_player(a);

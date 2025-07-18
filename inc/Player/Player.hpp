@@ -19,6 +19,7 @@ class Player
 		std::string team_name;
 		Inventory	inv;
 		int			level;
+		uint8_t		dir; // N, S, W, E
 		int			x;
 		int			y;
 		bool		handshake_finished;
@@ -62,4 +63,14 @@ class Player
 		void		set_team_name(std::string &);
 		void		set_handshake(bool &);
 		void		add_command(std::string);
+
+
+		void		Avance();
+		void		Droite();
+		void		Gauche();
+		std::string	Inventaire();
+		void		Prend(std::string item);
+		void		Pose(std::string item);
+		void		IncantationBgn();
+		void		IncantationEnd();
 };

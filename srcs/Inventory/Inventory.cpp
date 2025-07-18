@@ -69,37 +69,65 @@ int Inventory::get_thystame() const
 
 void Inventory::add_nourriture(int new_ammount)
 {
-	this->nourriture += new_ammount;
+	if ((this->nourriture + new_ammount) >= 0) {
+		this->nourriture += new_ammount;
+	} else {
+		this->nourriture = 0;
+	}
 }
 
 void Inventory::add_linemate(int new_ammount)
 {
-	this->linemate += new_ammount;
+	if ((this->linemate + new_ammount) >= 0) {
+		this->linemate += new_ammount;
+	} else {
+		this->linemate = 0;
+	}
 }
 
 void Inventory::add_deraumere(int new_ammount)
 {
-	this->deraumere += new_ammount;
+	if ((this->deraumere + new_ammount) >= 0) {
+		this->deraumere += new_ammount;
+	} else {
+		this->deraumere = 0;
+	}
 }
 
 void Inventory::add_sibur(int new_ammount)
 {
-	this->sibur += new_ammount;
+	if ((this->sibur + new_ammount) >= 0) {
+		this->sibur += new_ammount;
+	} else {
+		this->sibur = 0;
+	}
 }
 
 void Inventory::add_mendiane(int new_ammount)
 {
-	this->mendiane += new_ammount;
+	if ((this->mendiane + new_ammount) >= 0) {
+		this->mendiane += new_ammount;
+	} else {
+		this->mendiane = 0;
+	}
 }
 
 void Inventory::add_phiras(int new_ammount)
 {
-	this->phiras += new_ammount;
+	if ((this->phiras + new_ammount) >= 0) {
+		this->phiras += new_ammount;
+	} else {
+		this->phiras = 0;
+	}
 }
 
 void Inventory::add_thystame(int new_ammount)
 {
-	this->thystame += new_ammount;
+	if ((this->thystame + new_ammount) >= 0) {
+		this->thystame += new_ammount;
+	} else {
+		this->thystame = 0;
+	}
 }
 
 
