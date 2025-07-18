@@ -43,8 +43,10 @@ void Game::init_teams(Parser *parser)
 {
 	t_teams_names teamNames = parser->getTeamsNames();
 
-	for (const auto& name : teamNames)
-		this->teams[name] = Team(name);
+	for (const auto& name : teamNames) {
+		this->teams[name] = Team(name, parser->getTeamsMembersLimit());
+		this->teams[name].init_eggs(parser->getTeamsMembersLimit(), parser->getHeight(), parser->getWidth());
+	}
 }
 
 void Game::init_action_time_map() {
@@ -123,7 +125,7 @@ void Game::run_tick() {
 				continue; 
 			}
 			if (player->get_state() == Player_States::Handshake) {
-				std::cout << "Still in handshake :P\n";
+				try2handshake(player);
 			}
 		}
 		last_tick = curr_millis; // update last_tick timestamp
@@ -136,4 +138,22 @@ void	Game::set_tick_millis(int64_t t) {
 		return ;
 	}
 	this->tick_millis = 1000 / t;
+}
+
+void	Game::try2handshake(Player *p) {
+	if (!p->has_queued_actions())
+		return ;
+	if (teams.find(p->get_current_command().cmd_name) == teams.end()) {
+		std::cerr << "Client " << std::to_string(p->get_sock_fd()) << ": Invalid teamname in handshake\n";
+		Messages resp = Messages(Command::Unknown, (void *) p, (void *) &map, false);
+		
+		p->set_send_buffer(resp.getMessageStr());
+		p->pop_command();
+	}
+	if (teams[p->get_current_command().cmd_name].get_conns_nbr()
+			< teams[p->get_current_command().cmd_name].get_max_conns()) {
+		teams[p->get_current_command().cmd_name].player2egg(p);
+		p->pop_command();
+	}
+	p->pop_command();
 }

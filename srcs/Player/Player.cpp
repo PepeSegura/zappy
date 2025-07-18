@@ -70,6 +70,12 @@ void	Player::add_buffer_or_parse_msg(std::string buffer)
 	this->add_buffer_or_parse_msg(buffer);
 }
 
+void	Player::pop_command() {
+	if (this->command_queue.empty())
+		return ;
+	this->command_queue.pop_front();
+}
+
 void	Player::Eat()
 {
 	if (this->inv.get_nourriture() == 0)
@@ -308,12 +314,13 @@ void	Player::add_command(std::string trimmed_cmd) {
 			tmp.args = trimmed_cmd.substr(pos + 1);
 			trimmed_cmd = trimmed_cmd.substr(0, pos);
 		}
-		tmp.cmd = hashString(trimmed_cmd);
+		tmp.cmd_name = trimmed_cmd;
+		tmp.cmd = hashString(tmp.cmd_name);
 		command_queue.emplace_back(tmp);
 	}
 	std::cout << "After adding: \n";
 	for (auto action : command_queue){
-		std::cout << action.cmd << ";" << action.args << std::endl;
+		std::cout << action.cmd << "(" << action.cmd_name << ")" << ";" << action.args << std::endl;
 	}
 }
 

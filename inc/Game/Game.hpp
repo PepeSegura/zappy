@@ -40,4 +40,5 @@ class Game
 		void					run_tick();
 
 		void					set_tick_millis(int64_t);
+		void					try2handshake(Player *);
 };

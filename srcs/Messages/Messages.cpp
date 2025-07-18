@@ -47,13 +47,13 @@ Messages::Messages() {
 	}
 }
 
-Messages::Messages(const std::string &cmd, void *player, void *map, bool success) {
+Messages::Messages(Command cmd, void *player, void *map, bool success) {
 	(void) player;
 	(void) map;
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
-	switch (hashString(cmd)) {
+	switch (cmd) {
 		case Avance:
 		case Droite:
 		case Gauche:
@@ -98,7 +98,7 @@ Messages::Messages(const std::string &cmd, void *player, void *map, bool success
 
 Messages::~Messages() {}
 
-std::string	Messages::getMessageStr() const {
+std::string	&Messages::getMessageStr() {
 	return messageStr;
 }
 
