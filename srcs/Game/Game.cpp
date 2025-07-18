@@ -95,19 +95,6 @@ void Game::_Gauche(Player *p)
 	p->set_send_buffer(rsp.getMessageStr());
 }
 
-/* 
-avance
-avance
-droite
-avance
-gauche
-gauche
-afdaf
-avance
-avance
-avance
-gauche
- */
 void Game::_Voir(Player *p)
 {
 	std::cout << "EXECUTING VOIR\n";
