@@ -60,7 +60,7 @@ void	TCPServer::acceptClient() {
 	if (pollFds.size() < MAX_CLIENTS) {
 		addToPoll(clientFd, POLLIN | POLLOUT);	
 		std::cout << "Client with fd " << clientFd << " accepted.\n";
-		game.add_player_to_fdmap(clientFd, new Player());
+		game.add_player_to_fdmap(clientFd, new Player(&this->game));
 		players = game.get_players_map();
 		players[clientFd]->set_sock_fd(clientFd);
 		std::string tmp = "BIENVENUE\n";

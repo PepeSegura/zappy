@@ -7,6 +7,8 @@
 # include "Messages.hpp"
 # include "Inventory.hpp"
 
+
+class Game;
 class Inventory;
 
 struct Command_Data {
@@ -24,6 +26,7 @@ enum Player_States {
 class Player
 {
 	private:
+		Game*		game_ptr;
 		std::string team_name;
 		Inventory	inv;
 		int			level;
@@ -46,6 +49,7 @@ class Player
 	public:
 		Player();
 		Player(std::string);
+		Player(Game*);
 		~Player();
 
 		Player&  operator=(const Player &other);
@@ -79,6 +83,7 @@ class Player
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
+		void			pop_command();
 
 		void		Eat();
 		void		Avance();
