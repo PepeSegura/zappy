@@ -4,6 +4,9 @@ Player::Player()
 {
 	this->inv = Inventory();
 	this->handshake_finished = false;
+
+	this->state = Player_States::Handshake;
+	last_action_start_time = 0;
 	this->dead = false;
 }
 
@@ -15,6 +18,8 @@ Player::Player(std::string team)
 {
 	this->team_name = team;
 	this->handshake_finished = false;
+	this->state = Player_States::Handshake;
+	last_action_start_time = 0;
 	this->dead = false;
 }
 
@@ -31,10 +36,10 @@ Player&  Player::operator=(const Player &other)
 
 	this->sock_fd = other.sock_fd;
 	this->state = other.state;
-
 	this->send_buffer = other.send_buffer;
 	this->msg_to_parse = other.msg_to_parse;
 	this->recv_buffer = other.recv_buffer;
+	this->last_action_start_time = other.last_action_start_time;
 	this->command_queue = other.command_queue;
 	return (*this);
 }
@@ -244,6 +249,10 @@ bool	Player::get_handshake() const
 	return (this->handshake_finished);
 }
 
+int64_t Player::get_last_start_time() const {
+	return this->last_action_start_time;
+}
+
 /*_____SETTERS_____*/
 
 void	Player::set_level(int new_level)
@@ -306,4 +315,16 @@ void	Player::add_command(std::string trimmed_cmd) {
 	for (auto action : command_queue){
 		std::cout << action.cmd << ";" << action.args << std::endl;
 	}
+}
+
+void	Player::set_last_start_time(int64_t now) {
+	this->last_action_start_time = now;
+}
+
+bool	Player::has_queued_actions() const {
+	return !this->command_queue.empty();
+}
+
+Command_Data	Player::get_current_command() const {
+	return command_queue.front();
 }

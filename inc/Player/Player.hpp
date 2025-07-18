@@ -2,6 +2,7 @@
 
 # include <iostream>
 # include <deque>
+# include <map>
 
 # include "Messages.hpp"
 # include "Inventory.hpp"
@@ -12,6 +13,13 @@ struct Command_Data {
 	Command		cmd;
 	std::string	args;
 };
+
+enum Player_States {
+	Handshake,
+	Free,
+	ExecutingAction
+};
+
 
 class Player
 {
@@ -33,6 +41,8 @@ class Player
 
 		std::deque<Command_Data> command_queue;
 
+		int64_t		last_action_start_time;
+
 	public:
 		Player();
 		Player(std::string);
@@ -53,6 +63,7 @@ class Player
 		std::string	get_recv_buffer() const;
 		std::string	get_send_buffer() const;
 		bool		get_handshake() const;
+		int64_t		get_last_start_time() const;
 
 		void		set_level(int);
 		void		set_x(int);
@@ -64,7 +75,10 @@ class Player
 		void		set_team_name(std::string &);
 		void		set_handshake(bool &);
 		void		add_command(std::string);
+		void		set_last_start_time(int64_t);
 
+		bool			has_queued_actions() const;
+		Command_Data	get_current_command() const;
 
 		void		Eat();
 		void		Avance();
