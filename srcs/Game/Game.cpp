@@ -78,17 +78,13 @@ void Game::_Avance(Player *p)
 void Game::_Droite(Player *p)
 {
 	std::cout << "EXECUTING DROITE\n";
-	this->map[p->get_x()][p->get_y()].remove_player_from_team(p);
 	p->Droite();
-	this->map[p->get_x()][p->get_y()].add_player_to_team(p);
 }
 
 void Game::_Gauche(Player *p)
 {
 	std::cout << "EXECUTING GAUCHE\n";
-	this->map[p->get_x()][p->get_y()].remove_player_from_team(p);
 	p->Gauche();
-	this->map[p->get_x()][p->get_y()].add_player_to_team(p);
 }
 
 void Game::_Voir(Player *p)

@@ -1,6 +1,14 @@
 #include "Player.hpp"
 #include "Game.hpp"
 
+int random_03(void)
+{
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
+	return (dist4(rng) % 4);
+}
+
 Player::Player() // NOT USING ANYMORE
 {
 	std::cout << "PLAYER()\n";
@@ -14,7 +22,7 @@ Player::Player() // NOT USING ANYMORE
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
-	this->dir = 'N';
+	this->dir = "NSWE"[random_03()];
 }
 
 Player::~Player()
@@ -35,7 +43,7 @@ Player::Player(Game *game)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
-	this->dir = 'N';
+	this->dir = "NSWE"[random_03()];
 }
 
 Player::Player(std::string team)
@@ -52,7 +60,7 @@ Player::Player(std::string team)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
-	this->dir = 'N';
+	this->dir = "NSWE"[random_03()];
 }
 
 Player&  Player::operator=(const Player &other)
@@ -123,6 +131,8 @@ void	Player::Avance()
 		std::cerr << "Game PTR not set\n";
 		return ;
 	}
+	std::cout << "Avance towards: " << this->dir << std::endl;
+
 	int map_width = this->game_ptr->get_map_width();
 	int map_height = this->game_ptr->get_map_height();
 
