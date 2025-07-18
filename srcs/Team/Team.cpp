@@ -86,6 +86,6 @@ void	Team::dec_conns() {
 Player	*Team::player2egg(Player *p) {
 	Player *egg = players[conns_nbr];
 	egg->handshake(p);
-	inc_conns();
+	++conns_nbr;
 	return egg;
 }
