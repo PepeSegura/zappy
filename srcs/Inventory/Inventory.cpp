@@ -67,6 +67,29 @@ int Inventory::get_thystame() const
 
 /*__________SETTERS__________*/
 
+int	Inventory::get_item(std::string item)
+{
+	if (item == "nourriture")	return (this->get_nourriture());
+	if (item == "linemate")		return (this->get_linemate());
+	if (item == "deraumere")	return (this->get_deraumere());
+	if (item == "sibur")		return (this->get_sibur());
+	if (item == "mendiane")		return (this->get_mendiane());
+	if (item == "phiras")		return (this->get_phiras());
+	if (item == "thystame")		return (this->get_thystame());
+	return (-1);
+}
+
+void Inventory::add_item(std::string item, int new_ammout)
+{
+	if (item == "nourriture")	this->add_nourriture(new_ammout);
+	if (item == "linemate")		this->add_linemate(new_ammout);
+	if (item == "deraumere")	this->add_deraumere(new_ammout);
+	if (item == "sibur")		this->add_sibur(new_ammout);
+	if (item == "mendiane")		this->add_mendiane(new_ammout);
+	if (item == "phiras")		this->add_phiras(new_ammout);
+	if (item == "thystame")		this->add_thystame(new_ammout);
+}
+
 void Inventory::add_nourriture(int new_ammount)
 {
 	if ((this->nourriture + new_ammount) >= 0) {

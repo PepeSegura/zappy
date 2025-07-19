@@ -24,6 +24,7 @@ class Inventory
 		Inventory&  operator=(const Inventory &other) = default;
 		Inventory&  operator+(const Inventory &other);
 
+		int get_item(std::string);
 		int get_nourriture() const;
 		int get_linemate() const;
 		int get_deraumere() const;
@@ -32,6 +33,7 @@ class Inventory
 		int get_phiras() const;
 		int get_thystame() const;
 
+		void add_item(std::string, int);
 		void add_nourriture(int);
 		void add_linemate(int);
 		void add_deraumere(int);

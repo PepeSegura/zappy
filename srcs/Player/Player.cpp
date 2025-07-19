@@ -241,29 +241,31 @@ std::string	Player::Inventaire()
 		inv_str.erase(inv_str.end() - 1);
 		inv_str.erase(inv_str.end() - 1);
 	}
-	return (inv_str += "}");
+	return (inv_str += "}\n");
 }
 
 void	Player::Prend(std::string item)
 {
-	if (item == "nourriture")	this->inv.add_nourriture(1);
-	if (item == "linemate")		this->inv.add_linemate(1);
-	if (item == "deraumere")	this->inv.add_deraumere(1);
-	if (item == "sibur")		this->inv.add_sibur(1);
-	if (item == "mendiane")		this->inv.add_mendiane(1);
-	if (item == "phiras")		this->inv.add_phiras(1);
-	if (item == "thystame")		this->inv.add_thystame(1);
+	this->inv.add_item(item, 1);
+	// if (item == "nourriture")	this->inv.add_nourriture(1);
+	// if (item == "linemate")		this->inv.add_linemate(1);
+	// if (item == "deraumere")	this->inv.add_deraumere(1);
+	// if (item == "sibur")		this->inv.add_sibur(1);
+	// if (item == "mendiane")		this->inv.add_mendiane(1);
+	// if (item == "phiras")		this->inv.add_phiras(1);
+	// if (item == "thystame")		this->inv.add_thystame(1);
 }
 
 void	Player::Pose(std::string item)
 {
-	if (item == "nourriture")	this->inv.add_nourriture(-1);
-	if (item == "linemate")		this->inv.add_linemate(-1);
-	if (item == "deraumere")	this->inv.add_deraumere(-1);
-	if (item == "sibur")		this->inv.add_sibur(-1);
-	if (item == "mendiane")		this->inv.add_mendiane(-1);
-	if (item == "phiras")		this->inv.add_phiras(-1);
-	if (item == "thystame")		this->inv.add_thystame(-1);
+	this->inv.add_item(item, -1);
+	// if (item == "nourriture")	this->inv.add_nourriture(-1);
+	// if (item == "linemate")		this->inv.add_linemate(-1);
+	// if (item == "deraumere")	this->inv.add_deraumere(-1);
+	// if (item == "sibur")		this->inv.add_sibur(-1);
+	// if (item == "mendiane")		this->inv.add_mendiane(-1);
+	// if (item == "phiras")		this->inv.add_phiras(-1);
+	// if (item == "thystame")		this->inv.add_thystame(-1);
 }
 
 void	Player::IncantationBgn()
@@ -373,7 +375,7 @@ void	Player::set_recv_buffer(std::string &buffer)
 	this->recv_buffer = buffer;
 }
 
-void	Player::set_send_buffer(std::string &buffer)
+void	Player::set_send_buffer(std::string buffer)
 {
 	this->send_buffer = buffer;
 }
