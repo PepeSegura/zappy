@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
 	TCPServer server(parser.getPort(), game);
 
-	std::cout << "setting player\n";
+/* 	std::cout << "setting player\n";
 	Player *a = new Player(&game);
 	std::cout << "after setting player\n";
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	std::cout << a->Inventaire() << std::endl;
 	game.add_player_to_team("hola", a);
 
-	game.remove_player(a);
+	game.remove_player(a); */
 
 	while (!game.get_end()) {
 		server.inputOutputComms();
