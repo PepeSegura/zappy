@@ -217,12 +217,15 @@ void Game::remove_player(Player *p)
 
 	//remove player from tile
 	
-	for (auto& [name, team] : teams)
-		team.remove_player(p);
+	/* for (auto& [name, team] : teams)
+		team.remove_player(p); */
 	
 	if (!p->get_handshake())
-		delete p;
-	//std::cout << "Player deleted\n";
+		delete p; //delete players that havent completed handshake (incomplate players)
+	else {
+		teams[p->get_team_name()].dec_conns();
+		p->set_disconnect(true); //set full players as disconnected to allow reconnect
+	}
 }
 
 bool Game::get_end() const {
