@@ -54,11 +54,12 @@ class Game
 		int		get_map_height() const { return (this->map_height); };
 
 		/* Handlers */
-		void	_Avance(Player *);
+		void	_Avance(Player *p);
 		void	_Droite(Player *p);
 		void	_Gauche(Player *p);
 		void	_Voir(Player *p);
 		void	_Inventaire(Player *p);
+		void	aux_prend_pose(Player *, std::string, int, int);
 		void	_Prend(Player *p);
 		void	_Pose(Player *p);
 		void	_Expulse(Player *p);
