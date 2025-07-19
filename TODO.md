@@ -11,3 +11,6 @@
 
 3. Player
 	- Player spawns with 10 life units. 1260/t seconds
+
+4. Communication with Graphic
+	- Everything is missing
