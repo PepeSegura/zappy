@@ -38,9 +38,14 @@ class Tile {
 		~Tile() = default;
 		Tile& operator=(const Tile& other) = default;
 
+		std::vector<Player*>& get_players_list();
 		Inventory&	get_inv(void);
 		void		gen_resources(void);
+
 		void		remove_player_from_team(Player*);
 		void		add_player_to_team(Player*);
+
+		std::string	aux_voir_tile(std::string item);
+		std::string	voir_tile(Player*);
 };
 

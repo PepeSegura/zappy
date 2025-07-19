@@ -24,8 +24,10 @@ class Team
 		void		add_player(Player* player);
 		void		remove_player(Player* player);
 		void		init_eggs(int , int);
-		void		inc_conns();
-		void		dec_conns();
+		void		inc_conns_nbr();
+		void		dec_conns_nbr();
+		void		inc_max_conns();
+		void		dec_max_conns();
 		Player		*player2egg(Player *);
 };
 

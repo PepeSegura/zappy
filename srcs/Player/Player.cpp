@@ -11,8 +11,7 @@ int random_03(void)
 
 Player::Player() // NOT USING ANYMORE
 {
-	std::cout << "PLAYER()\n";
-
+	// std::cout << "PLAYER()\n";
 	this->game_ptr = nullptr;
 	this->inv = Inventory();
 	this->handshake_finished = false;
@@ -22,6 +21,7 @@ Player::Player() // NOT USING ANYMORE
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = true;
 }
@@ -32,7 +32,7 @@ Player::~Player()
 
 Player::Player(Game *game)
 {
-	std::cout << "PLAYER(Game *game)\n";
+	// std::cout << "PLAYER(Game *game)\n";
 	this->game_ptr = game;
 	this->inv = Inventory();
 
@@ -43,13 +43,14 @@ Player::Player(Game *game)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = false;
 }
 
 Player::Player(std::string team)
 {
-	std::cout << "PLAYER(std::string team)\n";
+	// std::cout << "PLAYER(std::string team)\n";
 	this->game_ptr = nullptr;
 	this->team_name = team;
 	this->inv = Inventory();
@@ -61,6 +62,7 @@ Player::Player(std::string team)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = true;
 }
@@ -91,7 +93,6 @@ void Player::parse_msg()
 {
 	if (!this->msg_to_parse.empty() && this->msg_to_parse.back() == '\n')
 		this->msg_to_parse.pop_back();
-	std::cout << "Adding: [" << this->msg_to_parse << "]\n";
 
 	this->add_command(this->msg_to_parse);
 	this->msg_to_parse.clear();
@@ -247,25 +248,11 @@ std::string	Player::Inventaire()
 void	Player::Prend(std::string item)
 {
 	this->inv.add_item(item, 1);
-	// if (item == "nourriture")	this->inv.add_nourriture(1);
-	// if (item == "linemate")		this->inv.add_linemate(1);
-	// if (item == "deraumere")	this->inv.add_deraumere(1);
-	// if (item == "sibur")		this->inv.add_sibur(1);
-	// if (item == "mendiane")		this->inv.add_mendiane(1);
-	// if (item == "phiras")		this->inv.add_phiras(1);
-	// if (item == "thystame")		this->inv.add_thystame(1);
 }
 
 void	Player::Pose(std::string item)
 {
 	this->inv.add_item(item, -1);
-	// if (item == "nourriture")	this->inv.add_nourriture(-1);
-	// if (item == "linemate")		this->inv.add_linemate(-1);
-	// if (item == "deraumere")	this->inv.add_deraumere(-1);
-	// if (item == "sibur")		this->inv.add_sibur(-1);
-	// if (item == "mendiane")		this->inv.add_mendiane(-1);
-	// if (item == "phiras")		this->inv.add_phiras(-1);
-	// if (item == "thystame")		this->inv.add_thystame(-1);
 }
 
 void	Player::IncantationBgn()
@@ -303,6 +290,11 @@ Inventory&	Player::get_inv()
 int	Player::get_level() const
 {
 	return (this->level);
+}
+
+uint8_t	Player::get_dir() const
+{
+	return (this->dir);
 }
 
 int	Player::get_x() const

@@ -115,7 +115,7 @@ Command	hashString(const std::string &str) {
 	if (str == "incantation") return Command::IncantationBgn;
 	if (str == "incantation_end") return Command::IncantationEnd;
 	if (str == "fork") return Command::Fork;
-	if (str == "connectNbr") return Command::ConnectNbr;
+	if (str == "connect_nbr") return Command::ConnectNbr;
 	if (str == "mort") return Command::Mort;
 	return Command::Unknown;
 }

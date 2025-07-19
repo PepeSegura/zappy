@@ -63,6 +63,7 @@ class Player
 		std::string	get_team_name() const;
 		Inventory&	get_inv();
 		int			get_level() const;
+		uint8_t		get_dir() const;
 		int			get_x() const;
 		int			get_y() const;
 		int			get_sock_fd() const;

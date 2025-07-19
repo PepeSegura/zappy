@@ -27,7 +27,7 @@ void	Team::add_player(Player* player)
 	if (it != this->players.end())
 		return ;
 	this->players.push_back(player);
-	std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
+	// std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
 }
 
 void	Team::remove_player(Player* player)
@@ -39,7 +39,7 @@ void	Team::remove_player(Player* player)
 	if (it == this->players.end())
 		return ;
 	this->players.erase(it);
-	std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
+	// std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
 }
 
 std::string	Team::get_name() const
@@ -64,23 +64,31 @@ void	Team::init_eggs(int width, int height) {
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
 	for (uint32_t i = 0; i < max_conns; ++i) {
-		Player *p = new Player(name);
 		int x = dist2048(rng) % width;
 		int y = dist2048(rng) % height;
+		Player *p = new Player(name);
 		p->set_x(x);
 		p->set_y(y);
 		add_player(p);
-		std::cout << "Added egg " << std::to_string(i) << " to team " << name << std::endl;
+		// std::cout << "Added egg " << std::to_string(i) << " to team " << name << std::endl;
 	}
 	conns_nbr = 0;
 }
 
-void	Team::inc_conns() {
+void	Team::inc_conns_nbr() {
 	++conns_nbr;
 }
 
-void	Team::dec_conns() {
+void	Team::dec_conns_nbr() {
 	--conns_nbr;
+}
+
+void	Team::inc_max_conns() {
+	++max_conns;
+}
+
+void	Team::dec_max_conns() {
+	--max_conns;
 }
 
 Player	*Team::player2egg(Player *p) {

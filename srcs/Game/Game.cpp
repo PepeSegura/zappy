@@ -70,137 +70,6 @@ void Game::init_action_time_map() {
 	action_time_table[Unknown] = 0;
 }
 
-void Game::_Avance(Player *p)
-{
-	std::cout << "EXECUTING AVANCE\n";
-	this->map[p->get_x()][p->get_y()].remove_player_from_team(p);
-	p->Avance();
-	this->map[p->get_x()][p->get_y()].add_player_to_team(p);
-	Messages rsp = Messages(Command::Avance, (void *) p, (void *) &map, true);
-	p->set_send_buffer(rsp.getMessageStr());
-}
-
-void Game::_Droite(Player *p)
-{
-	std::cout << "EXECUTING DROITE\n";
-	p->Droite();
-	Messages rsp = Messages(Command::Droite, (void *) p, (void *) &map, true);
-	p->set_send_buffer(rsp.getMessageStr());
-}
-
-void Game::_Gauche(Player *p)
-{
-	std::cout << "EXECUTING GAUCHE\n";
-	p->Gauche();
-	Messages rsp = Messages(Command::Gauche, (void *) p, (void *) &map, true);
-	p->set_send_buffer(rsp.getMessageStr());
-}
-
-void Game::_Voir(Player *p)
-{
-	std::cout << "EXECUTING VOIR\n";
-	(void)p;
-}
-
-void Game::_Inventaire(Player *p)
-{
-	std::cout << "EXECUTING INVENTAIRE\n";
-	std::cout << "Inventory: " << p->Inventaire() << std::endl;
-	p->set_send_buffer(p->Inventaire());
-}
-
-void Game::aux_prend_pose(Player *p, std::string item, int new_tile_ammount, int new_player_ammount)
-{
-	std::vector<std::string> items = {
-		"nourriture", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"
-	};
-
-	auto it = std::find(items.begin(), items.end(), item);
-	if (it == items.end())
-	{
-		p->set_send_buffer("ko\n");
-		return ;
-	}
-
-	if (new_tile_ammount == -1 && this->map[p->get_y()][p->get_x()].get_inv().get_item(item) <= 0)
-	{
-		p->set_send_buffer("ko\n");
-		return ;
-	}
-	if (new_player_ammount == -1 && p->get_inv().get_item(item) <= 0)
-	{
-		p->set_send_buffer("ko\n");
-		return ;	
-	}
-	this->map[p->get_y()][p->get_x()].get_inv().add_item(item, new_tile_ammount);
-	p->get_inv().add_item(item, new_player_ammount);
-	p->set_send_buffer("ok\n");
-}
-
-void Game::_Prend(Player *p)
-{
-	std::cout << "EXECUTING PREND\n";
-	std::string item = p->get_current_command().args;
-	this->aux_prend_pose(p, item, -1, +1);
-}
-
-void Game::_Pose(Player *p)
-{
-	std::cout << "EXECUTING POSE\n";
-	std::string item = p->get_current_command().args;
-	this->aux_prend_pose(p, item, +1, -1);
-}
-
-void Game::_Expulse(Player *p)
-{
-	std::cout << "EXECUTING EXPULSE\n";
-	(void)p;
-}
-
-void Game::_Broadcast(Player *p)
-{
-	std::cout << "EXECUTING BROADCAST\n";
-	(void)p;
-}
-
-void Game::_IncantationBgn(Player *p)
-{
-	std::cout << "EXECUTING INCANTATION\n";
-	(void)p;
-}
-
-void Game::_IncantationEnd(Player *p)
-{
-	std::cout << "EXECUTING INCANTATION_END\n";
-	(void)p;
-}
-
-void Game::_Fork(Player *p)
-{
-	std::cout << "EXECUTING FORK\n";
-	(void)p;
-}
-
-void Game::_ConnectNbr(Player *p)
-{
-	std::cout << "EXECUTING CONNECT_NBR\n";
-	(void)p;
-}
-
-void Game::_Mort(Player *p)
-{
-	std::cout << "EXECUTING MORT\n";
-	(void)p;
-}
-
-void Game::_Unknown(Player *p)
-{
-	std::cout << "IGNORING UNKNOWN COMMAND\n";
-	Messages rsp = Messages(Command::Unknown, (void *) p, (void *) &map, true);
-	p->set_send_buffer(rsp.getMessageStr());
-}
-
-
 void Game::init_handlers_map()
 {
 	handlers[Avance] = &Game::_Avance;
@@ -219,7 +88,6 @@ void Game::init_handlers_map()
 	handlers[Mort] = &Game::_Mort;
 	handlers[Unknown] = &Game::_Unknown;
 }
-
 
 Game::Game(Parser *parser)
 {
@@ -255,7 +123,7 @@ void Game::remove_player(Player *p)
 	if (!p->get_handshake())
 		delete p; //delete players that havent completed handshake (incomplate players)
 	else {
-		teams[p->get_team_name()].dec_conns();
+		teams[p->get_team_name()].dec_conns_nbr();
 		p->set_disconnect(true); //set full players as disconnected to allow reconnect
 	}
 }
