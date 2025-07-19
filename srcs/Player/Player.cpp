@@ -23,6 +23,7 @@ Player::Player() // NOT USING ANYMORE
 	this->x = 0;
 	this->y = 0;
 	this->dir = "NSWE"[random_03()];
+	this->is_disconnected = true;
 }
 
 Player::~Player()
@@ -43,6 +44,7 @@ Player::Player(Game *game)
 	this->x = 0;
 	this->y = 0;
 	this->dir = "NSWE"[random_03()];
+	this->is_disconnected = false;
 }
 
 Player::Player(std::string team)
@@ -60,6 +62,7 @@ Player::Player(std::string team)
 	this->x = 0;
 	this->y = 0;
 	this->dir = "NSWE"[random_03()];
+	this->is_disconnected = true;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -331,6 +334,10 @@ int64_t Player::get_last_start_time() const {
 	return this->last_action_start_time;
 }
 
+bool Player::get_disconnected() const {
+	return this->is_disconnected;
+}
+
 /*_____SETTERS_____*/
 
 void	Player::set_level(int new_level)
@@ -400,6 +407,10 @@ void	Player::set_last_start_time(int64_t now) {
 	this->last_action_start_time = now;
 }
 
+void	Player::set_disconnect(bool is_disconnected) {
+	this->is_disconnected = is_disconnected;
+}
+
 bool	Player::has_queued_actions() const {
 	return !this->command_queue.empty();
 }
@@ -413,4 +424,5 @@ void	Player::handshake(Player *connected_player) {
 	this->state = Player_States::Free;
 	this->handshake_finished = true;
 	this->game_ptr = connected_player->game_ptr;
+	this->is_disconnected = false;
 }

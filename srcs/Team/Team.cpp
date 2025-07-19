@@ -84,7 +84,14 @@ void	Team::dec_conns() {
 }
 
 Player	*Team::player2egg(Player *p) {
-	Player *egg = players[conns_nbr];
+	Player *egg;
+	if (conns_nbr >= max_conns)
+		return nullptr;
+	for (uint32_t i = 0; i < max_conns; ++i) {
+		egg = players[i];
+		if (egg->get_disconnected())
+			break ;
+	}
 	egg->handshake(p);
 	++conns_nbr;
 	return egg;

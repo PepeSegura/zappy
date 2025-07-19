@@ -37,6 +37,7 @@ class Player
 		int			y;
 		bool		dead;
 		bool		handshake_finished;
+		bool		is_disconnected;
 
 		int			sock_fd;
 		int			state;
@@ -70,6 +71,7 @@ class Player
 		std::string	get_send_buffer() const;
 		bool		get_handshake() const;
 		int64_t		get_last_start_time() const;
+		bool		get_disconnected() const;
 
 		void		set_level(int);
 		void		set_x(int);
@@ -82,6 +84,7 @@ class Player
 		void		set_handshake(bool &);
 		void		add_command(std::string);
 		void		set_last_start_time(int64_t);
+		void		set_disconnect(bool);
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
