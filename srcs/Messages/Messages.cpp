@@ -82,7 +82,7 @@ Messages::Messages(Command cmd, void *player, void *map, bool success) {
 			messageStr = "elevation en cours\n";
 			break;
 		case IncantationEnd:
-			messageStr = "niveau actuel : " + ((dist2048(rng) % 8) + 1) ; //todo take level from player
+			messageStr = "niveau actuel : " + std::to_string((dist2048(rng) % 8) + 1) ; //todo take level from player
 			break;
 		case ConnectNbr:
 			messageStr = dist2048(rng);
