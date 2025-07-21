@@ -181,6 +181,8 @@ void Game::_Expulse(Player *p)
 		if (player != p)
 		{
 			new_tile.add_player_to_team(player);
+			player->set_x(new_x);
+			player->set_y(new_y);
 			old_tile.remove_player_from_team(player);
 		}
 	}
