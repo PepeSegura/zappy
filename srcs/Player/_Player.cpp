@@ -1,13 +1,14 @@
 #include "Player.hpp"
 #include "Game.hpp"
+#include "Utils.hpp"
 
-int random_03(void)
-{
-	std::random_device dev;
-	std::mt19937 rng(dev());
-	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
-	return (dist4(rng) % 4);
-}
+// int random_03(void)
+// {
+// 	std::random_device dev;
+// 	std::mt19937 rng(dev());
+// 	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
+// 	return (dist4(rng) % 4);
+// }
 
 Player::Player() // NOT USING ANYMORE
 {
@@ -22,7 +23,7 @@ Player::Player() // NOT USING ANYMORE
 	this->x = 0;
 	this->y = 0;
 	this->level = 1;
-	this->dir = "NSWE"[random_03()];
+	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
 }
 
@@ -44,7 +45,7 @@ Player::Player(Game *game)
 	this->x = 0;
 	this->y = 0;
 	this->level = 1;
-	this->dir = "NSWE"[random_03()];
+	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = false;
 }
 
@@ -63,7 +64,7 @@ Player::Player(std::string team)
 	this->x = 0;
 	this->y = 0;
 	this->level = 1;
-	this->dir = "NSWE"[random_03()];
+	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
 }
 

@@ -27,6 +27,24 @@ Inventory&  Inventory::operator+(const Inventory &other)
 	return (*this);
 }
 
+bool	Inventory::is_empty() const
+{
+	if (this->nourriture <= 0)
+		return (true);
+	if (this->linemate <= 0)
+		return (true);
+	if (this->deraumere <= 0)
+		return (true);
+	if (this->sibur <= 0)
+		return (true);
+	if (this->mendiane <= 0)
+		return (true);
+	if (this->phiras <= 0)
+		return (true);
+	if (this->thystame <= 0)
+		return (true);
+	return (false);
+}
 
 /*_________GETTERS__________*/
 
