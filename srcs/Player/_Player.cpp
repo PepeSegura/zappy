@@ -25,6 +25,8 @@ Player::Player() // NOT USING ANYMORE
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->inv.add_nourriture(10);
+	this->ticks_until_eat = 0;
 }
 
 Player::~Player()
@@ -47,6 +49,8 @@ Player::Player(Game *game)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = false;
+	this->inv.add_nourriture(10);
+	this->ticks_until_eat = 0;
 }
 
 Player::Player(std::string team)
@@ -66,6 +70,8 @@ Player::Player(std::string team)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->inv.add_nourriture(10);
+	this->ticks_until_eat = 0;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -186,6 +192,10 @@ bool Player::get_disconnected() const {
 	return this->is_disconnected;
 }
 
+bool Player::get_dead() const {
+	return this->dead;
+}
+
 /*_____SETTERS_____*/
 
 void	Player::set_level(int new_level)
@@ -273,4 +283,19 @@ void	Player::handshake(Player *connected_player) {
 	this->handshake_finished = true;
 	this->game_ptr = connected_player->game_ptr;
 	this->is_disconnected = false;
+}
+
+void	Player::check_food_and_eat() {
+	if (ticks_until_eat == 0) {
+		if (this->inv.get_nourriture() > 0) {
+			this->inv.add_nourriture(-1);
+			ticks_until_eat = FOOD_TICKS;
+			std::cout << "Player from team " << team_name << " is eating\n";
+			return ;
+		}
+		std::cout << "Player from team " << team_name << " died of hunger\n";
+		dead = true;
+		return ;
+	}
+	--ticks_until_eat;
 }

@@ -151,9 +151,13 @@ void Game::remove_player(Player *p)
 	/* for (auto& [name, team] : teams)
 		team.remove_player(p); */
 	
-	if (!p->get_handshake())
-		delete p; //delete players that havent completed handshake (incomplate players)
-	else {
+	if (!p->get_handshake() || p->get_dead()) { //delete players that havent completed handshake (incomplate players) and dead players
+		for (auto& [name, team] : teams)
+			team.remove_player(p);
+		//remove from tile
+		map[p->get_y()][p->get_x()].remove_player_from_team(p);
+		delete p;
+	} else {
 		teams[p->get_team_name()].dec_conns_nbr();
 		p->set_disconnect(true); //set full players as disconnected to allow reconnect
 	}
@@ -168,25 +172,36 @@ void Game::run_tick() {
 
 	auto curr_millis = Utils::get_current_ms();
 	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
-		// std::cout << std::to_string(curr_millis) << std::endl;
-		if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
-
-		for (auto& [fd, player] : playersfd_map) { // for each team
-			if (player->get_state() == Player_States::Free) {
-				if (player->has_queued_actions()) {
-					player->set_last_start_time(curr_millis);
-					player->set_state(Player_States::ExecutingAction);
+    	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
+		//std::cout << std::to_string(curr_millis) << std::endl;
+		for (auto &[key, team] : teams) {
+			auto players = team.get_team_players();
+			for (auto player : players) {
+				if (player->get_handshake()) {
+					player->check_food_and_eat();
+				}
+				if (player->get_dead()) {
+					player->set_send_buffer("mort\n");
+					continue;
+				}
+				if (player->get_state() == Player_States::Free) {
+					if (player->has_queued_actions()) {
+						player->set_last_start_time(curr_millis);
+						player->set_state(Player_States::ExecutingAction);
+					}
+				}
+				if (player->get_state() == Player_States::ExecutingAction) {
+					//std::cout << "Ticks since start action: " << std::to_string((curr_millis - player->get_last_start_time()) / tick_millis) << std::endl;
+					if (action_time_table[player->get_current_command().cmd] <= ((curr_millis - player->get_last_start_time()) / tick_millis)) { //action ended, call handlers
+						(this->*handlers[player->get_current_command().cmd])(player);
+						player->pop_command();
+						player->set_state(Player_States::Free);
+					}
+					continue; 
 				}
 			}
-			if (player->get_state() == Player_States::ExecutingAction) {
-				std::cout << "Ticks since start action: " << std::to_string((curr_millis - player->get_last_start_time()) / tick_millis) << std::endl;
-				if (action_time_table[player->get_current_command().cmd] <= ((curr_millis - player->get_last_start_time()) / tick_millis)) { //action ended, call handlers
-					(this->*handlers[player->get_current_command().cmd])(player);
-					player->pop_command();
-					player->set_state(Player_States::Free);
-				}
-				continue; 
-			}
+		}
+		for (auto& [fd, player] : playersfd_map) { // for each connected player
 			if (player->get_state() == Player_States::Handshake) {
 				try2handshake(player);
 			}
