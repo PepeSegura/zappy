@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include <algorithm>
+#include "Utils.hpp"
 
 Game::Game()
 {
@@ -18,8 +18,45 @@ std::map<int, Player *> &Game::get_players_map() {
 	return this->playersfd_map;
 }
 
-void	Game::add_player_to_fdmap(int fd, Player *player) {
+void Game::add_player_to_fdmap(int fd, Player *player) {
 	playersfd_map.insert_or_assign(fd, player);
+}
+
+void Game::add_missing_resource(int (Inventory::*getter)() const, void (Inventory::*adder)(int))
+{
+	if ((this->world_resources.*getter)() > 0)
+		return ;
+
+	int random_height = Utils::random_between(0, this->map_height - 1);
+	int random_width = Utils::random_between(0, this->map_width - 1);
+
+	Inventory& random_tile = this->map[random_height][random_width].get_inv();
+
+	(random_tile.*adder)(1);
+	(world_resources.*adder)(1);
+	std::cout << "Added resource at (" << random_height << ", " << random_width << std::endl;
+}
+
+void Game::gen_map_resources()
+{
+	this->world_resources = Inventory();
+
+	for (int i = 0; i < this->map_height; i++) {
+		for (int j = 0; j < this->map_width; j++) {
+			this->map[i][j].gen_resources();
+			this->world_resources = this->world_resources + this->map[i][j].get_inv();
+		}
+	}
+
+	add_missing_resource(&Inventory::get_nourriture, &Inventory::add_nourriture);
+    add_missing_resource(&Inventory::get_linemate, &Inventory::add_linemate);
+    add_missing_resource(&Inventory::get_deraumere, &Inventory::add_deraumere);
+    add_missing_resource(&Inventory::get_sibur, &Inventory::add_sibur);
+    add_missing_resource(&Inventory::get_mendiane, &Inventory::add_mendiane);
+    add_missing_resource(&Inventory::get_phiras, &Inventory::add_phiras);
+    add_missing_resource(&Inventory::get_thystame, &Inventory::add_thystame);
+
+	std::cout << "Total World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
@@ -30,16 +67,10 @@ void Game::init_map(Parser *parser)
 	this->map.reserve(height);
 	for (int i = 0; i < height; ++i)
 		this->map.emplace_back(width);
-
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width; j++) {
-			this->map[i][j].gen_resources();
-			this->world_resources = this->world_resources + this->map[i][j].get_inv();
-		}
-	}
-	std::cout << "Total World resources\n" << this->world_resources;
+		
 	this->map_width = width;
 	this->map_height = height;
+	gen_map_resources();
 }
 
 void Game::init_teams(Parser *parser)
@@ -48,7 +79,7 @@ void Game::init_teams(Parser *parser)
 
 	for (const auto& name : teamNames) {
 		this->teams[name] = Team(name, parser->getTeamsMembersLimit(), this);
-		this->teams[name].init_eggs(parser->getHeight(), parser->getWidth());
+		this->teams[name].init_eggs(parser->getWidth(), parser->getHeight());
 	}
 }
 
@@ -137,10 +168,11 @@ bool Game::get_end() const {
 }
 
 void Game::run_tick() {
-	auto now = std::chrono::system_clock::now();
-	auto duration = now.time_since_epoch();
-	auto curr_millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+	static uint8_t ticks_count = 0;
+
+	auto curr_millis = Utils::get_current_ms();
 	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
+    if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
 		//std::cout << std::to_string(curr_millis) << std::endl;
 		for (auto &[key, team] : teams) {
 			auto players = team.get_team_players();

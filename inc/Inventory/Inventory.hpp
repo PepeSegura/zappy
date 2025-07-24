@@ -24,6 +24,8 @@ class Inventory
 		Inventory&  operator=(const Inventory &other) = default;
 		Inventory&  operator+(const Inventory &other);
 
+		bool is_empty() const;
+
 		int get_item(std::string);
 		int get_nourriture() const;
 		int get_linemate() const;
