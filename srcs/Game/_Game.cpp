@@ -125,10 +125,8 @@ void Game::remove_player(Player *p)
 			team.remove_player(p);
 		//remove from tile
 		map[p->get_y()][p->get_x()].remove_player_from_team(p);
-		std::cout << "wtf \n";
 		delete p;
 	} else {
-		std::cout << "ok \n";
 		teams[p->get_team_name()].dec_conns_nbr();
 		p->set_disconnect(true); //set full players as disconnected to allow reconnect
 	}

@@ -289,10 +289,10 @@ void	Player::check_food_and_eat() {
 		if (this->inv.get_nourriture() > 0) {
 			this->inv.add_nourriture(-1);
 			ticks_until_eat = FOOD_TICKS;
-			std::cout << "mmmmmhh tasty jummy\n";
+			std::cout << "Player from team " << team_name << " is eating\n";
 			return ;
 		}
-		std::cout << "es como fak, me muero loko\n";
+		std::cout << "Player from team " << team_name << " died of hunger\n";
 		dead = true;
 		return ;
 	}
