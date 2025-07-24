@@ -64,12 +64,10 @@ uint32_t	Team::get_avail_conns() const {
 }
 
 void	Team::init_eggs(int width, int height) {
-	std::random_device dev;
-	std::mt19937 rng(dev());
-	std::uniform_int_distribution<std::mt19937::result_type> dist2048(0,2047);
 	for (uint32_t i = 0; i < max_conns; ++i) {
-		int x = dist2048(rng) % width;
-		int y = dist2048(rng) % height;
+		int x = Utils::random_between(0, width - 1);
+		int y = Utils::random_between(0, height - 1);
+
 		Player *egg = new Player(name);
 		egg->set_x(x);
 		egg->set_y(y);

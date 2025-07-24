@@ -4,6 +4,7 @@
 # include <iostream>
 # include <chrono>
 
+# include "Utils.hpp"
 # include "Team.hpp"
 # include "Parser.hpp"
 # include "Tile.hpp"
@@ -12,6 +13,8 @@ class Game;
 
 typedef void (Game::*ActionHandler)(Player *);
 typedef std::vector<std::vector<Tile>> Tile_Map;
+
+# define FOOD_SPAWN_RATE 20
 
 class Game
 {
@@ -47,6 +50,9 @@ class Game
 		bool					get_end() const;
 
 		void					run_tick();
+
+		void					add_missing_resource(int (Inventory::*getter)() const, void (Inventory::*adder)(int));
+		void					gen_map_resources();
 
 		void					set_tick_millis(int64_t);
 		void					try2handshake(Player *);
