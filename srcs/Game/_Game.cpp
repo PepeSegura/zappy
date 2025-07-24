@@ -172,7 +172,7 @@ void Game::run_tick() {
 
 	auto curr_millis = Utils::get_current_ms();
 	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
-    if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
+    	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
 		//std::cout << std::to_string(curr_millis) << std::endl;
 		for (auto &[key, team] : teams) {
 			auto players = team.get_team_players();
@@ -230,7 +230,6 @@ void	Game::try2handshake(Player *p) {
 		return ;
 	}
 	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
-		std::cout << "outside: " << std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) << std::endl;
 		Player *connected_player = teams[p->get_current_command().cmd_name].player2egg(p);
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
