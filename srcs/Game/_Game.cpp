@@ -164,12 +164,12 @@ bool Game::get_end() const {
 }
 
 void Game::run_tick() {
-	static uint32_t ticks_count = 0;
+	static uint8_t ticks_count = 0;
 
 	auto curr_millis = Utils::get_current_ms();
 	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
 		// std::cout << std::to_string(curr_millis) << std::endl;
-		if ((++ticks_count % FOOD_SPAWN_RATE) == 0) gen_map_resources();
+		if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
 
 		for (auto& [fd, player] : playersfd_map) { // for each team
 			if (player->get_state() == Player_States::Free) {
