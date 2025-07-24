@@ -30,6 +30,8 @@ class Team
 		void		inc_max_conns();
 		void		dec_max_conns();
 		Player		*player2egg(Player *);
+
+		std::vector<Player*>	&get_team_players();
 };
 
 

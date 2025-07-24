@@ -43,6 +43,8 @@ void	Team::remove_player(Player* player)
 	if (it == this->players.end())
 		return ;
 	this->players.erase(it);
+	if (max_conns) --max_conns;
+	if (conns_nbr) --conns_nbr;
 	// std::cout << "Team[\"" << this->name << "\"] -> size: " << this->players.size() << std::endl;
 }
 
@@ -85,7 +87,7 @@ void	Team::inc_conns_nbr() {
 }
 
 void	Team::dec_conns_nbr() {
-	--conns_nbr;
+	if (conns_nbr) --conns_nbr;
 }
 
 void	Team::inc_max_conns() {
@@ -98,7 +100,7 @@ void	Team::dec_max_conns() {
 
 Player	*Team::player2egg(Player *p) {
 	Player *egg;
-	if (conns_nbr >= max_conns)
+	if (get_avail_conns() <= 0)
 		return nullptr;
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		egg = players[i];
@@ -108,4 +110,8 @@ Player	*Team::player2egg(Player *p) {
 	egg->handshake(p);
 	++conns_nbr;
 	return egg;
+}
+
+std::vector<Player*>	&Team::get_team_players() {
+	return (this->players);
 }

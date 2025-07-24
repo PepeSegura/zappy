@@ -11,6 +11,7 @@
 class Game;
 class Inventory;
 
+# define FOOD_TICKS 126
 
 struct Command_Data {
 	Command		cmd;
@@ -48,6 +49,7 @@ class Player
 		std::deque<Command_Data> command_queue;
 
 		int64_t		last_action_start_time;
+		int64_t		ticks_until_eat;
 
 	public:
 		Player();
@@ -73,6 +75,7 @@ class Player
 		bool		get_handshake() const;
 		int64_t		get_last_start_time() const;
 		bool		get_disconnected() const;
+		bool		get_dead() const;
 
 		void		set_level(int);
 		void		set_x(int);
@@ -101,4 +104,6 @@ class Player
 		void		IncantationBgn();
 		void		IncantationEnd();
 		void		handshake(Player *);
+
+		void		check_food_and_eat();
 };
