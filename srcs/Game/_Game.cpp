@@ -47,7 +47,7 @@ void Game::init_teams(Parser *parser)
 	t_teams_names teamNames = parser->getTeamsNames();
 
 	for (const auto& name : teamNames) {
-		this->teams[name] = Team(name, parser->getTeamsMembersLimit());
+		this->teams[name] = Team(name, parser->getTeamsMembersLimit(), this);
 		this->teams[name].init_eggs(parser->getHeight(), parser->getWidth());
 	}
 }

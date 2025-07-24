@@ -11,11 +11,12 @@
 class Game;
 
 typedef void (Game::*ActionHandler)(Player *);
+typedef std::vector<std::vector<Tile>> Tile_Map;
 
 class Game
 {
 	private:
-		std::vector<std::vector<Tile>>		map;
+		Tile_Map							map;
 		int									map_width, map_height;
 
 		std::map<int, Player *>				playersfd_map; //key=client_fd
@@ -52,6 +53,8 @@ class Game
 
 		int		get_map_width() const { return (this->map_width); };
 		int		get_map_height() const { return (this->map_height); };
+
+		Tile_Map	&get_tile_map() { return map; }
 
 		/* Handlers */
 		void	_Avance(Player*);

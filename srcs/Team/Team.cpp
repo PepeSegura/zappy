@@ -1,13 +1,17 @@
 #include "Team.hpp"
+#include "Game.hpp"
+#include "Tile.hpp"
 
 Team::Team()
 {
+	game = nullptr;
 }
 
-Team::Team(std::string _name, int _max_conns)
+Team::Team(std::string _name, int _max_conns, Game *game)
 {
 	this->name = _name;
 	this->max_conns = _max_conns;
+	this->game = game;
 }
 
 Team::~Team()
@@ -66,10 +70,11 @@ void	Team::init_eggs(int width, int height) {
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		int x = dist2048(rng) % width;
 		int y = dist2048(rng) % height;
-		Player *p = new Player(name);
-		p->set_x(x);
-		p->set_y(y);
-		add_player(p);
+		Player *egg = new Player(name);
+		egg->set_x(x);
+		egg->set_y(y);
+		add_player(egg);
+		this->game->get_tile_map()[y][x].add_player_to_team(egg);
 		// std::cout << "Added egg " << std::to_string(i) << " to team " << name << std::endl;
 	}
 	conns_nbr = 0;

@@ -11,10 +11,11 @@ class Team
 		std::vector<Player*>	players;
 		uint32_t				conns_nbr;
 		uint32_t				max_conns;
+		Game					*game;
 
 	public:
 		Team();
-		Team(std::string _name, int _max_conns);
+		Team(std::string _name, int _max_conns, Game *);
 		~Team();
 
 		std::string	get_name() const;
