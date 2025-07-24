@@ -82,7 +82,7 @@ Messages::Messages(Command cmd, void *player, void *map, bool success) {
 			messageStr = "elevation en cours\n";
 			break;
 		case IncantationEnd:
-			messageStr = "niveau actuel : " + ((dist2048(rng) % 8) + 1) ; //todo take level from player
+			messageStr = "niveau actuel : " + std::to_string((dist2048(rng) % 8) + 1) ; //todo take level from player
 			break;
 		case ConnectNbr:
 			messageStr = dist2048(rng);
@@ -115,7 +115,7 @@ Command	hashString(const std::string &str) {
 	if (str == "incantation") return Command::IncantationBgn;
 	if (str == "incantation_end") return Command::IncantationEnd;
 	if (str == "fork") return Command::Fork;
-	if (str == "connectNbr") return Command::ConnectNbr;
+	if (str == "connect_nbr") return Command::ConnectNbr;
 	if (str == "mort") return Command::Mort;
 	return Command::Unknown;
 }

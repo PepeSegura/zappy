@@ -11,8 +11,7 @@ int random_03(void)
 
 Player::Player() // NOT USING ANYMORE
 {
-	std::cout << "PLAYER()\n";
-
+	// std::cout << "PLAYER()\n";
 	this->game_ptr = nullptr;
 	this->inv = Inventory();
 	this->handshake_finished = false;
@@ -22,6 +21,7 @@ Player::Player() // NOT USING ANYMORE
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = true;
 }
@@ -32,7 +32,7 @@ Player::~Player()
 
 Player::Player(Game *game)
 {
-	std::cout << "PLAYER(Game *game)\n";
+	// std::cout << "PLAYER(Game *game)\n";
 	this->game_ptr = game;
 	this->inv = Inventory();
 
@@ -43,13 +43,14 @@ Player::Player(Game *game)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = false;
 }
 
 Player::Player(std::string team)
 {
-	std::cout << "PLAYER(std::string team)\n";
+	// std::cout << "PLAYER(std::string team)\n";
 	this->game_ptr = nullptr;
 	this->team_name = team;
 	this->inv = Inventory();
@@ -61,6 +62,7 @@ Player::Player(std::string team)
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
+	this->level = 1;
 	this->dir = "NSWE"[random_03()];
 	this->is_disconnected = true;
 }
@@ -91,7 +93,6 @@ void Player::parse_msg()
 {
 	if (!this->msg_to_parse.empty() && this->msg_to_parse.back() == '\n')
 		this->msg_to_parse.pop_back();
-	std::cout << "Adding: [" << this->msg_to_parse << "]\n";
 
 	this->add_command(this->msg_to_parse);
 	this->msg_to_parse.clear();
@@ -119,165 +120,6 @@ void	Player::pop_command() {
 	this->command_queue.pop_front();
 }
 
-void	Player::Eat()
-{
-	if (this->inv.get_nourriture() == 0)
-		this->dead = true;
-	this->inv.add_nourriture(-1);
-}
-
-void	Player::Avance()
-{
-	if (this->game_ptr == nullptr)
-	{
-		std::cerr << "Game PTR not set\n";
-		return ;
-	}
-	std::cout << "Avance towards: " << this->dir << std::endl;
-
-	int map_width = this->game_ptr->get_map_width();
-	int map_height = this->game_ptr->get_map_height();
-
-	switch (this->dir)
-	{
-		case 'N':
-		{
-			if (this->y - 1 == -1)
-				this->y = map_height - 1;
-			else
-				this->y--;
-			break;		
-		}
-		case 'S':
-		{
-			if (this->y + 1 == map_height)
-				this->y = 0;
-			else
-				this->y++;
-			break;		
-		}
-		case 'W':
-		{
-			if (this->x - 1 == -1)
-				this->x = map_width - 1;
-			else
-				this->x--;
-			break;		
-		}
-		case 'E':
-		{
-			if (this->x + 1 == map_width)
-				this->x = 0;
-			else
-				this->x++;
-			break;		
-		}
-		default:
-			break;
-	}
-}
-
-void	Player::Droite()
-{
-	switch (this->dir)
-	{
-		case 'N':
-			this->dir = 'E';
-			break;		
-		case 'S':
-			this->dir = 'W';
-			break;
-		case 'W':
-			this->dir = 'N';
-			break;
-		case 'E':
-			this->dir = 'S';
-			break;
-		default:
-			break;
-	}
-}
-
-void	Player::Gauche()
-{
-	switch (this->dir)
-	{
-		case 'N':
-			this->dir = 'W';
-			break;		
-		case 'S':
-			this->dir = 'E';
-			break;
-		case 'W':
-			this->dir = 'S';
-			break;
-		case 'E':
-			this->dir = 'N';
-			break;
-		default:
-			break;
-	}
-}
-
-static	std::string aux_inv(std::string key, int value)
-{
-	return (key + std::to_string(value) + ", ");
-}
-
-std::string	Player::Inventaire()
-{
-	std::string inv_str = "{";
-
-	inv_str += aux_inv("nourriture ", this->inv.get_nourriture());
-	inv_str += aux_inv("linemate ", this->inv.get_linemate());
-	inv_str += aux_inv("deraumere ", this->inv.get_deraumere());
-	inv_str += aux_inv("sibur ", this->inv.get_sibur());
-	inv_str += aux_inv("mendiane ", this->inv.get_mendiane());
-	inv_str += aux_inv("phiras ", this->inv.get_phiras());
-	inv_str += aux_inv("thystame ", this->inv.get_thystame());
-
-	if (inv_str.size() > 1)
-	{
-		inv_str.erase(inv_str.end() - 1);
-		inv_str.erase(inv_str.end() - 1);
-	}
-	return (inv_str += "}\n");
-}
-
-void	Player::Prend(std::string item)
-{
-	this->inv.add_item(item, 1);
-	// if (item == "nourriture")	this->inv.add_nourriture(1);
-	// if (item == "linemate")		this->inv.add_linemate(1);
-	// if (item == "deraumere")	this->inv.add_deraumere(1);
-	// if (item == "sibur")		this->inv.add_sibur(1);
-	// if (item == "mendiane")		this->inv.add_mendiane(1);
-	// if (item == "phiras")		this->inv.add_phiras(1);
-	// if (item == "thystame")		this->inv.add_thystame(1);
-}
-
-void	Player::Pose(std::string item)
-{
-	this->inv.add_item(item, -1);
-	// if (item == "nourriture")	this->inv.add_nourriture(-1);
-	// if (item == "linemate")		this->inv.add_linemate(-1);
-	// if (item == "deraumere")	this->inv.add_deraumere(-1);
-	// if (item == "sibur")		this->inv.add_sibur(-1);
-	// if (item == "mendiane")		this->inv.add_mendiane(-1);
-	// if (item == "phiras")		this->inv.add_phiras(-1);
-	// if (item == "thystame")		this->inv.add_thystame(-1);
-}
-
-void	Player::IncantationBgn()
-{
-	/* set flag so he cannot move?? */
-}
-
-void	Player::IncantationEnd()
-{
-	this->level++;
-}
-
 /*_____GETTERS_____*/
 
 std::string	Player::get_team_name() const
@@ -303,6 +145,11 @@ Inventory&	Player::get_inv()
 int	Player::get_level() const
 {
 	return (this->level);
+}
+
+uint8_t	Player::get_dir() const
+{
+	return (this->dir);
 }
 
 int	Player::get_x() const

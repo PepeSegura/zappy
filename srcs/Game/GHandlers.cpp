@@ -1,0 +1,246 @@
+#include "Game.hpp"
+#include <algorithm>
+
+void Game::_Avance(Player *p)
+{
+	std::cout << "EXECUTING AVANCE\n";
+
+	this->map[p->get_x()][p->get_y()].remove_player_from_team(p);
+	p->Avance();
+	this->map[p->get_x()][p->get_y()].add_player_to_team(p);
+	Messages rsp = Messages(Command::Avance, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
+}
+
+void Game::_Droite(Player *p)
+{
+	std::cout << "EXECUTING DROITE\n";
+
+	p->Droite();
+	Messages rsp = Messages(Command::Droite, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
+}
+
+void Game::_Gauche(Player *p)
+{
+	std::cout << "EXECUTING GAUCHE\n";
+
+	p->Gauche();
+	Messages rsp = Messages(Command::Gauche, (void *) p, (void *) &map, true);
+	p->set_send_buffer(rsp.getMessageStr());
+}
+
+void Game::_Voir(Player *p)
+{
+	std::cout << "EXECUTING VOIR\n";
+	// std::cout << "---------------------\n";
+	// std::cout << "Looking at: " << p->get_dir() << std::endl;
+
+	int actual_level = 0;
+	int check_sides = 0;
+	int max_level = p->get_level();
+	
+	std::string content_tile = "{";
+	// std::cout << "-- Max level: " << max_level << std::endl;
+	int tile = 0;
+	while (actual_level <= max_level)
+	{
+		check_sides = -actual_level;
+		while (check_sides <= actual_level)
+		{
+			int y_coord = p->get_y();
+			int x_coord = p->get_x();
+			
+			switch (p->get_dir())
+			{
+				case 'N':
+					y_coord -= actual_level;
+					x_coord += check_sides;
+					break;
+				case 'S':
+					y_coord += actual_level;
+					x_coord -= check_sides;
+					break;
+				case 'W':
+					y_coord -= check_sides;
+					x_coord -= actual_level;
+					break;
+				case 'E':
+					y_coord += check_sides;
+					x_coord += actual_level;
+					break;
+				default:
+					break;
+			}
+
+			while (y_coord < 0) { y_coord += map_height; }
+			while (y_coord >= map_height) { y_coord -= map_height; }
+			
+			while (x_coord < 0) { x_coord += map_width;	}
+			while (x_coord >= map_width) { x_coord -= map_width; }
+			
+			// std::cout << "Inventory from: (" << x_coord << "," << y_coord << ")" << std::endl;
+			// content_tile += std::to_string(tile) + " " + this->map[y_coord][x_coord].voir_tile(p) + ",";
+			content_tile += this->map[y_coord][x_coord].voir_tile(p) + ",";
+			
+			check_sides++;
+			tile++;
+		}
+		actual_level++;
+	}
+
+	if (content_tile.length() > 1)
+	{
+		content_tile.erase(content_tile.end() - 1);
+	}
+	p->set_send_buffer(content_tile + "}\n");
+	// std::cout << "----------------------\n" << std::endl;
+}
+
+void Game::_Inventaire(Player *p)
+{
+	std::cout << "EXECUTING INVENTAIRE\n";
+
+	std::cout << "Inventory: " << p->Inventaire() << std::endl;
+	p->set_send_buffer(p->Inventaire());
+}
+
+void Game::aux_prend_pose(Player *p, std::string item, int new_tile_ammount, int new_player_ammount)
+{
+	std::vector<std::string> items = {
+		"nourriture", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"
+	};
+
+	auto it = std::find(items.begin(), items.end(), item);
+	if (it == items.end())
+	{
+		p->set_send_buffer("ko\n");
+		return ;
+	}
+
+	if (new_tile_ammount == -1 && this->map[p->get_y()][p->get_x()].get_inv().get_item(item) <= 0)
+	{
+		p->set_send_buffer("ko\n");
+		return ;
+	}
+	if (new_player_ammount == -1 && p->get_inv().get_item(item) <= 0)
+	{
+		p->set_send_buffer("ko\n");
+		return ;	
+	}
+	this->map[p->get_y()][p->get_x()].get_inv().add_item(item, new_tile_ammount);
+	p->get_inv().add_item(item, new_player_ammount);
+	p->set_send_buffer("ok\n");
+}
+
+void Game::_Prend(Player *p)
+{
+	std::cout << "EXECUTING PREND\n";
+
+	std::string item = p->get_current_command().args;
+	this->aux_prend_pose(p, item, -1, +1);
+}
+
+void Game::_Pose(Player *p)
+{
+	std::cout << "EXECUTING POSE\n";
+
+	std::string item = p->get_current_command().args;
+	this->aux_prend_pose(p, item, +1, -1);
+}
+
+void Game::_Expulse(Player *p)
+{
+	std::cout << "EXECUTING EXPULSE\n";
+	int player_y = p->get_y(), player_x = p->get_x();
+	int new_y = player_y, new_x = player_x;
+
+	switch (p->get_dir())
+	{
+		case 'N':
+			(player_y == 0) ? new_y = map_height - 1 : new_y = player_y - 1;
+			break;
+		case 'S':
+			(player_y == map_height - 1) ? new_y = 0 : new_y = player_y + 1;
+			break;
+		case 'W':
+			(player_x == 0) ? new_x = map_width - 1 : new_x = player_x - 1;
+			break;
+		case 'E':
+			(player_x == map_width - 1) ? new_x = 0 : new_x = player_x + 1;
+			break;
+		default:
+			break;
+	}
+
+	Tile& old_tile = this->map[player_y][player_x];
+	Tile& new_tile = this->map[new_y][new_x];
+
+	for (Player* player : old_tile.get_players_list())
+	{
+		if (player != p)
+		{
+			new_tile.add_player_to_team(player);
+			player->set_x(new_x);
+			player->set_y(new_y);
+			old_tile.remove_player_from_team(player);
+		}
+	}
+}
+
+void Game::_Broadcast(Player *p)
+{
+	std::cout << "EXECUTING BROADCAST\n";
+	(void)p;
+}
+
+void Game::_IncantationBgn(Player *p)
+{
+	std::cout << "EXECUTING INCANTATION\n";
+	(void)p;
+}
+
+void Game::_IncantationEnd(Player *p)
+{
+	std::cout << "EXECUTING INCANTATION_END\n";
+	(void)p;
+}
+
+void Game::_Fork(Player *p)
+{
+	std::cout << "EXECUTING FORK\n";
+
+	Player *egg = new Player(p->get_team_name());
+
+	egg->set_x(p->get_x());
+	egg->set_y(p->get_y());
+
+	this->teams[p->get_team_name()].inc_max_conns();
+	this->teams[p->get_team_name()].add_player(egg);
+	this->map[p->get_y()][p->get_x()].add_player_to_team(egg);
+
+	p->set_send_buffer("ok\n");
+}
+
+void Game::_ConnectNbr(Player *p)
+{
+	std::cout << "EXECUTING CONNECT_NBR\n";
+
+	uint32_t conn_nbr = this->teams[p->get_team_name()].get_avail_conns();
+	p->set_send_buffer(std::to_string(conn_nbr) + "\n");
+}
+
+void Game::_Mort(Player *p)
+{
+	std::cout << "EXECUTING MORT\n";
+
+	p->set_send_buffer("mort\n");
+}
+
+void Game::_Unknown(Player *p)
+{
+	std::cout << "IGNORING UNKNOWN COMMAND\n";
+
+	p->set_send_buffer("ko\n");
+}
+

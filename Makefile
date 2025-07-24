@@ -4,7 +4,7 @@ NAME := server
 
 CXX := c++
 
-CXXFLAGS := -Wall -Wextra -Werror
+CXXFLAGS := -Wall -Wextra -Werror -std=c++17
 DEBUG := -g3 -fsanitize=address
 
 # Add hostname definition
