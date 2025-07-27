@@ -234,7 +234,7 @@ void	Game::try2handshake(Player *p) {
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
 		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns())
-			+ "\n" + std::to_string(connected_player->get_x()) + " " + std::to_string(connected_player->get_y()) + "\n";
+			+ "\n" + std::to_string(this->map_width) + " " + std::to_string(this->map_height) + "\n";
 		delete p;
 		connected_player->set_send_buffer(response);
 		return ;
