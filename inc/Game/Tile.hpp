@@ -31,7 +31,7 @@ class Tile {
 		Inventory				inv;
 		std::vector<Player*>	players;
 
-		void		gen_item(Item);
+		void		gen_item(Item, Game &game);
 
 	public:
 		Tile() = default;
@@ -40,7 +40,7 @@ class Tile {
 
 		std::vector<Player*>& get_players_list();
 		Inventory&	get_inv(void);
-		void		gen_resources(void);
+		void		gen_resources(Game &game);
 
 		void		remove_player_from_team(Player*);
 		void		add_player_to_team(Player*);

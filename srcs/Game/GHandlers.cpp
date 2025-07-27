@@ -129,6 +129,7 @@ void Game::aux_prend_pose(Player *p, std::string item, int new_tile_ammount, int
 		return ;	
 	}
 	this->map[p->get_y()][p->get_x()].get_inv().add_item(item, new_tile_ammount);
+	this->world_resources.add_item(item, new_tile_ammount);
 	p->get_inv().add_item(item, new_player_ammount);
 	p->set_send_buffer("ok\n");
 }
