@@ -22,6 +22,11 @@ void Game::add_player_to_fdmap(int fd, Player *player) {
 	playersfd_map.insert_or_assign(fd, player);
 }
 
+Inventory& Game::get_world_resources()
+{
+	return (this->world_resources);
+}
+
 void Game::add_missing_resource(int (Inventory::*getter)() const, void (Inventory::*adder)(int))
 {
 	if ((this->world_resources.*getter)() > 0)
@@ -39,12 +44,9 @@ void Game::add_missing_resource(int (Inventory::*getter)() const, void (Inventor
 
 void Game::gen_map_resources()
 {
-	this->world_resources = Inventory();
-
 	for (int i = 0; i < this->map_height; i++) {
 		for (int j = 0; j < this->map_width; j++) {
-			this->map[i][j].gen_resources();
-			this->world_resources = this->world_resources + this->map[i][j].get_inv();
+			this->map[i][j].gen_resources(*this);
 		}
 	}
 
