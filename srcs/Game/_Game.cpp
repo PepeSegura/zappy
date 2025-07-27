@@ -223,25 +223,28 @@ void	Game::set_tick_millis(int64_t t) {
 void	Game::try2handshake(Player *p) {
 	if (!p->has_queued_actions())
 		return ;
-	if (teams.find(p->get_current_command().cmd_name) == teams.end()) {
+
+	std::string team_name = p->get_current_command().cmd_name;
+
+	if (teams.find(team_name) == teams.end()) {
 		std::cerr << "Client " << std::to_string(p->get_sock_fd()) << ": Invalid teamname in handshake\n";
 		Messages resp = Messages(Command::Unknown, (void *) p, (void *) &map, false);
-		
+
 		p->set_send_buffer(resp.getMessageStr());
 		p->pop_command();
 		return ;
 	}
-	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
-		Player *connected_player = teams[p->get_current_command().cmd_name].player2egg(p);
+	if (teams[team_name].get_avail_conns() > 0) {
+		Player *connected_player = teams[team_name].player2egg(p);
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
-		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns())
+		std::string response = std::to_string(teams[team_name].get_avail_conns())
 			+ "\n" + std::to_string(this->map_width) + " " + std::to_string(this->map_height) + "\n";
 		delete p;
 		connected_player->set_send_buffer(response);
 		return ;
 	}
-	std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
+	std::string response = std::to_string(teams[team_name].get_avail_conns()) + "\n";
 	p->set_send_buffer(response);
 	p->pop_command();
 }
