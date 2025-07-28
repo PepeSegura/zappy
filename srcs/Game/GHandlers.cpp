@@ -42,7 +42,7 @@ void Game::_Voir(Player *p)
 	
 	std::string content_tile = "{";
 	// std::cout << "-- Max level: " << max_level << std::endl;
-	int tile = 0;
+	
 	while (actual_level <= max_level)
 	{
 		check_sides = -actual_level;
@@ -84,7 +84,6 @@ void Game::_Voir(Player *p)
 			content_tile += this->map[y_coord][x_coord].voir_tile(p) + ",";
 			
 			check_sides++;
-			tile++;
 		}
 		actual_level++;
 	}

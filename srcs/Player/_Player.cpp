@@ -269,6 +269,10 @@ void	Player::set_disconnect(bool is_disconnected) {
 	this->is_disconnected = is_disconnected;
 }
 
+void	Player::set_dead(bool dead) {
+	this->dead = dead;
+}
+
 bool	Player::has_queued_actions() const {
 	return !this->command_queue.empty();
 }

@@ -89,6 +89,7 @@ class Player
 		void		add_command(std::string);
 		void		set_last_start_time(int64_t);
 		void		set_disconnect(bool);
+		void		set_dead(bool);
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;

@@ -25,7 +25,7 @@ class Game
 		std::map<int, Player *>				playersfd_map; //key=client_fd
 		std::map<std::string, Team>			teams;
 		bool								end;
-		int64_t								last_tick, tick_millis;
+		int64_t								last_tick, tick_millis, curr_millis;
 
 		std::map<Command, int64_t>			action_time_table;
 		std::map<Command, ActionHandler>	handlers;
@@ -35,6 +35,8 @@ class Game
 		void init_teams(Parser *);
 		void init_action_time_map();
 		void init_handlers_map();
+		void check_player_action(Player *);
+		void try2start_action(Player *);
 
 	public:
 		Game();
