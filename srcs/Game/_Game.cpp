@@ -172,7 +172,7 @@ bool Game::get_end() const {
 void Game::run_tick() {
 	static uint8_t ticks_count = 0;
 
-	auto curr_millis = Utils::get_current_ms();
+	curr_millis = Utils::get_current_ms();
 	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
     	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
 		//std::cout << std::to_string(curr_millis) << std::endl;
@@ -187,24 +187,16 @@ void Game::run_tick() {
 					continue;
 				}
 				if (player->get_state() == Player_States::Free) {
-					if (player->has_queued_actions()) {
-						player->set_last_start_time(curr_millis);
-						player->set_state(Player_States::ExecutingAction);
-					}
+					try2start_action(player);
 				}
 				if (player->get_state() == Player_States::ExecutingAction) {
-					//std::cout << "Ticks since start action: " << std::to_string((curr_millis - player->get_last_start_time()) / tick_millis) << std::endl;
-					if (action_time_table[player->get_current_command().cmd] <= ((curr_millis - player->get_last_start_time()) / tick_millis)) { //action ended, call handlers
-						(this->*handlers[player->get_current_command().cmd])(player);
-						player->pop_command();
-						player->set_state(Player_States::Free);
-					}
+					check_player_action(player);
 					continue; 
 				}
 			}
 		}
 		for (auto& [fd, player] : playersfd_map) { // for each connected player
-			if (player->get_state() == Player_States::Handshake) {
+			if (player->get_state() == Player_States::Handshake) { // if its still in handshake state
 				try2handshake(player);
 			}
 		}
@@ -229,6 +221,7 @@ void	Game::try2handshake(Player *p) {
 		
 		p->set_send_buffer(resp.getMessageStr());
 		p->pop_command();
+		p->set_dead(true); //kick players that provide invalid team names
 		return ;
 	}
 	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
@@ -244,4 +237,21 @@ void	Game::try2handshake(Player *p) {
 	std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
 	p->set_send_buffer(response);
 	p->pop_command();
+	//p->set_dead(true); //kick players that try to connect to teams without free spaces
+}
+
+void	Game::check_player_action(Player *player) {
+	//std::cout << "Ticks since start action: " << std::to_string((curr_millis - player->get_last_start_time()) / tick_millis) << std::endl;
+	if (action_time_table[player->get_current_command().cmd] <= ((curr_millis - player->get_last_start_time()) / tick_millis)) { //action ended, call handlers
+		(this->*handlers[player->get_current_command().cmd])(player);
+		player->pop_command();
+		player->set_state(Player_States::Free);
+	}
+}
+
+void Game::try2start_action(Player *player) {
+	if (player->has_queued_actions()) {
+		player->set_last_start_time(curr_millis);
+		player->set_state(Player_States::ExecutingAction);
+	}
 }
