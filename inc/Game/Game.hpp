@@ -51,8 +51,7 @@ class Game
 
 		void					run_tick();
 
-		Inventory&				get_world_resources();
-		void					add_missing_resource(int (Inventory::*getter)() const, void (Inventory::*adder)(int));
+		void					gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(int), Item);
 		void					gen_map_resources();
 
 		void					set_tick_millis(int64_t);

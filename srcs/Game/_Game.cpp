@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Utils.hpp"
+#include <iomanip>
 
 Game::Game()
 {
@@ -22,43 +23,42 @@ void Game::add_player_to_fdmap(int fd, Player *player) {
 	playersfd_map.insert_or_assign(fd, player);
 }
 
-Inventory& Game::get_world_resources()
+void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(int), Item item)
 {
-	return (this->world_resources);
-}
+	const int item_max_count = item_densities.at(item) * this->map_height * this->map_width;
 
-void Game::add_missing_resource(int (Inventory::*getter)() const, void (Inventory::*adder)(int))
-{
-	if ((this->world_resources.*getter)() > 0)
-		return ;
+	while (1)
+	{
+		if ((this->world_resources.*getter)() >= item_max_count)
+			return ;
+	
+		int random_height = Utils::random_between(0, this->map_height - 1);
+		int random_width = Utils::random_between(0, this->map_width - 1);
+	
+		Inventory& random_tile = this->map[random_height][random_width].get_inv();
+	
+		(random_tile.*adder)(1);
+		(world_resources.*adder)(1);
 
-	int random_height = Utils::random_between(0, this->map_height - 1);
-	int random_width = Utils::random_between(0, this->map_width - 1);
-
-	Inventory& random_tile = this->map[random_height][random_width].get_inv();
-
-	(random_tile.*adder)(1);
-	(world_resources.*adder)(1);
-	std::cout << "Added resource at (" << random_height << ", " << random_width << std::endl;
+		std::cout << "(" << random_height << ", " << random_width << ") -> "
+				  << item_string.at(item)
+				  << std::endl;
+	}
 }
 
 void Game::gen_map_resources()
 {
-	for (int i = 0; i < this->map_height; i++) {
-		for (int j = 0; j < this->map_width; j++) {
-			this->map[i][j].gen_resources(*this);
-		}
-	}
+	std::cout << "Generating new resources" << std::endl;
 
-	add_missing_resource(&Inventory::get_nourriture, &Inventory::add_nourriture);
-    add_missing_resource(&Inventory::get_linemate, &Inventory::add_linemate);
-    add_missing_resource(&Inventory::get_deraumere, &Inventory::add_deraumere);
-    add_missing_resource(&Inventory::get_sibur, &Inventory::add_sibur);
-    add_missing_resource(&Inventory::get_mendiane, &Inventory::add_mendiane);
-    add_missing_resource(&Inventory::get_phiras, &Inventory::add_phiras);
-    add_missing_resource(&Inventory::get_thystame, &Inventory::add_thystame);
+	gen_item(&Inventory::get_nourriture, &Inventory::add_nourriture, Item::NOURRITURE);
+    gen_item(&Inventory::get_linemate, &Inventory::add_linemate, Item::LINEMATE);
+    gen_item(&Inventory::get_deraumere, &Inventory::add_deraumere, Item::DERAUMERE);
+    gen_item(&Inventory::get_sibur, &Inventory::add_sibur, Item::SIBUR);
+    gen_item(&Inventory::get_mendiane, &Inventory::add_mendiane, Item::MENDIANE);
+    gen_item(&Inventory::get_phiras, &Inventory::add_phiras, Item::PHIRAS);
+    gen_item(&Inventory::get_thystame, &Inventory::add_thystame, Item::THYSTAME);
 
-	std::cout << "Total World resources:\n" << this->world_resources;
+	std::cout << "---\nTotal World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
