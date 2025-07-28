@@ -26,12 +26,20 @@ const std::unordered_map<Item, double> item_densities = {
     {Item::THYSTAME,	0.05}
 };
 
+const std::unordered_map<Item, const std::string> item_string = {
+    {Item::NOURRITURE,	"Nourriture"},
+    {Item::LINEMATE,	"Linemate"},
+    {Item::DERAUMERE,	"Deraumere"},
+    {Item::SIBUR,		"Sibur"},
+    {Item::MENDIANE,	"Mendiane"},
+    {Item::PHIRAS,		"Phiras"},
+    {Item::THYSTAME,	"Thystame"}
+};
+
 class Tile {
 	private:
 		Inventory				inv;
 		std::vector<Player*>	players;
-
-		void		gen_item(Item, Game &game);
 
 	public:
 		Tile() = default;
@@ -40,7 +48,6 @@ class Tile {
 
 		std::vector<Player*>& get_players_list();
 		Inventory&	get_inv(void);
-		void		gen_resources(Game &game);
 
 		void		remove_player_from_team(Player*);
 		void		add_player_to_team(Player*);
