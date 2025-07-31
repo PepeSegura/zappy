@@ -89,6 +89,9 @@ class Game
 		void	_Prend(Player*);
 		void	_Pose(Player*);
 		void	_Expulse(Player*);
+
+		std::pair<int, int>	dda(Player *origin, Player *dest, int y, int x);
+		double	dist_copy_pos(Player *origin, Player *dest, int y, int x);
 		uint8_t	get_sound_direction(Player *origin, Player *dest);
 		void	_Broadcast(Player*);
 		void	_IncantationBgn(Player*);

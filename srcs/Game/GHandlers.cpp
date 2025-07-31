@@ -197,9 +197,68 @@ void Game::_Expulse(Player *p)
 	p->set_send_buffer(response);
 }
 
+double	Game::dist_copy_pos(Player *origin, Player *dest, int y, int x)
+{
+	int ay = origin->get_y();
+	int ax = origin->get_x();
+	int by = dest->get_y();
+	int bx = dest->get_x();
+
+	return (Utils::get_distance(ay, ax, (by + (y * this->map_height)), (bx + (x * this->map_width))));
+}
+
+std::pair<int, int>	Game::dda(Player *origin, Player *dest, int y_mod, int x_mod)
+{
+	int ay = origin->get_y();
+	int ax = origin->get_x();
+	int by = dest->get_y() + (y_mod * this->map_height);
+	int bx = dest->get_x() + (x_mod * this->map_width);
+
+	int dy = by - ay;
+	int dx = bx - ax;
+
+	int step = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+
+	double inc_x = dx / (double)step;
+	double inc_y = dy / (double)step;
+
+	double x = ax;
+	double y = ay;
+
+	for (int i = 0; i < step; i++)
+	{
+		std::cout << "(" << y << ", " << x << ")" << std::endl;
+		y += inc_y;
+		x += inc_x;
+	}
+	std::cout << "DEFORE CONVERSION: (" << y << ", " << x << ")" << std::endl;
+	y -= (y_mod * this->map_height);
+	x -= (x_mod * this->map_width);
+	std::cout << "AFTER CONVERSION: (" << y << ", " << x << ")" << std::endl;
+	return (std::pair<int, int>(y, x));
+}
+
 uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 {
-	(void)origin, (void) dest;
+	double closest_dist = std::numeric_limits<double>::max();
+	int closest_y = INT32_MAX;
+	int closest_x = INT32_MAX;
+
+	for (int dy = -1; dy <= 1; dy++)
+	{
+		for (int dx = -1; dx <= 1; dx++)
+		{
+			double distance = dist_copy_pos(origin, dest, dy, dx);
+			if (distance < closest_dist)
+			{
+				closest_dist = distance;
+				closest_y = dy;
+				closest_x = dx;
+			}
+		}
+	}
+	std::cout << "Nearest enemie is in map: (" << closest_y << ", " << closest_x << ")" << std::endl;
+	dda(origin, dest, closest_y, closest_x);
 	return ('1');
 }
 
@@ -211,6 +270,7 @@ void Game::_Broadcast(Player *p)
 	{
 		if (player->get_handshake() == true && player != p)
 		{
+			get_sound_direction(p, player);
 			player->set_send_buffer("message 1," + msg + "\n");
 		}
 	}
