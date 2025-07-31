@@ -66,3 +66,21 @@ std::string Tile::voir_tile(Player *p)
 	// std::cout << "Content_tile: [" << content_tile << "]" <<std::endl;
 	return (content_tile);
 }
+
+int	Tile::players_at_level(int lvl) {
+	int ctr = 0;
+	for (auto player : players) {
+		if (player->get_handshake() && player->get_level() == lvl)
+			ctr++;
+	}
+	return ctr;
+}
+
+int	Tile::players_at_level_and_enchating(int lvl) {
+	int ctr = 0;
+	for (auto player : players) {
+		if (player->get_handshake() && player->get_level() == lvl && player->get_is_encantating())
+			ctr++;
+	}
+	return ctr;
+}

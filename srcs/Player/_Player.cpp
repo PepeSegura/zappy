@@ -25,6 +25,8 @@ Player::Player() // NOT USING ANYMORE
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
@@ -49,6 +51,8 @@ Player::Player(Game *game)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = false;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
@@ -70,6 +74,8 @@ Player::Player(std::string team)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
@@ -192,6 +198,14 @@ bool Player::get_disconnected() const {
 	return this->is_disconnected;
 }
 
+bool Player::get_encantation_precheck() const {
+	return this->encantation_prechecked;
+}
+
+bool Player::get_is_encantating() const {
+	return this->is_encantating;
+}
+
 bool Player::get_dead() const {
 	return this->dead;
 }
@@ -267,6 +281,10 @@ void	Player::set_last_start_time(int64_t now) {
 
 void	Player::set_disconnect(bool is_disconnected) {
 	this->is_disconnected = is_disconnected;
+}
+
+void	Player::set_encantation_precheck(bool encantation_prechecked) {
+	this->encantation_prechecked = encantation_prechecked;
 }
 
 void	Player::set_dead(bool dead) {

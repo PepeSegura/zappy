@@ -40,15 +40,15 @@ void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(i
 		(random_tile.*adder)(1);
 		(world_resources.*adder)(1);
 
-		std::cout << "(" << random_height << ", " << random_width << ") -> "
+		/* std::cout << "(" << random_height << ", " << random_width << ") -> "
 				  << item_string.at(item)
-				  << std::endl;
+				  << std::endl; */
 	}
 }
 
 void Game::gen_map_resources()
 {
-	std::cout << "Generating new resources" << std::endl;
+	//std::cout << "Generating new resources" << std::endl;
 
 	gen_item(&Inventory::get_nourriture, &Inventory::add_nourriture, Item::NOURRITURE);
     gen_item(&Inventory::get_linemate, &Inventory::add_linemate, Item::LINEMATE);
@@ -58,7 +58,7 @@ void Game::gen_map_resources()
     gen_item(&Inventory::get_phiras, &Inventory::add_phiras, Item::PHIRAS);
     gen_item(&Inventory::get_thystame, &Inventory::add_thystame, Item::THYSTAME);
 
-	std::cout << "---\nTotal World resources:\n" << this->world_resources;
+	//std::cout << "---\nTotal World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
@@ -95,12 +95,84 @@ void Game::init_action_time_map() {
 	action_time_table[Pose] = 7;
 	action_time_table[Expulse] = 7;
 	action_time_table[Broadcast] = 7;
-	action_time_table[IncantationBgn] = 300;
-	action_time_table[IncantationEnd] = 0;
+	action_time_table[IncantationBgn] = 0;
+	action_time_table[IncantationEnd] = 300;
 	action_time_table[Fork] = 42;
 	action_time_table[ConnectNbr] = 0;
 	action_time_table[Mort] = 0;
 	action_time_table[Unknown] = 0;
+}
+
+void Game::init_encantation_reqs_map()
+{
+	Incantation_Reqs tmp;
+	tmp.nbr_of_players = 1;
+	tmp.linemate_req = 1;
+	tmp.deraumere_req = 0;
+	tmp.sibur_req = 0;
+	tmp.mendiane_req = 0;
+	tmp.phiras_req = 0;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[1] = tmp;
+	tmp.nbr_of_players = 2;
+	tmp.linemate_req = 1;
+	tmp.deraumere_req = 1;
+	tmp.sibur_req = 1;
+	tmp.mendiane_req = 0;
+	tmp.phiras_req = 0;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[2] = tmp;
+	tmp.nbr_of_players = 2;
+	tmp.linemate_req = 2;
+	tmp.deraumere_req = 0;
+	tmp.sibur_req = 1;
+	tmp.mendiane_req = 0;
+	tmp.phiras_req = 2;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[3] = tmp;
+	tmp.nbr_of_players = 4;
+	tmp.linemate_req = 1;
+	tmp.deraumere_req = 1;
+	tmp.sibur_req = 2;
+	tmp.mendiane_req = 0;
+	tmp.phiras_req = 1;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[4] = tmp;
+	tmp.nbr_of_players = 4;
+	tmp.linemate_req = 1;
+	tmp.deraumere_req = 2;
+	tmp.sibur_req = 1;
+	tmp.mendiane_req = 3;
+	tmp.phiras_req = 0;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[5] = tmp;
+	tmp.nbr_of_players = 6;
+	tmp.linemate_req = 1;
+	tmp.deraumere_req = 2;
+	tmp.sibur_req = 3;
+	tmp.mendiane_req = 0;
+	tmp.phiras_req = 1;
+	tmp.thystame_req = 0;
+	incantation_lvl_reqs[6] = tmp;
+	tmp.nbr_of_players = 6;
+	tmp.linemate_req = 2;
+	tmp.deraumere_req = 2;
+	tmp.sibur_req = 2;
+	tmp.mendiane_req = 2;
+	tmp.phiras_req = 2;
+	tmp.thystame_req = 1;
+	incantation_lvl_reqs[7] = tmp;
+	std::cout << "Reqs lvl n:pl;li;de;si;me;ph;th\n";
+	for (auto [i, reqs] : incantation_lvl_reqs) {
+		std::cout << "Reqs lvl " << std::to_string(i) << ": " 
+		<< std::to_string(reqs.nbr_of_players) << "; " 
+		<< std::to_string(reqs.linemate_req) << "; " 
+		<< std::to_string(reqs.deraumere_req) << "; " 
+		<< std::to_string(reqs.sibur_req) << "; " 
+		<< std::to_string(reqs.mendiane_req) << "; " 
+		<< std::to_string(reqs.phiras_req) << "; " 
+		<< std::to_string(reqs.thystame_req) << std::endl;
+	}
 }
 
 void Game::init_handlers_map()
@@ -128,6 +200,7 @@ Game::Game(Parser *parser)
 	init_teams(parser);
 	init_action_time_map();
 	init_handlers_map();
+	init_encantation_reqs_map();
 	
 	end = false;
 	tick_millis = 1000 / parser->getTimeFreq();
@@ -161,6 +234,7 @@ void Game::remove_player(Player *p)
 		delete p;
 	} else {
 		teams[p->get_team_name()].dec_conns_nbr();
+		p->set_sock_fd(-1);
 		p->set_disconnect(true); //set full players as disconnected to allow reconnect
 	}
 }
@@ -184,6 +258,7 @@ void Game::run_tick() {
 				}
 				if (player->get_dead()) {
 					player->set_send_buffer("mort\n");
+					if (player->get_disconnected()) { remove_player(player); }
 					continue;
 				}
 				if (player->get_state() == Player_States::Free) {
