@@ -41,7 +41,7 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 			} else if (pollFds[i].revents & POLLOUT){ //write event
 				if (players[pollFds[i].fd] && players[pollFds[i].fd]->get_send_buffer().length()) {
 					send(pollFds[i].fd, players[pollFds[i].fd]->get_send_buffer().c_str(), players[pollFds[i].fd]->get_send_buffer().length(), 0);
-					players[pollFds[i].fd]->set_send_buffer("");
+					players[pollFds[i].fd]->clear_send_buffer();
 					if (players[pollFds[i].fd]->get_dead()) { //player is dead and has been notified, remove him!!!
 						disconnectClient(&i);
 					}
