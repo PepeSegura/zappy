@@ -2,7 +2,6 @@
 1. Game Handler
 	- Broadcast
 	- Incantation ritual
-	- Kick: send message to everyone that was kicked from that tile
 
 2. Tickrate
 	- Egg should take 600/t to hatch
