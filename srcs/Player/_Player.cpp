@@ -25,6 +25,8 @@ Player::Player() // NOT USING ANYMORE
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
@@ -49,6 +51,8 @@ Player::Player(Game *game)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = false;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
@@ -70,6 +74,8 @@ Player::Player(std::string team)
 	this->level = 1;
 	this->dir = "NSWE"[Utils::random_between(0, 3)];
 	this->is_disconnected = true;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 }
