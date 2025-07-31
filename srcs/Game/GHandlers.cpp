@@ -197,9 +197,23 @@ void Game::_Expulse(Player *p)
 	p->set_send_buffer(response);
 }
 
+uint8_t Game::get_sound_direction(Player *origin, Player *dest)
+{
+	(void)origin, (void) dest;
+	return ('1');
+}
+
 void Game::_Broadcast(Player *p)
 {
+	std::string msg = p->get_current_command().args;
 	std::cout << "EXECUTING BROADCAST\n";
+	for (auto [fd, player] : this->playersfd_map)
+	{
+		if (player->get_handshake() == true && player != p)
+		{
+			player->set_send_buffer("message 1," + msg + "\n");
+		}
+	}
 	(void)p;
 }
 

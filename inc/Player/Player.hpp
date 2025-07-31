@@ -83,6 +83,7 @@ class Player
 		void		set_sock_fd(int);
 		void		set_state(int);
 		void		set_recv_buffer(std::string &);
+		void		clear_send_buffer(void);
 		void		set_send_buffer(std::string);
 		void		set_team_name(std::string &);
 		void		set_handshake(bool &);

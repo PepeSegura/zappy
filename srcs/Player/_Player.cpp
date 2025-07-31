@@ -233,9 +233,14 @@ void	Player::set_recv_buffer(std::string &buffer)
 	this->recv_buffer = buffer;
 }
 
+void	Player::clear_send_buffer(void)
+{
+	this->send_buffer = "";
+}
+
 void	Player::set_send_buffer(std::string buffer)
 {
-	this->send_buffer = buffer;
+	this->send_buffer += buffer;
 }
 
 void	Player::set_handshake(bool &status)
