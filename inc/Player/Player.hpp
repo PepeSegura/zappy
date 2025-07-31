@@ -38,7 +38,7 @@ class Player
 		int			y;
 		bool		dead;
 		bool		handshake_finished;
-		bool		is_disconnected;
+		bool		is_disconnected, is_encantating, encantation_prechecked;
 
 		int			sock_fd;
 		int			state;
@@ -75,6 +75,8 @@ class Player
 		bool		get_handshake() const;
 		int64_t		get_last_start_time() const;
 		bool		get_disconnected() const;
+		bool		get_encantation_precheck() const;
+		bool		get_is_encantating() const;
 		bool		get_dead() const;
 
 		void		set_level(int);
@@ -89,6 +91,7 @@ class Player
 		void		add_command(std::string);
 		void		set_last_start_time(int64_t);
 		void		set_disconnect(bool);
+		void		set_encantation_precheck(bool);
 		void		set_dead(bool);
 
 		bool			has_queued_actions() const;

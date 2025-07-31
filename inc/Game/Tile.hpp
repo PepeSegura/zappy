@@ -54,5 +54,7 @@ class Tile {
 
 		std::string	aux_voir_tile(std::string item);
 		std::string	voir_tile(Player*);
+		int			players_at_level(int);
+		int			players_at_level_and_enchating(int);
 };
 

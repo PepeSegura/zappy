@@ -14,6 +14,13 @@ class Game;
 typedef void (Game::*ActionHandler)(Player *);
 typedef std::vector<std::vector<Tile>> Tile_Map;
 
+struct Incantation_Reqs {
+	int		nbr_of_players, linemate_req,
+			deraumere_req, sibur_req,
+			mendiane_req, phiras_req,
+			thystame_req;
+};
+
 # define FOOD_SPAWN_RATE 20
 
 class Game
@@ -28,15 +35,23 @@ class Game
 		int64_t								last_tick, tick_millis, curr_millis;
 
 		std::map<Command, int64_t>			action_time_table;
+		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
 		std::map<Command, ActionHandler>	handlers;
 		Inventory world_resources;
 		
 		void init_map(Parser *);
 		void init_teams(Parser *);
 		void init_action_time_map();
+		void init_encantation_reqs_map();
 		void init_handlers_map();
 		void check_player_action(Player *);
 		void try2start_action(Player *);
+
+		bool	check_incantation_materials(Player *);
+		bool	check_incantation_players_bgn(Player *);
+		bool	check_incantation_players_end(Player *);
+		void	remove_incantation_materials(Player *);
+		void	mark_all_enchanting_players(Player *);
 
 	public:
 		Game();
