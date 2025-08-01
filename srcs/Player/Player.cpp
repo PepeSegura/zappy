@@ -2,34 +2,26 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
-// int random_03(void)
+// Player::Player() // NOT USING ANYMORE
 // {
-// 	std::random_device dev;
-// 	std::mt19937 rng(dev());
-// 	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
-// 	return (dist4(rng) % 4);
+// 	// std::cout << "PLAYER()\n";
+// 	this->game_ptr = nullptr;
+// 	this->inv = Inventory();
+// 	this->handshake_finished = false;
+
+// 	this->state = Player_States::Handshake;
+// 	last_action_start_time = 0;
+// 	this->dead = false;
+// 	this->x = 0;
+// 	this->y = 0;
+// 	this->level = 1;
+// 	this->dir = "NSWE"[Utils::random_between(0, 3)];
+// 	this->is_disconnected = true;
+// 	this->is_encantating = false;
+// 	this->encantation_prechecked = false;
+// 	this->inv.add_nourriture(10);
+// 	this->ticks_until_eat = 0;
 // }
-
-Player::Player() // NOT USING ANYMORE
-{
-	// std::cout << "PLAYER()\n";
-	this->game_ptr = nullptr;
-	this->inv = Inventory();
-	this->handshake_finished = false;
-
-	this->state = Player_States::Handshake;
-	last_action_start_time = 0;
-	this->dead = false;
-	this->x = 0;
-	this->y = 0;
-	this->level = 1;
-	this->dir = "NSWE"[Utils::random_between(0, 3)];
-	this->is_disconnected = true;
-	this->is_encantating = false;
-	this->encantation_prechecked = false;
-	this->inv.add_nourriture(10);
-	this->ticks_until_eat = 0;
-}
 
 Player::~Player()
 {

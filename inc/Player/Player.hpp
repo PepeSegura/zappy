@@ -52,7 +52,7 @@ class Player
 		int64_t		ticks_until_eat;
 
 	public:
-		Player();
+		// Player();
 		Player(std::string);
 		Player(Game*);
 		~Player();
