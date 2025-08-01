@@ -2,26 +2,27 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
-// Player::Player() // NOT USING ANYMORE
-// {
-// 	// std::cout << "PLAYER()\n";
-// 	this->game_ptr = nullptr;
-// 	this->inv = Inventory();
-// 	this->handshake_finished = false;
+Player::Player() // NOT USING ANYMORE
+{
+	// std::cout << "PLAYER()\n";
+	this->game_ptr = nullptr;
+	this->inv = Inventory();
+	this->handshake_finished = false;
 
-// 	this->state = Player_States::Handshake;
-// 	last_action_start_time = 0;
-// 	this->dead = false;
-// 	this->x = 0;
-// 	this->y = 0;
-// 	this->level = 1;
-// 	this->dir = "NSWE"[Utils::random_between(0, 3)];
-// 	this->is_disconnected = true;
-// 	this->is_encantating = false;
-// 	this->encantation_prechecked = false;
-// 	this->inv.add_nourriture(10);
-// 	this->ticks_until_eat = 0;
-// }
+	this->state = Player_States::Handshake;
+	last_action_start_time = 0;
+	this->dead = false;
+	this->x = 0;
+	this->y = 0;
+	this->level = 1;
+	this->dir = "NSWE"[Utils::random_between(0, 3)];
+	this->is_disconnected = true;
+	this->is_encantating = false;
+	this->encantation_prechecked = false;
+	this->inv.add_nourriture(10);
+	this->ticks_until_eat = 0;
+	this->egg_creation = 0;
+}
 
 Player::~Player()
 {
@@ -47,12 +48,13 @@ Player::Player(Game *game)
 	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
+	this->egg_creation = 0;
 }
 
-Player::Player(std::string team)
+Player::Player(std::string team, int64_t egg_creation, Game *game)
 {
 	// std::cout << "PLAYER(std::string team)\n";
-	this->game_ptr = nullptr;
+	this->game_ptr = game;
 	this->team_name = team;
 	this->inv = Inventory();
 
@@ -70,6 +72,7 @@ Player::Player(std::string team)
 	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
+	this->egg_creation = egg_creation;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -200,6 +203,10 @@ bool Player::get_is_encantating() const {
 
 bool Player::get_dead() const {
 	return this->dead;
+}
+
+bool Player::is_hatched() const {
+	return ((Utils::get_current_ms() - egg_creation) / game_ptr->get_tick_millis() >= EGG_HATCH_TICKS);
 }
 
 /*_____SETTERS_____*/

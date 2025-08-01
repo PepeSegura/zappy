@@ -4,7 +4,7 @@ void Game::_Fork(Player *p)
 {
 	std::cout << "EXECUTING FORK\n";
 
-	Player *egg = new Player(p->get_team_name());
+	Player *egg = new Player(p->get_team_name(), Utils::get_current_ms(), this);
 
 	egg->set_x(p->get_x());
 	egg->set_y(p->get_y());
