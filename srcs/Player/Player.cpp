@@ -2,14 +2,6 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
-// int random_03(void)
-// {
-// 	std::random_device dev;
-// 	std::mt19937 rng(dev());
-// 	std::uniform_int_distribution<std::mt19937::result_type> dist4(0,2047);
-// 	return (dist4(rng) % 4);
-// }
-
 Player::Player() // NOT USING ANYMORE
 {
 	// std::cout << "PLAYER()\n";

@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
+
 // ./server -p 8080 -x 10 -y 10 --names hola que tal -c 4 -t 100
 
 int main(int argc, char **argv) {

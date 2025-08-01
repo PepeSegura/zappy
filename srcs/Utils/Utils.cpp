@@ -14,3 +14,13 @@ int Utils::random_between(int a, int b)
 	std::uniform_int_distribution<std::mt19937::result_type> dist_ab(a, b);
 	return (dist_ab(rng));
 }
+
+double Utils::get_distance(int ay, int ax, int by, int bx)
+{
+	int dy = abs(ay - by);
+	int dx = abs(ax - bx);
+
+	double distance = sqrt((dy * dy) + (dx * dx));
+	std::cout << "Distance: " << distance << std::endl;
+	return (distance);
+}
