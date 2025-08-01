@@ -46,7 +46,7 @@ std::string Tile::voir_tile(Player *p)
 	{
 		if (player == p)
 			continue;
-		if (player->get_disconnected() == true)
+		if (!player->get_handshake())
 			content_tile += " egg";
 		else
 			content_tile += " player";

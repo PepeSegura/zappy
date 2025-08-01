@@ -12,6 +12,7 @@ class Game;
 class Inventory;
 
 # define FOOD_TICKS 126
+# define EGG_HATCH_TICKS 600
 
 struct Command_Data {
 	Command		cmd;
@@ -50,10 +51,11 @@ class Player
 
 		int64_t		last_action_start_time;
 		int64_t		ticks_until_eat;
+		int64_t		egg_creation;
 
 	public:
 		Player();
-		Player(std::string);
+		Player(std::string, int64_t, Game *);
 		Player(Game*);
 		~Player();
 
@@ -78,6 +80,7 @@ class Player
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
 		bool		get_dead() const;
+		bool		is_hatched() const;
 
 		void		set_level(int);
 		void		set_x(int);

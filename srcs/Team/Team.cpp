@@ -62,7 +62,13 @@ uint32_t	Team::get_max_conns() const {
 }
 
 uint32_t	Team::get_avail_conns() const {
-	return this->max_conns - this->conns_nbr;
+	int cnt = 0;
+	for (uint32_t i = 0; i < max_conns; ++i) {
+		Player *p = players[i];
+		if (p->get_disconnected() && p->is_hatched())
+			++cnt;
+	}
+	return cnt;
 }
 
 void	Team::init_eggs(int width, int height) {
@@ -70,7 +76,7 @@ void	Team::init_eggs(int width, int height) {
 		int x = Utils::random_between(0, width - 1);
 		int y = Utils::random_between(0, height - 1);
 
-		Player *egg = new Player(name);
+		Player *egg = new Player(name, 0, game);
 		egg->set_x(x);
 		egg->set_y(y);
 		add_player(egg);
@@ -102,7 +108,7 @@ Player	*Team::player2egg(Player *p) {
 		return nullptr;
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		egg = players[i];
-		if (egg->get_disconnected())
+		if (egg->get_disconnected() && egg->is_hatched())
 			break ;
 	}
 	egg->handshake(p);
