@@ -35,9 +35,11 @@ std::pair<int, int>	Game::dda(Player *origin, Player *dest, int y_mod, int x_mod
 		y += inc_y;
 		x += inc_x;
 	}
-	std::cout << "BEFORE CONVERSION: (" << y << ", " << x << ")" << std::endl;
-	y -= (y_mod * this->map_height);
-	x -= (x_mod * this->map_width);
+	std::cout << "BEFORE CONVERSION: (" << y << ", " << x << ") with map ("<< y_mod << ", " << x_mod << ")" << std::endl;
+	if (y < 0 || y >= map_height)
+		y -= (y_mod * this->map_height);
+	if (x < 0 || x >= map_width)
+		x -= (x_mod * this->map_width);
 	std::cout << "AFTER CONVERSION: (" << y << ", " << x << ")" << std::endl;
 	return (std::pair<int, int>(y, x));
 }
@@ -64,46 +66,40 @@ uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 	std::cout << "Nearest enemie is in map: (" << closest_y << ", " << closest_x << ")" << std::endl;
 	std::pair<int,int> coords = dda(origin, dest, closest_y, closest_x);
 
-	int cnt = 1;
+	int cnt = 2;
 	int dy, dx, py, px, i;
 
 	switch (dest->get_dir()) {
 		case 'N':
-			dy = 0;
-			dx = -1;
-			py = dest->get_y() - 1;
-			px = dest->get_x();
-			break;
-		case 'S':
-			dy = 0;
-			dx = 1;
-			py = dest->get_y() + 1;
-			px = dest->get_x();
-			break;
-		case 'W':
-			dy = 1;
-			dx = 0;
-			py = dest->get_y();
-			px = dest->get_x() - 1;
-			break;
-		case 'E':
 			dy = -1;
 			dx = 0;
-			py = dest->get_y();
-			px = dest->get_x() + 1;
+			break;
+		case 'S':
+			dy = 1;
+			dx = 0;
+			break;
+		case 'W':
+			dy = 0;
+			dx = -1;
+			break;
+		case 'E':
+			dy = 0;
+			dx = 1;
 			break;
 		default:
 			break;
 	}
+	py = dest->get_y();
+	px = dest->get_x();
 
-	std::cout << "Checking player at (" << std::to_string(dest->get_y()) << ", " << std::to_string(dest->get_x()) << ") looking at " << dest->get_dir() + 'A' << std::endl;
+	std::cout << "Checking player at x,y (" << std::to_string(dest->get_x()) << ", " << std::to_string(dest->get_y()) << ") looking at " << (char)dest->get_dir() << std::endl;
 
-	for (i = 1; i < 9; ++i) {
+	for (i = 0; i < 9; ++i) {
 		if (py < 0) py = map_height - 1;
 		if (px < 0) px = map_width - 1;
 		if (py == map_height) py = 0;
 		if (px == map_width) px = 0;
-		std::cout << "Checking coord (" << std::to_string(px) << ", " << std::to_string(py) << "), looking for (" << std::to_string(coords.second) << ", " << std::to_string(coords.first) << ")\n";
+		std::cout << "Checking coord x,y (" << std::to_string(px) << ", " << std::to_string(py) << "), looking for (" << std::to_string(coords.second) << ", " << std::to_string(coords.first) << ")\n";
 		if (py == coords.first && px == coords.second) {
 			std::cout << "Found!!!\n";
 			break ;
@@ -111,7 +107,7 @@ uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 		py += dy;
 		px += dx;
 		++cnt;
-		if (cnt == 2) {
+		if (cnt >= 2) {
 			if (dy == -1 && dx == 0) {
 				dy = 0;
 				dx = -1;
@@ -125,7 +121,7 @@ uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 				dy = -1;
 				dx = 0;
 			}
-			cnt = 0;
+			cnt -= 2;
 		}
 	}
 
