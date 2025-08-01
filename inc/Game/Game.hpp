@@ -76,6 +76,7 @@ class Game
 
 		int		get_map_width() const { return (this->map_width); };
 		int		get_map_height() const { return (this->map_height); };
+		int64_t	get_tick_millis() const { return (this->tick_millis); };
 
 		Tile_Map	&get_tile_map() { return map; }
 
