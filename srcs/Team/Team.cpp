@@ -65,7 +65,7 @@ uint32_t	Team::get_avail_conns() const {
 	int cnt = 0;
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		Player *p = players[i];
-		if (p->get_disconnected() && p->is_hatched())
+		if (!p->get_handshake() && p->is_hatched())
 			++cnt;
 	}
 	return cnt;
@@ -108,7 +108,7 @@ Player	*Team::player2egg(Player *p) {
 		return nullptr;
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		egg = players[i];
-		if (egg->get_disconnected() && egg->is_hatched())
+		if (!egg->get_handshake() && egg->is_hatched())
 			break ;
 	}
 	egg->handshake(p);
