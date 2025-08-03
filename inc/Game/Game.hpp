@@ -39,6 +39,7 @@ class Game
 		std::map<Command, int64_t>			action_time_table;
 		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
 		std::map<Command, ActionHandler>	handlers;
+		bool								debug;
 		Inventory world_resources;
 		
 		void init_map(Parser *);
@@ -81,6 +82,7 @@ class Game
 		std::chrono::nanoseconds	get_tick_interval() const { return (this->tick_interval); };
 
 		Tile_Map	&get_tile_map() { return map; }
+		bool		get_debug() const { return this->debug; }
 
 		/* Handlers */
 		void	_Avance(Player*);

@@ -263,7 +263,9 @@ void	Player::set_handshake(bool &status)
 }
 
 void	Player::add_command(std::string trimmed_cmd) {
-	if (command_queue.size() < 200) { // TODO set back to 10
+	size_t size_queue;
+	(this->game_ptr->get_debug()) ? size_queue = QUEUE_SIZE_DBG : size_queue = QUEUE_SIZE;
+	if (command_queue.size() < size_queue) { // TODO set back to 10
 		size_t pos = trimmed_cmd.find(" ");
 		Command_Data tmp;
 		if (pos < trimmed_cmd.length()){
@@ -322,6 +324,8 @@ void	Player::check_food_and_eat() {
 			std::cout << "Player from team " << team_name << " is eating\n";
 			return ;
 		}
+		if (this->game_ptr->get_debug())
+			return ;
 		std::cout << "Player from team " << team_name << " died of hunger\n";
 		dead = true;
 		return ;

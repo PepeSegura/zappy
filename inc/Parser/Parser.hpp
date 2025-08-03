@@ -7,6 +7,8 @@
 # include "FlagParser.hpp"
 
 typedef std::vector<std::string> t_teams_names;
+# define QUEUE_SIZE 10
+# define QUEUE_SIZE_DBG 200
 
 class Parser {
 	private:
@@ -16,6 +18,7 @@ class Parser {
 		t_teams_names	teams_names;
 		int				teams_members_limit;
 		int				time_freq;
+		bool			debug;
 
 	public:
 		Parser(int argc, char **argv);
@@ -27,6 +30,7 @@ class Parser {
 		void setTeamsMembersLimit(t_flag_parser *flags, int pos_flag);
 		void setTeams(t_flag_parser *flags, int pos_flag);
 		void setTimeFreq(t_flag_parser *flags, int pos_flag);
+		void setDebug();
 
 		void settersParser(t_flag_parser *flags);
 
@@ -35,6 +39,7 @@ class Parser {
 		int getHeight(void) const;
 		int getTeamsMembersLimit(void) const;
 		int getTimeFreq(void) const;
+		bool	getDebug() const { return (this->debug); }
 		t_teams_names getTeamsNames(void) const;
 };
 
