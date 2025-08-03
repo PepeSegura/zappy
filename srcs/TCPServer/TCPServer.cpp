@@ -47,7 +47,6 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 					}
 				}
 			}
-			usleep(500);
 		}
 	}
 }

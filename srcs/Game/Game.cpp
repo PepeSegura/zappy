@@ -203,10 +203,7 @@ Game::Game(Parser *parser)
 	init_encantation_reqs_map();
 	
 	end = false;
-	tick_millis = 1000 / parser->getTimeFreq();
-	// for (const auto& [name, team] : teams) {
-	// 	std::cout << name << " -> " << team.get_name() << std::endl;
-	// }
+	set_tick_millis(parser->getTimeFreq());
 }
 
 void Game::add_player_to_team(std::string team_name, Player *p)
@@ -246,10 +243,10 @@ bool Game::get_end() const {
 void Game::run_tick() {
 	static uint8_t ticks_count = 0;
 
-	curr_millis = Utils::get_current_ms();
-	if (curr_millis - last_tick >= tick_millis) { //enough time has passed, run tick logic
+	now = std::chrono::high_resolution_clock::now();
+    auto elapsed = now - last_tick;
+	if (elapsed >= tick_interval) { //enough time has passed, run tick logic
     	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
-		//std::cout << std::to_string(curr_millis) << std::endl;
 		for (auto &[key, team] : teams) {
 			auto players = team.get_team_players();
 			for (auto player : players) {
@@ -275,7 +272,7 @@ void Game::run_tick() {
 				try2handshake(player);
 			}
 		}
-		last_tick = curr_millis; // update last_tick timestamp
+		last_tick = now; // update last_tick timestamp
 	}
 }
 
@@ -284,7 +281,7 @@ void	Game::set_tick_millis(int64_t t) {
 		std::cerr << "Invalid freq; allowed values [1, 1000]\n";
 		return ;
 	}
-	this->tick_millis = 1000 / t;
+	this->tick_interval = std::chrono::nanoseconds(1000000000 / t);
 }
 
 void	Game::try2handshake(Player *p) {
@@ -316,17 +313,18 @@ void	Game::try2handshake(Player *p) {
 }
 
 void	Game::check_player_action(Player *player) {
-	//std::cout << "Ticks since start action: " << std::to_string((curr_millis - player->get_last_start_time()) / tick_millis) << std::endl;
-	if (action_time_table[player->get_current_command().cmd] <= ((curr_millis - player->get_last_start_time()) / tick_millis)) { //action ended, call handlers
+	auto action_time = action_time_table[player->get_current_command().cmd] * get_tick_interval();
+	if (action_time <= now - player->get_last_start_time()) { //action ended, call handlers
 		(this->*handlers[player->get_current_command().cmd])(player);
 		player->pop_command();
 		player->set_state(Player_States::Free);
+		try2start_action(player);
 	}
 }
 
 void Game::try2start_action(Player *player) {
 	if (player->has_queued_actions()) {
-		player->set_last_start_time(curr_millis);
+		player->set_last_start_time(now);
 		player->set_state(Player_States::ExecutingAction);
 	}
 }

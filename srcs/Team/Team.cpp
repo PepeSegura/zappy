@@ -76,7 +76,7 @@ void	Team::init_eggs(int width, int height) {
 		int x = Utils::random_between(0, width - 1);
 		int y = Utils::random_between(0, height - 1);
 
-		Player *egg = new Player(name, 0, game);
+		Player *egg = new Player(name, std::chrono::system_clock::from_time_t(0), game);
 		egg->set_x(x);
 		egg->set_y(y);
 		add_player(egg);
