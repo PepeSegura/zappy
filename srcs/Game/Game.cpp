@@ -202,7 +202,8 @@ Game::Game(Parser *parser)
 	init_handlers_map();
 	init_encantation_reqs_map();
 	
-	end = false;
+	this->end = false;
+	this->debug = parser->getDebug();
 	set_tick_millis(parser->getTimeFreq());
 }
 

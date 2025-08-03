@@ -111,6 +111,10 @@ void Parser:: setTimeFreq(t_flag_parser *flags, int pos_flag) {
 	}
 }
 
+void Parser:: setDebug() {
+	this->debug = true;
+}
+
 void Parser::settersParser(t_flag_parser *flags) {
 	if (flags->extra_args_count != 0)
 	{
@@ -120,6 +124,7 @@ void Parser::settersParser(t_flag_parser *flags) {
 	}
 
 	int pos_flag = -1;
+	this->debug = false;
 
 	if ((pos_flag = check_flag(flags, 0, "help")) != -1)		{
 		std::cout << USAGE;
@@ -137,7 +142,10 @@ void Parser::settersParser(t_flag_parser *flags) {
 		setTeamsMembersLimit(flags, pos_flag);
 	} if ((pos_flag = check_flag(flags, 't', "time")) != -1)	{
 		setTimeFreq(flags, pos_flag);
+	} if ((pos_flag = check_flag(flags, 'd', "debug")) != -1)	{
+		setDebug();
 	}
+
 
 	if (this->port == -1 ||
 		this->x == -1 || this->y == -1 ||
@@ -161,6 +169,7 @@ Parser::Parser(int argc, char **argv) : port(-1), x(-1), y(-1), teams_names(), t
 		INIT_FLAG('n',	"names",	NEED_ARG,	MULTIPLE_ARG),
 		INIT_FLAG('c',	"clients",	NEED_ARG,	SINGLE_ARG),
 		INIT_FLAG('t',	"time",		NEED_ARG,	SINGLE_ARG),
+		INIT_FLAG('d',	"debug",	NO_ARG  ,	SINGLE_ARG),
 	};
 
 	t_flag_parser flags = parser_init(available_flags, FLAGS_COUNT(available_flags), argc, argv);
