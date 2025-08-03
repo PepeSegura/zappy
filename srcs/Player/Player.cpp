@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
-Player::Player() // NOT USING ANYMORE
+/* Player::Player() // NOT USING ANYMORE
 {
 	// std::cout << "PLAYER()\n";
 	this->game_ptr = nullptr;
@@ -10,7 +10,7 @@ Player::Player() // NOT USING ANYMORE
 	this->handshake_finished = false;
 
 	this->state = Player_States::Handshake;
-	last_action_start_time = 0;
+	last_action_start_time = std::chrono::system_clock::from_time_t(0);
 	this->dead = false;
 	this->x = 0;
 	this->y = 0;
@@ -21,8 +21,8 @@ Player::Player() // NOT USING ANYMORE
 	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
-	this->egg_creation = 0;
-}
+	this->egg_creation = std::chrono::system_clock::from_time_t(0);
+} */
 
 Player::~Player()
 {
@@ -36,7 +36,7 @@ Player::Player(Game *game)
 
 	this->handshake_finished = false;
 	this->state = Player_States::Handshake;
-	last_action_start_time = 0;
+	last_action_start_time = std::chrono::system_clock::from_time_t(0);
 
 	this->dead = false;
 	this->x = 0;
@@ -48,10 +48,10 @@ Player::Player(Game *game)
 	this->encantation_prechecked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
-	this->egg_creation = 0;
+	this->egg_creation = std::chrono::system_clock::from_time_t(0);
 }
 
-Player::Player(std::string team, int64_t egg_creation, Game *game)
+Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game)
 {
 	// std::cout << "PLAYER(std::string team)\n";
 	this->game_ptr = game;
@@ -60,7 +60,7 @@ Player::Player(std::string team, int64_t egg_creation, Game *game)
 
 	this->handshake_finished = false;
 	this->state = Player_States::Handshake;
-	last_action_start_time = 0;
+	last_action_start_time = std::chrono::system_clock::from_time_t(0);
 	
 	this->dead = false;
 	this->x = 0;
@@ -185,7 +185,7 @@ bool	Player::get_handshake() const
 	return (this->handshake_finished);
 }
 
-int64_t Player::get_last_start_time() const {
+std::chrono::high_resolution_clock::time_point Player::get_last_start_time() const {
 	return this->last_action_start_time;
 }
 
@@ -206,7 +206,8 @@ bool Player::get_dead() const {
 }
 
 bool Player::is_hatched() const {
-	return ((Utils::get_current_ms() - egg_creation) / game_ptr->get_tick_millis() >= EGG_HATCH_TICKS);
+	auto now = std::chrono::high_resolution_clock::now();
+	return (now - egg_creation >= EGG_HATCH_TICKS * game_ptr->get_tick_interval());
 }
 
 /*_____SETTERS_____*/
@@ -262,7 +263,7 @@ void	Player::set_handshake(bool &status)
 }
 
 void	Player::add_command(std::string trimmed_cmd) {
-	if (command_queue.size() < 10) {
+	if (command_queue.size() < 200) { // TODO set back to 10
 		size_t pos = trimmed_cmd.find(" ");
 		Command_Data tmp;
 		if (pos < trimmed_cmd.length()){
@@ -273,13 +274,13 @@ void	Player::add_command(std::string trimmed_cmd) {
 		tmp.cmd = hashString(tmp.cmd_name);
 		command_queue.emplace_back(tmp);
 	}
-	std::cout << "After adding: \n";
+	/* std::cout << "After adding: \n";
 	for (auto action : command_queue){
 		std::cout << action.cmd << "(" << action.cmd_name << ")" << ";" << action.args << std::endl;
-	}
+	} */
 }
 
-void	Player::set_last_start_time(int64_t now) {
+void	Player::set_last_start_time(std::chrono::high_resolution_clock::time_point now) {
 	this->last_action_start_time = now;
 }
 
@@ -309,10 +310,12 @@ void	Player::handshake(Player *connected_player) {
 	this->handshake_finished = true;
 	this->game_ptr = connected_player->game_ptr;
 	this->is_disconnected = false;
+	this->command_queue = connected_player->command_queue;
+	this->command_queue.pop_front();
 }
 
 void	Player::check_food_and_eat() {
-	if (ticks_until_eat == 0) {
+	if (--ticks_until_eat <= 0) {
 		if (this->inv.get_nourriture() > 0) {
 			this->inv.add_nourriture(-1);
 			ticks_until_eat = FOOD_TICKS;
@@ -323,5 +326,4 @@ void	Player::check_food_and_eat() {
 		dead = true;
 		return ;
 	}
-	--ticks_until_eat;
 }

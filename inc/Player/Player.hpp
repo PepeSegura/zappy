@@ -3,6 +3,7 @@
 # include <iostream>
 # include <deque>
 # include <map>
+# include <chrono>
 
 # include "Messages.hpp"
 # include "Inventory.hpp"
@@ -49,13 +50,12 @@ class Player
 
 		std::deque<Command_Data> command_queue;
 
-		int64_t		last_action_start_time;
+		std::chrono::high_resolution_clock::time_point		last_action_start_time, egg_creation;
 		int64_t		ticks_until_eat;
-		int64_t		egg_creation;
 
 	public:
 		Player();
-		Player(std::string, int64_t, Game *);
+		Player(std::string, std::chrono::high_resolution_clock::time_point, Game *);
 		Player(Game*);
 		~Player();
 
@@ -75,7 +75,7 @@ class Player
 		std::string	get_recv_buffer() const;
 		std::string	get_send_buffer() const;
 		bool		get_handshake() const;
-		int64_t		get_last_start_time() const;
+		std::chrono::high_resolution_clock::time_point		get_last_start_time() const;
 		bool		get_disconnected() const;
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
@@ -93,7 +93,7 @@ class Player
 		void		set_team_name(std::string &);
 		void		set_handshake(bool &);
 		void		add_command(std::string);
-		void		set_last_start_time(int64_t);
+		void		set_last_start_time(std::chrono::high_resolution_clock::time_point);
 		void		set_disconnect(bool);
 		void		set_encantation_precheck(bool);
 		void		set_dead(bool);

@@ -32,7 +32,9 @@ class Game
 		std::map<int, Player *>				playersfd_map; //key=client_fd
 		std::map<std::string, Team>			teams;
 		bool								end;
-		int64_t								last_tick, tick_millis, curr_millis;
+
+		std::chrono::nanoseconds						tick_interval;
+		std::chrono::high_resolution_clock::time_point	last_tick, now;
 
 		std::map<Command, int64_t>			action_time_table;
 		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
@@ -76,7 +78,7 @@ class Game
 
 		int		get_map_width() const { return (this->map_width); };
 		int		get_map_height() const { return (this->map_height); };
-		int64_t	get_tick_millis() const { return (this->tick_millis); };
+		std::chrono::nanoseconds	get_tick_interval() const { return (this->tick_interval); };
 
 		Tile_Map	&get_tile_map() { return map; }
 
