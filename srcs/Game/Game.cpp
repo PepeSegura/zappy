@@ -305,6 +305,11 @@ void Game::run_tick() {
 				}
 			}
 		}
+		for (auto& [fd, graphic_client] : graphicfd_map) { // for each graphic client
+			if (graphic_client->has_queued_actions()) { // if it has queued actions
+				handle_graphic_client(graphic_client);
+			}
+		}
 		for (auto& [fd, player] : playersfd_map) { // for each connected player
 			if (player->get_state() == Player_States::Handshake) { // if its still in handshake state
 				try2handshake(player);
@@ -380,4 +385,16 @@ void Game::try2start_action(Player *player) {
 
 int	Game::get_new_id() {
 	return id_ctr++;
+}
+
+void Game::handle_graphic_client(Player *graphic_client) {
+	Command_Data cmd;
+	while (graphic_client->has_queued_actions()) {
+		cmd = graphic_client->get_current_command();
+		//call handlers here
+		std::cout << "Executing craphic command " << cmd.cmd_name
+			<< " (enum: " << std::to_string(cmd.cmd) << ") with args: ("
+				<< cmd.args << ") for graphic client with fd " << std::to_string(graphic_client->get_sock_fd()) << "\n";
+		graphic_client->pop_command();
+	}
 }
