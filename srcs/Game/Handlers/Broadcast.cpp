@@ -139,5 +139,5 @@ void Game::_Broadcast(Player *p)
 			player->set_send_buffer("message " + std::to_string(get_sound_direction(p, player)) + "," + msg + "\n");
 		}
 	}
-	(void)p;
+	p->set_send_buffer("ok\n");
 }
