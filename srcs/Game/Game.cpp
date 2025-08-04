@@ -217,6 +217,7 @@ Game::Game(Parser *parser)
 	init_teams(parser);
 	init_action_time_map();
 	init_p_handlers_map();
+	init_g_handlers_map();
 	init_encantation_reqs_map();
 	
 	this->end = false;
@@ -381,9 +382,11 @@ void Game::handle_graphic_client(Player *graphic_client) {
 	while (graphic_client->has_queued_actions()) {
 		cmd = graphic_client->get_current_command();
 		//call handlers here
-		std::cout << "Executing craphic command " << cmd.cmd_name
-			<< " (enum: " << std::to_string(cmd.cmd) << ") with args: ("
-				<< cmd.args << ") for graphic client with fd " << std::to_string(graphic_client->get_sock_fd()) << "\n";
+		std::cout << "Executing graphic command " << cmd.cmd_name
+		<< " (enum: " << std::to_string(cmd.cmd) << ") with args: ("
+		<< cmd.args << ") for graphic client with fd " << std::to_string(graphic_client->get_sock_fd()) << "\n";
+		graphic_client->set_send_buffer((this->*g_handlers[cmd.cmd])(graphic_client));
+		std::cout << "AFTER HANDLER\n";
 		graphic_client->pop_command();
 	}
 }

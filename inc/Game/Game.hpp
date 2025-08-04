@@ -127,6 +127,7 @@ class Game
 
 		std::string	gr_map_size();
 		std::string	gr_content_tile(int y, int x);
+		std::string	gr_content_map();
 		std::string	gr_team_names();
 		std::string	gr_player_new_conn();
 		std::string	gr_player_pos(int n);
@@ -145,7 +146,7 @@ class Game
 		std::string	gr_egg_to_player(int e);
 		std::string	gr_egg_mort(int e);
 		std::string	gr_time_unit();
-		std::string	gr_time_unit_mod(Player *);
+		std::string	gr_time_unit_mod(int t);
 		std::string	gr_game_end();
 		std::string gr_server_msg(std::string M);
 		std::string	gr_unknown_cmd();

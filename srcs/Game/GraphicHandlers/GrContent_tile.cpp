@@ -9,8 +9,9 @@ std::string	Game::gr_content_tile(int y, int x) {
 		+ std::to_string(tile_inv.get_thystame()) + "\n");
 }
 
-std::string	gr_content_tile(Player *p) {
+std::string	Game::gr_content_tile(Player *p) {
 	std::string args = p->get_current_command().args;
 
 	// args.sp
+	return ("CAMBIAR; ESTOY DEBUG");
 }

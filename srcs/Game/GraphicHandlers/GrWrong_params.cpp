@@ -1,5 +1,5 @@
 #include "Game.hpp"
 
-std::string	Game::gr_unknown_cmd() {
+std::string	Game::gr_wrong_params() {
 	return std::string("sbp\n");
 }
