@@ -11,7 +11,8 @@
 
 class Game;
 
-typedef void (Game::*ActionHandler)(Player *);
+typedef void (Game::*ActionPHandler)(Player *);
+typedef void (Game::*ActionGPHandler)(int, int);
 typedef std::vector<std::vector<Tile>> Tile_Map;
 
 struct Incantation_Reqs {
@@ -39,7 +40,8 @@ class Game
 
 		std::map<Command, int64_t>			action_time_table;
 		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
-		std::map<Command, ActionHandler>	handlers;
+		std::map<Command, ActionPHandler>	p_handlers;
+		std::map<Command, ActionPHandler>	g_handlers;
 		bool								debug;
 		Inventory world_resources;
 		
@@ -47,7 +49,8 @@ class Game
 		void init_teams(Parser *);
 		void init_action_time_map();
 		void init_encantation_reqs_map();
-		void init_handlers_map();
+		void init_p_handlers_map();
+		void init_g_handlers_map();
 		void check_player_action(Player *);
 		void try2start_action(Player *);
 

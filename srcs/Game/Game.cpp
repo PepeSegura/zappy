@@ -175,23 +175,53 @@ void Game::init_encantation_reqs_map()
 	}
 }
 
-void Game::init_handlers_map()
+void Game::init_p_handlers_map()
 {
-	handlers[Avance] = &Game::_Avance;
-	handlers[Droite] = &Game::_Droite;
-	handlers[Gauche] = &Game::_Gauche;
-	handlers[Voir] = &Game::_Voir;
-	handlers[Inventaire] = &Game::_Inventaire;
-	handlers[Prend] = &Game::_Prend;
-	handlers[Pose] = &Game::_Pose;
-	handlers[Expulse] = &Game::_Expulse;
-	handlers[Broadcast] = &Game::_Broadcast;
-	handlers[IncantationBgn] = &Game::_IncantationBgn;
-	handlers[IncantationEnd] = &Game::_IncantationEnd;
-	handlers[Fork] = &Game::_Fork;
-	handlers[ConnectNbr] = &Game::_ConnectNbr;
-	handlers[Mort] = &Game::_Mort;
-	handlers[Unknown] = &Game::_Unknown;
+	p_handlers[Avance] = &Game::_Avance;
+	p_handlers[Droite] = &Game::_Droite;
+	p_handlers[Gauche] = &Game::_Gauche;
+	p_handlers[Voir] = &Game::_Voir;
+	p_handlers[Inventaire] = &Game::_Inventaire;
+	p_handlers[Prend] = &Game::_Prend;
+	p_handlers[Pose] = &Game::_Pose;
+	p_handlers[Expulse] = &Game::_Expulse;
+	p_handlers[Broadcast] = &Game::_Broadcast;
+	p_handlers[IncantationBgn] = &Game::_IncantationBgn;
+	p_handlers[IncantationEnd] = &Game::_IncantationEnd;
+	p_handlers[Fork] = &Game::_Fork;
+	p_handlers[ConnectNbr] = &Game::_ConnectNbr;
+	p_handlers[Mort] = &Game::_Mort;
+	p_handlers[Unknown] = &Game::_Unknown;
+}
+
+void Game::init_g_handlers_map()
+{
+	p_handlers[Map_size] = &Game::_Avance;
+	p_handlers[Content_tile] = &Game::_Droite;
+	p_handlers[Content_map] = &Game::_Gauche;
+	p_handlers[Team_names] = &Game::_Voir;
+	p_handlers[Player_new_conn] = &Game::_Inventaire;
+	p_handlers[Player_pos] = &Game::_Prend;
+	p_handlers[Player_lvl] = &Game::_Pose;
+	p_handlers[Player_inv] = &Game::_Expulse;
+	p_handlers[Player_expelled] = &Game::_Broadcast;
+	p_handlers[Player_broadcast] = &Game::_IncantationBgn;
+	p_handlers[Player_fork] = &Game::_IncantationEnd;
+	p_handlers[Player_pose] = &Game::_Fork;
+	p_handlers[Player_prend] = &Game::_ConnectNbr;
+	p_handlers[Player_mort] = &Game::_Mort;
+	p_handlers[Incantation_start] = &Game::_Unknown;
+	p_handlers[Incantation_res] = &Game::_Unknown;
+	p_handlers[Egg_laid_by_player] = &Game::_Unknown;
+	p_handlers[Egg_hatch] = &Game::_Unknown;
+	p_handlers[Egg_to_player] = &Game::_Unknown;
+	p_handlers[Egg_mort] = &Game::_Unknown;
+	p_handlers[Time_unit] = &Game::_Unknown;
+	p_handlers[Time_unit_mod] = &Game::_Unknown;
+	p_handlers[Game_end] = &Game::_Unknown;
+	p_handlers[Server_msg] = &Game::_Unknown;
+	p_handlers[Unknown_cmd] = &Game::_Unknown;
+	p_handlers[Wrong_params] = &Game::_Unknown;
 }
 
 Game::Game(Parser *parser)
@@ -199,7 +229,7 @@ Game::Game(Parser *parser)
 	init_map(parser);
 	init_teams(parser);
 	init_action_time_map();
-	init_handlers_map();
+	init_p_handlers_map();
 	init_encantation_reqs_map();
 	
 	this->end = false;
@@ -333,8 +363,8 @@ void	Game::try2handshake(Player *p) {
 
 void	Game::check_player_action(Player *player) {
 	auto action_time = action_time_table[player->get_current_command().cmd] * get_tick_interval();
-	if (action_time <= now - player->get_last_start_time()) { //action ended, call handlers
-		(this->*handlers[player->get_current_command().cmd])(player);
+	if (action_time <= now - player->get_last_start_time()) { //action ended, call p_handlers
+		(this->*p_handlers[player->get_current_command().cmd])(player);
 		player->pop_command();
 		player->set_state(Player_States::Free);
 		try2start_action(player);
