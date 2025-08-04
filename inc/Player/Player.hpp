@@ -31,6 +31,7 @@ enum Player_States {
 class Player
 {
 	private:
+		bool		graphic_client;
 		Game*		game_ptr;
 		std::string team_name;
 		Inventory	inv;
@@ -64,6 +65,7 @@ class Player
 		void		add_buffer_or_parse_msg(std::string);
 		void		parse_msg(void);
 
+		bool		is_graphic_client() const;
 		std::string	get_team_name() const;
 		Inventory&	get_inv();
 		int			get_level() const;
@@ -82,6 +84,7 @@ class Player
 		bool		get_dead() const;
 		bool		is_hatched() const;
 
+		void		set_graphic_client(bool);
 		void		set_level(int);
 		void		set_x(int);
 		void		set_y(int);

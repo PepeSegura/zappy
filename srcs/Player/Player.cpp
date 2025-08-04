@@ -2,28 +2,6 @@
 #include "Game.hpp"
 #include "Utils.hpp"
 
-/* Player::Player() // NOT USING ANYMORE
-{
-	// std::cout << "PLAYER()\n";
-	this->game_ptr = nullptr;
-	this->inv = Inventory();
-	this->handshake_finished = false;
-
-	this->state = Player_States::Handshake;
-	last_action_start_time = std::chrono::system_clock::from_time_t(0);
-	this->dead = false;
-	this->x = 0;
-	this->y = 0;
-	this->level = 1;
-	this->dir = "NSWE"[Utils::random_between(0, 3)];
-	this->is_disconnected = true;
-	this->is_encantating = false;
-	this->encantation_prechecked = false;
-	this->inv.add_nourriture(10);
-	this->ticks_until_eat = 0;
-	this->egg_creation = std::chrono::system_clock::from_time_t(0);
-} */
-
 Player::~Player()
 {
 }
@@ -31,6 +9,8 @@ Player::~Player()
 Player::Player(Game *game)
 {
 	// std::cout << "PLAYER(Game *game)\n";
+	this->graphic_client = false;
+
 	this->game_ptr = game;
 	this->inv = Inventory();
 
@@ -54,6 +34,8 @@ Player::Player(Game *game)
 Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game)
 {
 	// std::cout << "PLAYER(std::string team)\n";
+	this->graphic_client = false;
+
 	this->game_ptr = game;
 	this->team_name = team;
 	this->inv = Inventory();
@@ -77,6 +59,7 @@ Player::Player(std::string team, std::chrono::high_resolution_clock::time_point 
 
 Player&  Player::operator=(const Player &other)
 {
+	this->graphic_client = other.graphic_client;
 	this->game_ptr = other.game_ptr;
 	this->team_name = other.team_name;
 	this->inv = other.inv;
@@ -129,6 +112,12 @@ void	Player::pop_command() {
 }
 
 /*_____GETTERS_____*/
+
+bool	Player::is_graphic_client() const
+{
+	return (this->graphic_client);
+}
+
 
 std::string	Player::get_team_name() const
 {
@@ -211,6 +200,11 @@ bool Player::is_hatched() const {
 }
 
 /*_____SETTERS_____*/
+
+void	Player::set_graphic_client(bool flag)
+{
+	this->graphic_client = flag;
+}
 
 void	Player::set_level(int new_level)
 {
