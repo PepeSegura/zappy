@@ -265,6 +265,7 @@ void	Player::set_handshake(bool status)
 void	Player::add_command(std::string trimmed_cmd) {
 	size_t size_queue;
 	(this->game_ptr->get_debug()) ? size_queue = QUEUE_SIZE_DBG : size_queue = QUEUE_SIZE;
+	if (this->graphic_client) size_queue = QUEUE_SIZE_GRAPHIC;
 	if (command_queue.size() < size_queue) { // TODO set back to 10
 		size_t pos = trimmed_cmd.find(" ");
 		Command_Data tmp;
