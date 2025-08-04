@@ -205,6 +205,7 @@ Game::Game(Parser *parser)
 	this->end = false;
 	this->debug = parser->getDebug();
 	this->id_ctr = 0;
+	this->winner_team = "";
 	set_tick_millis(parser->getTimeFreq());
 }
 
@@ -289,6 +290,7 @@ void	Game::set_tick_millis(int64_t t) {
 		std::cerr << "Invalid freq; allowed values [1, 1000]\n";
 		return ;
 	}
+	this->time_unit = t;
 	this->tick_interval = std::chrono::nanoseconds(1000000000 / t);
 }
 

@@ -1,4 +1,8 @@
-/* std::string	Game::gr_egg_laid_by_player(int e, int n, int y, int x) {
-	(void) e, (void) n, (void) y, (void) x;
-	return std::string("msz " + std::to_string(map_width) + " " + std::to_string(map_height) + "\n");
-} */
+#include "Game.hpp"
+
+std::string	Game::gr_server_msg(std::string M) {
+	std::string team_names = "";
+	for (auto &[key, team] : teams)
+		team_names += ("tna " + key + "\n");
+	return team_names;
+}
