@@ -30,6 +30,7 @@ class Game
 		int									map_width, map_height;
 
 		std::map<int, Player *>				playersfd_map; //key=client_fd
+		std::map<int, Player *>				graphicfd_map; //key=client_fd
 		std::map<std::string, Team>			teams;
 		bool								end;
 

@@ -219,6 +219,12 @@ void Game::remove_player(Player *p)
 	if (playersfd_map.find(p->get_sock_fd()) != playersfd_map.end())
 		playersfd_map.erase(p->get_sock_fd());
 
+	if (graphicfd_map.find(p->get_sock_fd()) != graphicfd_map.end())
+	{
+		graphicfd_map.erase(p->get_sock_fd());
+		delete p;
+		return;
+	}
 	//remove player from tile
 	
 	/* for (auto& [name, team] : teams)
@@ -288,6 +294,15 @@ void	Game::set_tick_millis(int64_t t) {
 void	Game::try2handshake(Player *p) {
 	if (!p->has_queued_actions())
 		return ;
+	if (p->get_current_command().cmd_name == GRAPHIC_NAME) {
+		p->set_graphic_client(true);
+		p->set_handshake(true);
+		p->set_state(Player_States::Free);
+		p->pop_command();
+		std::cout << "NEW GCLIENT WITH FD:" << p->get_sock_fd() << std::endl;
+		graphicfd_map[p->get_sock_fd()] = p;
+		return ;
+	}
 	if (teams.find(p->get_current_command().cmd_name) == teams.end()) {
 		std::cerr << "Client " << std::to_string(p->get_sock_fd()) << ": Invalid teamname in handshake\n";
 		Messages resp = Messages(Command::Unknown, (void *) p, (void *) &map, false);

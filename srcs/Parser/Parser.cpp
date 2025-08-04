@@ -88,7 +88,7 @@ void Parser:: setTeams(t_flag_parser *flags, int pos_flag) {
 	size_t count = flags->flags[pos_flag].args_count;
 	for (size_t i = 0; i < count; i++)
 	{
-		if (flags->flags[pos_flag].args[i] == std::string("GRAPHIC")) {
+		if (flags->flags[pos_flag].args[i] == std::string(GRAPHIC_NAME)) {
 			std::cerr << "server: \"" << flags->flags[pos_flag].args[i] << "\" invalid team name" << std::endl;
 			cleanup_parser(flags);
 			exit(EXIT_FAILURE);
