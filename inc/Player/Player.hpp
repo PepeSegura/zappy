@@ -14,6 +14,9 @@ class Inventory;
 
 # define FOOD_TICKS 126
 # define EGG_HATCH_TICKS 600
+# define QUEUE_SIZE 10
+# define QUEUE_SIZE_DBG 200
+# define QUEUE_SIZE_GRAPHIC 1024
 
 struct Command_Data {
 	Command		cmd;
