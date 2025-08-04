@@ -267,7 +267,7 @@ void	Player::add_command(std::string trimmed_cmd) {
 			trimmed_cmd = trimmed_cmd.substr(0, pos);
 		}
 		tmp.cmd_name = trimmed_cmd;
-		tmp.cmd = hashString(tmp.cmd_name);
+		tmp.cmd = hashString(tmp.cmd_name, this->graphic_client);
 		command_queue.emplace_back(tmp);
 	}
 	/* std::cout << "After adding: \n";

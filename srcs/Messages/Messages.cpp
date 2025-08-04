@@ -93,6 +93,8 @@ Messages::Messages(Command cmd, void *player, void *map, bool success) {
 		case Unknown:
 			messageStr = "ko\n";
 			break;
+		default:
+			break;
 	}
 }
 
@@ -102,7 +104,7 @@ std::string	&Messages::getMessageStr() {
 	return messageStr;
 }
 
-Command	hashString(const std::string &str) {
+Command hashPlayer(const std::string &str) {
 	if (str == "avance") return Command::Avance;
 	if (str == "droite") return Command::Droite;
 	if (str == "gauche") return Command::Gauche;
@@ -118,4 +120,25 @@ Command	hashString(const std::string &str) {
 	if (str == "connect_nbr") return Command::ConnectNbr;
 	if (str == "mort") return Command::Mort;
 	return Command::Unknown;
+}
+
+Command hashGraphic(const std::string &str) {
+	if (str == "msz") return Command::Map_size;
+	if (str == "bct") return Command::Content_tile;
+	if (str == "mct") return Command::Content_map;
+	if (str == "tna") return Command::Team_names;
+	if (str == "ppo") return Command::Player_pos;
+	if (str == "plv") return Command::Player_lvl;
+	if (str == "pin") return Command::Player_inv;
+	if (str == "sgt") return Command::Time_unit;
+	if (str == "sst") return Command::Time_unit_mod;
+	return Command::Unknown_cmd;
+}
+
+Command	hashString(const std::string &str, bool is_graphic) {
+	if (is_graphic == true) {
+		return hashGraphic(str);
+	} else {
+		return hashPlayer(str);
+	}
 }
