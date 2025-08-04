@@ -28,7 +28,7 @@ class Game
 {
 	private:
 		Tile_Map							map;
-		int									map_width, map_height, id_ctr;
+		int									map_width, map_height, id_ctr, time_unit;
 
 		std::map<int, Player *>				playersfd_map; //key=client_fd
 		std::map<int, Player *>				graphicfd_map; //key=client_fd
@@ -44,6 +44,7 @@ class Game
 		std::map<Command, ActionGHandler>	g_handlers;
 		bool								debug;
 		Inventory world_resources;
+		std::string							winner_team;
 		
 		void init_map(Parser *);
 		void init_teams(Parser *);
@@ -144,8 +145,8 @@ class Game
 		std::string	gr_egg_to_player(int e);
 		std::string	gr_egg_mort(int e);
 		std::string	gr_time_unit();
-		std::string	gr_time_unit_mod(int t);
-		std::string	gr_game_end(std::string winner);
+		std::string	gr_time_unit_mod(Player *);
+		std::string	gr_game_end();
 		std::string gr_server_msg(std::string M);
 		std::string	gr_unknown_cmd();
 		std::string	gr_wrong_params();
