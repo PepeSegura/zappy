@@ -196,32 +196,19 @@ void Game::init_p_handlers_map()
 
 void Game::init_g_handlers_map()
 {
-	p_handlers[Map_size] = &Game::_Avance;
-	p_handlers[Content_tile] = &Game::_Droite;
-	p_handlers[Content_map] = &Game::_Gauche;
-	p_handlers[Team_names] = &Game::_Voir;
-	p_handlers[Player_new_conn] = &Game::_Inventaire;
-	p_handlers[Player_pos] = &Game::_Prend;
-	p_handlers[Player_lvl] = &Game::_Pose;
-	p_handlers[Player_inv] = &Game::_Expulse;
-	p_handlers[Player_expelled] = &Game::_Broadcast;
-	p_handlers[Player_broadcast] = &Game::_IncantationBgn;
-	p_handlers[Player_fork] = &Game::_IncantationEnd;
-	p_handlers[Player_pose] = &Game::_Fork;
-	p_handlers[Player_prend] = &Game::_ConnectNbr;
-	p_handlers[Player_mort] = &Game::_Mort;
-	p_handlers[Incantation_start] = &Game::_Unknown;
-	p_handlers[Incantation_res] = &Game::_Unknown;
-	p_handlers[Egg_laid_by_player] = &Game::_Unknown;
-	p_handlers[Egg_hatch] = &Game::_Unknown;
-	p_handlers[Egg_to_player] = &Game::_Unknown;
-	p_handlers[Egg_mort] = &Game::_Unknown;
-	p_handlers[Time_unit] = &Game::_Unknown;
-	p_handlers[Time_unit_mod] = &Game::_Unknown;
-	p_handlers[Game_end] = &Game::_Unknown;
-	p_handlers[Server_msg] = &Game::_Unknown;
-	p_handlers[Unknown_cmd] = &Game::_Unknown;
-	p_handlers[Wrong_params] = &Game::_Unknown;
+	g_handlers[Map_size] = &Game::gr_map_size;
+	g_handlers[Content_tile] = &Game::gr_content_tile;
+	g_handlers[Content_map] = &Game::gr_content_map;
+	g_handlers[Team_names] = &Game::gr_team_names;
+
+	g_handlers[Player_pos] = &Game::gr_player_pos;
+	g_handlers[Player_lvl] = &Game::gr_player_lvl;
+	g_handlers[Player_inv] = &Game::gr_player_inv;
+
+	g_handlers[Time_unit] = &Game::gr_time_unit;
+	g_handlers[Time_unit_mod] = &Game::gr_time_unit_mod;
+
+	g_handlers[Unknown_cmd] = &Game::gr_unknown_cmd;
 }
 
 Game::Game(Parser *parser)

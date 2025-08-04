@@ -11,8 +11,8 @@
 
 class Game;
 
-typedef void (Game::*ActionPHandler)(Player *);
-typedef void (Game::*ActionGPHandler)(int, int);
+typedef void		(Game::*ActionPHandler)(Player *);
+typedef std::string	(Game::*ActionGHandler)(Player *);
 typedef std::vector<std::vector<Tile>> Tile_Map;
 
 struct Incantation_Reqs {
@@ -41,7 +41,7 @@ class Game
 		std::map<Command, int64_t>			action_time_table;
 		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
 		std::map<Command, ActionPHandler>	p_handlers;
-		std::map<Command, ActionPHandler>	g_handlers;
+		std::map<Command, ActionGHandler>	g_handlers;
 		bool								debug;
 		Inventory world_resources;
 		
@@ -113,9 +113,19 @@ class Game
 		void	_Unknown(Player*);
 
 		/* Graphic handlers */
+		std::string	gr_map_size(Player*);
+		std::string	gr_content_tile(Player*);
+		std::string	gr_content_map(Player*);
+		std::string	gr_team_names(Player*);
+		std::string	gr_player_pos(Player*);
+		std::string	gr_player_lvl(Player*);
+		std::string	gr_player_inv(Player*);
+		std::string	gr_time_unit(Player*);
+		std::string	gr_time_unit_mod(Player*);
+		std::string	gr_unknown_cmd(Player*);
+
 		std::string	gr_map_size();
 		std::string	gr_content_tile(int y, int x);
-		std::string	gr_content_map();
 		std::string	gr_team_names();
 		std::string	gr_player_new_conn();
 		std::string	gr_player_pos(int n);
