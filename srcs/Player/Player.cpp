@@ -251,7 +251,7 @@ void	Player::set_send_buffer(std::string buffer)
 	this->send_buffer += buffer;
 }
 
-void	Player::set_handshake(bool &status)
+void	Player::set_handshake(bool status)
 {
 	this->handshake_finished = status;
 }

@@ -94,7 +94,7 @@ class Player
 		void		clear_send_buffer(void);
 		void		set_send_buffer(std::string);
 		void		set_team_name(std::string &);
-		void		set_handshake(bool &);
+		void		set_handshake(bool);
 		void		add_command(std::string);
 		void		set_last_start_time(std::chrono::high_resolution_clock::time_point);
 		void		set_disconnect(bool);
