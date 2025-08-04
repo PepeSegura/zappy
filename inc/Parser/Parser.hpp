@@ -7,8 +7,6 @@
 # include "FlagParser.hpp"
 
 typedef std::vector<std::string> t_teams_names;
-# define QUEUE_SIZE 10
-# define QUEUE_SIZE_DBG 200
 # define GRAPHIC_NAME "GRAPHIC"
 
 class Parser {

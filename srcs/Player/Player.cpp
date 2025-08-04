@@ -29,9 +29,10 @@ Player::Player(Game *game)
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = std::chrono::system_clock::from_time_t(0);
+	id = -1;
 }
 
-Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game)
+Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game, int id)
 {
 	// std::cout << "PLAYER(std::string team)\n";
 	this->graphic_client = false;
@@ -55,6 +56,7 @@ Player::Player(std::string team, std::chrono::high_resolution_clock::time_point 
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = egg_creation;
+	this->id = id;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -194,6 +196,10 @@ bool Player::get_dead() const {
 	return this->dead;
 }
 
+int Player::get_id() const {
+	return this->id;
+}
+
 bool Player::is_hatched() const {
 	auto now = std::chrono::high_resolution_clock::now();
 	return (now - egg_creation >= EGG_HATCH_TICKS * game_ptr->get_tick_interval());
@@ -259,6 +265,7 @@ void	Player::set_handshake(bool status)
 void	Player::add_command(std::string trimmed_cmd) {
 	size_t size_queue;
 	(this->game_ptr->get_debug()) ? size_queue = QUEUE_SIZE_DBG : size_queue = QUEUE_SIZE;
+	if (this->graphic_client) size_queue = QUEUE_SIZE_GRAPHIC;
 	if (command_queue.size() < size_queue) { // TODO set back to 10
 		size_t pos = trimmed_cmd.find(" ");
 		Command_Data tmp;

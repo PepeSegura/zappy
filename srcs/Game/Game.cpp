@@ -175,23 +175,40 @@ void Game::init_encantation_reqs_map()
 	}
 }
 
-void Game::init_handlers_map()
+void Game::init_p_handlers_map()
 {
-	handlers[Avance] = &Game::_Avance;
-	handlers[Droite] = &Game::_Droite;
-	handlers[Gauche] = &Game::_Gauche;
-	handlers[Voir] = &Game::_Voir;
-	handlers[Inventaire] = &Game::_Inventaire;
-	handlers[Prend] = &Game::_Prend;
-	handlers[Pose] = &Game::_Pose;
-	handlers[Expulse] = &Game::_Expulse;
-	handlers[Broadcast] = &Game::_Broadcast;
-	handlers[IncantationBgn] = &Game::_IncantationBgn;
-	handlers[IncantationEnd] = &Game::_IncantationEnd;
-	handlers[Fork] = &Game::_Fork;
-	handlers[ConnectNbr] = &Game::_ConnectNbr;
-	handlers[Mort] = &Game::_Mort;
-	handlers[Unknown] = &Game::_Unknown;
+	p_handlers[Avance] = &Game::_Avance;
+	p_handlers[Droite] = &Game::_Droite;
+	p_handlers[Gauche] = &Game::_Gauche;
+	p_handlers[Voir] = &Game::_Voir;
+	p_handlers[Inventaire] = &Game::_Inventaire;
+	p_handlers[Prend] = &Game::_Prend;
+	p_handlers[Pose] = &Game::_Pose;
+	p_handlers[Expulse] = &Game::_Expulse;
+	p_handlers[Broadcast] = &Game::_Broadcast;
+	p_handlers[IncantationBgn] = &Game::_IncantationBgn;
+	p_handlers[IncantationEnd] = &Game::_IncantationEnd;
+	p_handlers[Fork] = &Game::_Fork;
+	p_handlers[ConnectNbr] = &Game::_ConnectNbr;
+	p_handlers[Mort] = &Game::_Mort;
+	p_handlers[Unknown] = &Game::_Unknown;
+}
+
+void Game::init_g_handlers_map()
+{
+	g_handlers[Map_size] = &Game::gr_map_size;
+	g_handlers[Content_tile] = &Game::gr_content_tile;
+	g_handlers[Content_map] = &Game::gr_content_map;
+	g_handlers[Team_names] = &Game::gr_team_names;
+
+	g_handlers[Player_pos] = &Game::gr_player_pos;
+	g_handlers[Player_lvl] = &Game::gr_player_lvl;
+	g_handlers[Player_inv] = &Game::gr_player_inv;
+
+	g_handlers[Time_unit] = &Game::gr_time_unit;
+	g_handlers[Time_unit_mod] = &Game::gr_time_unit_mod;
+
+	g_handlers[Unknown_cmd] = &Game::gr_unknown_cmd;
 }
 
 Game::Game(Parser *parser)
@@ -199,11 +216,14 @@ Game::Game(Parser *parser)
 	init_map(parser);
 	init_teams(parser);
 	init_action_time_map();
-	init_handlers_map();
+	init_p_handlers_map();
+	init_g_handlers_map();
 	init_encantation_reqs_map();
 	
 	this->end = false;
 	this->debug = parser->getDebug();
+	this->id_ctr = 0;
+	this->winner_team = "";
 	set_tick_millis(parser->getTimeFreq());
 }
 
@@ -293,6 +313,7 @@ void	Game::set_tick_millis(int64_t t) {
 		std::cerr << "Invalid freq; allowed values [1, 1000]\n";
 		return ;
 	}
+	this->time_unit = t;
 	this->tick_interval = std::chrono::nanoseconds(1000000000 / t);
 }
 
@@ -304,6 +325,8 @@ void	Game::try2handshake(Player *p) {
 		p->set_handshake(true);
 		p->set_state(Player_States::Free);
 		p->pop_command();
+		p->set_send_buffer(gr_map_size());
+		p->set_send_buffer(gr_content_map());
 		std::cout << "NEW GCLIENT WITH FD:" << p->get_sock_fd() << std::endl;
 		graphicfd_map[p->get_sock_fd()] = p;
 		return ;
@@ -335,8 +358,8 @@ void	Game::try2handshake(Player *p) {
 
 void	Game::check_player_action(Player *player) {
 	auto action_time = action_time_table[player->get_current_command().cmd] * get_tick_interval();
-	if (action_time <= now - player->get_last_start_time()) { //action ended, call handlers
-		(this->*handlers[player->get_current_command().cmd])(player);
+	if (action_time <= now - player->get_last_start_time()) { //action ended, call p_handlers
+		(this->*p_handlers[player->get_current_command().cmd])(player);
 		player->pop_command();
 		player->set_state(Player_States::Free);
 		try2start_action(player);
@@ -350,14 +373,20 @@ void Game::try2start_action(Player *player) {
 	}
 }
 
+int	Game::get_new_id() {
+	return id_ctr++;
+}
+
 void Game::handle_graphic_client(Player *graphic_client) {
 	Command_Data cmd;
 	while (graphic_client->has_queued_actions()) {
 		cmd = graphic_client->get_current_command();
 		//call handlers here
-		std::cout << "Executing craphic command " << cmd.cmd_name
-			<< " (enum: " << std::to_string(cmd.cmd) << ") with args: ("
-				<< cmd.args << ") for graphic client with fd " << std::to_string(graphic_client->get_sock_fd()) << "\n";
+		std::cout << "Executing graphic command " << cmd.cmd_name
+		<< " (enum: " << std::to_string(cmd.cmd) << ") with args: ("
+		<< cmd.args << ") for graphic client with fd " << std::to_string(graphic_client->get_sock_fd()) << "\n";
+		graphic_client->set_send_buffer((this->*g_handlers[cmd.cmd])(graphic_client));
+		std::cout << "AFTER HANDLER\n";
 		graphic_client->pop_command();
 	}
 }

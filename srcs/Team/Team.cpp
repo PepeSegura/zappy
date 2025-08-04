@@ -76,7 +76,7 @@ void	Team::init_eggs(int width, int height) {
 		int x = Utils::random_between(0, width - 1);
 		int y = Utils::random_between(0, height - 1);
 
-		Player *egg = new Player(name, std::chrono::system_clock::from_time_t(0), game);
+		Player *egg = new Player(name, std::chrono::system_clock::from_time_t(0), game, game->get_new_id());
 		egg->set_x(x);
 		egg->set_y(y);
 		add_player(egg);
@@ -113,6 +113,7 @@ Player	*Team::player2egg(Player *p) {
 	}
 	egg->handshake(p);
 	++conns_nbr;
+	std::cout << "Player with fd " << std::to_string(egg->get_sock_fd()) << " assigned to id " << std::to_string(egg->get_id()) << std::endl;
 	return egg;
 }
 

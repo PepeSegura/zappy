@@ -11,7 +11,8 @@
 
 class Game;
 
-typedef void (Game::*ActionHandler)(Player *);
+typedef void		(Game::*ActionPHandler)(Player *);
+typedef std::string	(Game::*ActionGHandler)(Player *);
 typedef std::vector<std::vector<Tile>> Tile_Map;
 
 struct Incantation_Reqs {
@@ -27,7 +28,7 @@ class Game
 {
 	private:
 		Tile_Map							map;
-		int									map_width, map_height;
+		int									map_width, map_height, id_ctr, time_unit;
 
 		std::map<int, Player *>				playersfd_map; //key=client_fd
 		std::map<int, Player *>				graphicfd_map; //key=client_fd
@@ -39,15 +40,18 @@ class Game
 
 		std::map<Command, int64_t>			action_time_table;
 		std::map<int, Incantation_Reqs>		incantation_lvl_reqs;
-		std::map<Command, ActionHandler>	handlers;
+		std::map<Command, ActionPHandler>	p_handlers;
+		std::map<Command, ActionGHandler>	g_handlers;
 		bool								debug;
 		Inventory world_resources;
+		std::string							winner_team;
 		
 		void init_map(Parser *);
 		void init_teams(Parser *);
 		void init_action_time_map();
 		void init_encantation_reqs_map();
-		void init_handlers_map();
+		void init_p_handlers_map();
+		void init_g_handlers_map();
 		void check_player_action(Player *);
 		void try2start_action(Player *);
 
@@ -85,6 +89,7 @@ class Game
 
 		Tile_Map	&get_tile_map() { return map; }
 		bool		get_debug() const { return this->debug; }
+		int			get_new_id();
 
 		/* Handlers */
 		void	_Avance(Player*);
@@ -107,4 +112,43 @@ class Game
 		void	_ConnectNbr(Player*);
 		void	_Mort(Player*);
 		void	_Unknown(Player*);
+
+		/* Graphic handlers */
+		std::string	gr_map_size(Player*);
+		std::string	gr_content_tile(Player*);
+		std::string	gr_content_map(Player*);
+		std::string	gr_team_names(Player*);
+		std::string	gr_player_pos(Player*);
+		std::string	gr_player_lvl(Player*);
+		std::string	gr_player_inv(Player*);
+		std::string	gr_time_unit(Player*);
+		std::string	gr_time_unit_mod(Player*);
+		std::string	gr_unknown_cmd(Player*);
+
+		std::string	gr_map_size();
+		std::string	gr_content_tile(int y, int x);
+		std::string	gr_content_map();
+		std::string	gr_team_names();
+		std::string	gr_player_new_conn();
+		std::string	gr_player_pos(int n);
+		std::string	gr_player_lvl(int n);
+		std::string	gr_player_inv(int n);
+		std::string	gr_player_expelled(int n);
+		std::string	gr_player_broadcast(int n);
+		std::string	gr_incantation_start(int n);
+		std::string	gr_incantation_res(int y, int x, int R);
+		std::string	gr_player_fork(int n);
+		std::string	gr_player_pose_resource(int n, int i);
+		std::string	gr_player_prend_resource(int n, int i);
+		std::string	gr_player_mort(int n);
+		std::string	gr_egg_laid_by_player(int e, int n, int y, int x);
+		std::string	gr_egg_hatch(int e);
+		std::string	gr_egg_to_player(int e);
+		std::string	gr_egg_mort(int e);
+		std::string	gr_time_unit();
+		std::string	gr_time_unit_mod(int t);
+		std::string	gr_game_end();
+		std::string gr_server_msg(std::string M);
+		std::string	gr_unknown_cmd();
+		std::string	gr_wrong_params();
 };
