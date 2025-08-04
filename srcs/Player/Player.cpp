@@ -29,9 +29,10 @@ Player::Player(Game *game)
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = std::chrono::system_clock::from_time_t(0);
+	id = -1;
 }
 
-Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game)
+Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game, int id)
 {
 	// std::cout << "PLAYER(std::string team)\n";
 	this->graphic_client = false;
@@ -55,6 +56,7 @@ Player::Player(std::string team, std::chrono::high_resolution_clock::time_point 
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = egg_creation;
+	this->id = id;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -192,6 +194,10 @@ bool Player::get_is_encantating() const {
 
 bool Player::get_dead() const {
 	return this->dead;
+}
+
+int Player::get_id() const {
+	return this->id;
 }
 
 bool Player::is_hatched() const {

@@ -204,6 +204,7 @@ Game::Game(Parser *parser)
 	
 	this->end = false;
 	this->debug = parser->getDebug();
+	this->id_ctr = 0;
 	set_tick_millis(parser->getTimeFreq());
 }
 
@@ -299,6 +300,8 @@ void	Game::try2handshake(Player *p) {
 		p->set_handshake(true);
 		p->set_state(Player_States::Free);
 		p->pop_command();
+		p->set_send_buffer(gr_map_size());
+		p->set_send_buffer(gr_content_map());
 		std::cout << "NEW GCLIENT WITH FD:" << p->get_sock_fd() << std::endl;
 		graphicfd_map[p->get_sock_fd()] = p;
 		return ;
@@ -343,4 +346,8 @@ void Game::try2start_action(Player *player) {
 		player->set_last_start_time(now);
 		player->set_state(Player_States::ExecutingAction);
 	}
+}
+
+int	Game::get_new_id() {
+	return id_ctr++;
 }

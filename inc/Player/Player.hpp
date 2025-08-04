@@ -43,7 +43,7 @@ class Player
 		bool		handshake_finished;
 		bool		is_disconnected, is_encantating, encantation_prechecked;
 
-		int			sock_fd;
+		int			sock_fd, id;
 		int			state;
 		std::string	send_buffer;
 		std::string msg_to_parse;
@@ -56,7 +56,7 @@ class Player
 
 	public:
 		Player();
-		Player(std::string, std::chrono::high_resolution_clock::time_point, Game *);
+		Player(std::string, std::chrono::high_resolution_clock::time_point, Game *, int id);
 		Player(Game*);
 		~Player();
 
@@ -82,6 +82,7 @@ class Player
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
 		bool		get_dead() const;
+		int			get_id() const;
 		bool		is_hatched() const;
 
 		void		set_graphic_client(bool);

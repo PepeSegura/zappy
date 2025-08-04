@@ -46,6 +46,7 @@ enum Command {
 	Time_unit,
 	Time_unit_mod,
 	Game_end,
+	Server_msg,
 	Unknown_cmd,
 	Wrong_params,
 };
