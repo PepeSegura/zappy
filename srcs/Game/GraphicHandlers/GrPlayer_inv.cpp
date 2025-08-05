@@ -2,8 +2,30 @@
 
 std::string	Game::gr_player_inv(int player_id)
 {
-	(void)player_id;
-	return "Working on it\n";
+	Inventory inv;
+	int x, y, found = 0;
+
+	for (auto [fd, player] : this->playersfd_map)
+	{
+		if (player->get_id() == player_id)
+		{
+			found = 1;
+			inv = player->get_inv();
+			x = player->get_x();
+			y = player->get_y();
+			break ;
+		}
+	}
+	if (not found)
+		return gr_wrong_params();
+	return "pin " + std::to_string(x) + " " + std::to_string(y) + " "
+				  + std::to_string(inv.get_nourriture())		+ " "
+				  + std::to_string(inv.get_linemate())			+ " "
+				  + std::to_string(inv.get_deraumere())			+ " "
+				  + std::to_string(inv.get_sibur())				+ " "
+				  + std::to_string(inv.get_mendiane())			+ " "
+				  + std::to_string(inv.get_phiras())			+ " "
+				  + std::to_string(inv.get_thystame())			+ "\n";
 }
 
 std::string	Game::gr_player_inv(Player *p)

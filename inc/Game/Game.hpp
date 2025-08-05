@@ -68,6 +68,7 @@ class Game
 		~Game();
 
 		std::map<int, Player *>	&get_players_map();
+		Player&					get_player_by_id(int player_id);
 
 		void					add_player_to_fdmap(int, Player *);
 		void					add_player_to_team(std::string, Player *);
