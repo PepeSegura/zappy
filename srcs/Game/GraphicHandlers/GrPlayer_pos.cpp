@@ -2,8 +2,43 @@
 
 std::string	Game::gr_player_pos(int player_id)
 {
-	(void)player_id;
-	return "Working on it\n";
+	char dir;
+	int x, y, found = 0;
+
+	for (auto [fd, player] : this->playersfd_map)
+	{
+		if (player->get_id() == player_id)
+		{
+			found = 1;
+			dir = (char)player->get_dir();
+			x = player->get_x();
+			y = player->get_y();
+			break ;
+		}
+	}
+	if (!found)
+		return gr_wrong_params();
+
+	switch (dir) {
+		case 'N':
+			found = 1;
+			break ;
+		case 'S':
+			found = 3;
+			break ;
+		case 'E':
+			found = 2;
+			break ;
+		case 'W':
+			found = 4;
+			break ;
+		default:
+			found = 1;
+			break ;
+	}
+	return "ppo " + std::to_string(player_id) + " " 
+				  + std::to_string(x) + " " + std::to_string(y) + " "
+				  + std::to_string(found)		+ "\n";
 }
 
 std::string	Game::gr_player_pos(Player *p)
