@@ -135,7 +135,7 @@ class Game
 		std::string	gr_player_lvl(int n);
 		std::string	gr_player_inv(int n);
 		std::string	gr_player_expelled(int n);
-		std::string	gr_player_broadcast(int n);
+		std::string	gr_player_broadcast(int n, std::string msg);
 		std::string	gr_incantation_start(int n);
 		std::string	gr_incantation_res(int y, int x, int R);
 		std::string	gr_player_fork(int n);

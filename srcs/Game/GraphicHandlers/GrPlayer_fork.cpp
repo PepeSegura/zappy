@@ -1,4 +1,5 @@
-/* std::string	Game::gr_egg_laid_by_player(int e, int n, int y, int x) {
-	(void) e, (void) n, (void) y, (void) x;
-	return std::string("msz " + std::to_string(map_width) + " " + std::to_string(map_height) + "\n");
-} */
+#include "Game.hpp"
+
+std::string	Game::gr_player_fork(int n) {
+	return std::string("pfk " + std::to_string(n) + "\n");
+}
