@@ -16,9 +16,10 @@ std::string	Game::gr_player_inv(int player_id)
 			break ;
 		}
 	}
-	if (not found)
+	if (!found)
 		return gr_wrong_params();
-	return "pin " + std::to_string(x) + " " + std::to_string(y) + " "
+	return "pin " + std::to_string(player_id) + " " 
+				  + std::to_string(x) + " " + std::to_string(y) + " "
 				  + std::to_string(inv.get_nourriture())		+ " "
 				  + std::to_string(inv.get_linemate())			+ " "
 				  + std::to_string(inv.get_deraumere())			+ " "

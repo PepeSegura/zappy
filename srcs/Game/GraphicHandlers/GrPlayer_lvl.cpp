@@ -2,8 +2,21 @@
 
 std::string	Game::gr_player_lvl(int player_id)
 {
-	(void)player_id;
-	return "Working on it\n";
+	int lvl, found = 0;
+
+	for (auto [fd, player] : this->playersfd_map)
+	{
+		if (player->get_id() == player_id)
+		{
+			found = 1;
+			lvl = player->get_level();
+			break ;
+		}
+	}
+	if (!found)
+		return gr_wrong_params();
+	return "plv " + std::to_string(player_id) + " "
+				  + std::to_string(lvl)			+ "\n";
 }
 
 std::string	Game::gr_player_lvl(Player *p)
