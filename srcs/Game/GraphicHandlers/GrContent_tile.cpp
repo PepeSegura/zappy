@@ -21,7 +21,7 @@ std::string	Game::gr_content_tile(Player *p) {
 
 		x = std::stoi(splitted_args[0]);
 		y = std::stoi(splitted_args[1]);
-		if (x < 0 || y < 0 || x > this->map_width || y > this->map_height)
+		if (x < 0 || y < 0 || x >= this->map_width || y >= this->map_height)
 			throw std::runtime_error("Invalid coordinates");
 	}
 	catch(const std::exception& e)
