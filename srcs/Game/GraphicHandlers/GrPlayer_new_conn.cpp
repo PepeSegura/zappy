@@ -31,7 +31,7 @@ std::string	Game::gr_player_new_conn(Player *player)
 			dir = 1;
 			break ;
 	}
-	return "pnw " + std::to_string(id) + " " 
+	return "pnw " + std::to_string(id) + " "
 				  + std::to_string(x) + " " + std::to_string(y) + " "
 				  + std::to_string(dir) + " " + std::to_string(level) + " "
 				  + team_name + "\n";
