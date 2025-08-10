@@ -17,6 +17,7 @@ namespace Utils {
 	int		random_between(int, int);
 	double	get_distance(int ay, int ax, int by, int bx);
 	std::vector<std::string> split_by_spaces(const std::string& s);
+	int 	hash_item(std::string item);
 }
 
 #endif

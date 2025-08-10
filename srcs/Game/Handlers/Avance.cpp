@@ -9,4 +9,5 @@ void Game::_Avance(Player *p)
 	this->map[p->get_y()][p->get_x()].add_player_to_team(p);
 	Messages rsp = Messages(Command::Avance, (void *) p, (void *) &map, true);
 	p->set_send_buffer(rsp.getMessageStr());
+	send2grclients(gr_player_pos(p->get_id()));
 }

@@ -98,7 +98,7 @@ class Game
 		void	_Gauche(Player*);
 		void	_Voir(Player*);
 		void	_Inventaire(Player*);
-		void	aux_prend_pose(Player*, std::string, int, int);
+		int		aux_prend_pose(Player*, std::string, int, int);
 		void	_Prend(Player*);
 		void	_Pose(Player*);
 		void	_Expulse(Player*);
@@ -139,8 +139,8 @@ class Game
 		std::string	gr_incantation_start(int y, int x, int L, std::vector<int> ids);
 		std::string	gr_incantation_res(int y, int x, int R);
 		std::string	gr_player_fork(int n);
-		std::string	gr_player_pose_resource(int n, int i);
-		std::string	gr_player_prend_resource(int n, int i);
+		std::string	gr_player_pose_resource(int n, std::string item);
+		std::string	gr_player_prend_resource(int n, std::string item);
 		std::string	gr_player_mort(int n);
 		std::string	gr_egg_laid_by_player(int e, int n, int y, int x);
 		std::string	gr_egg_hatch(int e);
@@ -154,4 +154,5 @@ class Game
 		std::string	gr_wrong_params();
 
 		void 		send2grclients(std::string str);
+		std::string	welcome_graphic();
 };

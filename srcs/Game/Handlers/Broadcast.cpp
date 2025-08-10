@@ -140,4 +140,5 @@ void Game::_Broadcast(Player *p)
 		}
 	}
 	p->set_send_buffer("ok\n");
+	send2grclients(gr_player_broadcast(p->get_id(), msg));
 }

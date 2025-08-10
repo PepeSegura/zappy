@@ -43,7 +43,10 @@ void Game::_Expulse(Player *p)
 			old_tile.remove_player_from_team(player);
 			player->set_send_buffer("deplacement " + comming_from + "\n");
 			response = "ok\n";
+			send2grclients(gr_player_expelled(player->get_id()));
+			send2grclients(gr_player_pos(player->get_id()));
 		}
 	}
 	p->set_send_buffer(response);
+	
 }

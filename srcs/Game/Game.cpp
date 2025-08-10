@@ -282,6 +282,7 @@ void Game::run_tick() {
 				}
 				if (player->get_dead()) {
 					player->set_send_buffer("mort\n");
+					send2grclients(gr_player_mort(player->get_id()));
 					if (player->get_disconnected()) { remove_player(player); }
 					continue;
 				}
@@ -325,8 +326,7 @@ void	Game::try2handshake(Player *p) {
 		p->set_handshake(true);
 		p->set_state(Player_States::Free);
 		p->pop_command();
-		p->set_send_buffer(gr_map_size());
-		p->set_send_buffer(gr_content_map());
+		p->set_send_buffer(welcome_graphic());
 		std::cout << "NEW GCLIENT WITH FD:" << p->get_sock_fd() << std::endl;
 		graphicfd_map[p->get_sock_fd()] = p;
 		return ;
@@ -396,4 +396,34 @@ void Game::send2grclients(std::string str) {
 	for (auto &[id, client] : graphicfd_map) {
 		client->set_send_buffer(str);
 	}
+}
+
+std::string	Game::welcome_graphic() {
+	std::string welcome;
+
+	welcome = gr_map_size();
+	welcome += gr_time_unit();
+	welcome += gr_content_map();
+	welcome += gr_team_names();
+	
+	/* Loop for connecteg players */
+	
+	for (auto &[teamname, team]: teams) {
+		for (auto player : team.get_team_players()) {
+			if (!player->get_disconnected()) {
+				welcome += gr_player_new_conn(player);
+			}
+		}
+	}
+
+	/* Loop for eggs */
+	
+	for (auto &[teamname, team]: teams) {
+		for (auto player : team.get_team_players()) {
+			if (player->get_disconnected() && player->is_hatched()) {
+				welcome += gr_egg_laid_by_player(player->get_id(), player->get_id(), player->get_y(), player->get_x());
+			}
+		}
+	}
+	return welcome;
 }

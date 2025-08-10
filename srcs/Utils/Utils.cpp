@@ -42,3 +42,14 @@ std::vector<std::string> Utils::split_by_spaces(const std::string& s) {
 	
 	return result;
 }
+
+int 	Utils::hash_item(std::string item) {
+	if (item == "nourriture") return 0;
+	if (item == "linemate") return 1;
+	if (item == "deraumere") return 2;
+	if (item == "sibur") return 3;
+	if (item == "mendiane") return 4;
+	if (item == "phiras") return 5;
+	if (item == "thystame") return 6;
+	return -1;
+}
