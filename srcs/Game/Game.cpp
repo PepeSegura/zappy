@@ -342,6 +342,7 @@ void	Game::try2handshake(Player *p) {
 	}
 	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
 		Player *connected_player = teams[p->get_current_command().cmd_name].player2egg(p);
+		send2grclients(gr_player_new_conn(connected_player));
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
 		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns())
@@ -388,5 +389,11 @@ void Game::handle_graphic_client(Player *graphic_client) {
 		graphic_client->set_send_buffer((this->*g_handlers[cmd.cmd])(graphic_client));
 		std::cout << "AFTER HANDLER\n";
 		graphic_client->pop_command();
+	}
+}
+
+void Game::send2grclients(std::string str) {
+	for (auto &[id, client] : graphicfd_map) {
+		client->set_send_buffer(str);
 	}
 }

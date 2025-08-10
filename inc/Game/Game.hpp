@@ -152,4 +152,6 @@ class Game
 		std::string gr_server_msg(std::string M);
 		std::string	gr_unknown_cmd();
 		std::string	gr_wrong_params();
+
+		void 		send2grclients(std::string str);
 };
