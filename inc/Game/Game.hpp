@@ -68,6 +68,7 @@ class Game
 		~Game();
 
 		std::map<int, Player *>	&get_players_map();
+		Player&					get_player_by_id(int player_id);
 
 		void					add_player_to_fdmap(int, Player *);
 		void					add_player_to_team(std::string, Player *);
@@ -97,7 +98,7 @@ class Game
 		void	_Gauche(Player*);
 		void	_Voir(Player*);
 		void	_Inventaire(Player*);
-		void	aux_prend_pose(Player*, std::string, int, int);
+		int		aux_prend_pose(Player*, std::string, int, int);
 		void	_Prend(Player*);
 		void	_Pose(Player*);
 		void	_Expulse(Player*);
@@ -129,17 +130,17 @@ class Game
 		std::string	gr_content_tile(int y, int x);
 		std::string	gr_content_map();
 		std::string	gr_team_names();
-		std::string	gr_player_new_conn();
+		std::string	gr_player_new_conn(Player *player);
 		std::string	gr_player_pos(int n);
 		std::string	gr_player_lvl(int n);
 		std::string	gr_player_inv(int n);
 		std::string	gr_player_expelled(int n);
-		std::string	gr_player_broadcast(int n);
-		std::string	gr_incantation_start(int n);
+		std::string	gr_player_broadcast(int n, std::string msg);
+		std::string	gr_incantation_start(int y, int x, int L, std::vector<int> ids);
 		std::string	gr_incantation_res(int y, int x, int R);
 		std::string	gr_player_fork(int n);
-		std::string	gr_player_pose_resource(int n, int i);
-		std::string	gr_player_prend_resource(int n, int i);
+		std::string	gr_player_pose_resource(int n, std::string item);
+		std::string	gr_player_prend_resource(int n, std::string item);
 		std::string	gr_player_mort(int n);
 		std::string	gr_egg_laid_by_player(int e, int n, int y, int x);
 		std::string	gr_egg_hatch(int e);
@@ -151,4 +152,7 @@ class Game
 		std::string gr_server_msg(std::string M);
 		std::string	gr_unknown_cmd();
 		std::string	gr_wrong_params();
+
+		void 		send2grclients(std::string str);
+		std::string	welcome_graphic();
 };

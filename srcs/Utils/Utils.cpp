@@ -24,3 +24,32 @@ double Utils::get_distance(int ay, int ax, int by, int bx)
 	std::cout << "Distance: " << distance << std::endl;
 	return (distance);
 }
+
+std::vector<std::string> Utils::split_by_spaces(const std::string& s) {
+	std::vector<std::string> result;
+	auto it = s.begin();
+	
+	while (it != s.end()) {
+		it = std::find_if_not(it, s.end(), [](char c) { return c == ' '; });
+		
+		auto end = std::find_if(it, s.end(), [](char c) { return c == ' '; });
+		
+		if (it != end) {
+			result.emplace_back(it, end);
+			it = end;
+		}
+	}
+	
+	return result;
+}
+
+int 	Utils::hash_item(std::string item) {
+	if (item == "nourriture") return 0;
+	if (item == "linemate") return 1;
+	if (item == "deraumere") return 2;
+	if (item == "sibur") return 3;
+	if (item == "mendiane") return 4;
+	if (item == "phiras") return 5;
+	if (item == "thystame") return 6;
+	return -1;
+}

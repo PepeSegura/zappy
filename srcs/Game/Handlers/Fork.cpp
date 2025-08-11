@@ -14,4 +14,5 @@ void Game::_Fork(Player *p)
 	this->map[p->get_y()][p->get_x()].add_player_to_team(egg);
 
 	p->set_send_buffer("ok\n");
+	send2grclients(gr_player_fork(p->get_id()));
 }

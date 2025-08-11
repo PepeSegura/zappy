@@ -11,7 +11,24 @@ std::string	Game::gr_content_tile(int y, int x) {
 
 std::string	Game::gr_content_tile(Player *p) {
 	std::string args = p->get_current_command().args;
+	std::vector<std::string> splitted_args = Utils::split_by_spaces(args);
 
-	// args.sp
-	return ("CAMBIAR; ESTOY DEBUG");
+	int x = -1, y = -1;
+	try
+	{
+		if (splitted_args.size() != 2)
+			throw std::runtime_error("Incorrect number of coordinates");
+
+		x = std::stoi(splitted_args[0]);
+		y = std::stoi(splitted_args[1]);
+		if (x < 0 || y < 0 || x >= this->map_width || y >= this->map_height)
+			throw std::runtime_error("Invalid coordinates");
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Error: " << e.what() << '\n';
+		return gr_wrong_params();
+	}
+
+	return gr_content_tile(y, x);
 }

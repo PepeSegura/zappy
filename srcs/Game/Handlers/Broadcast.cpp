@@ -134,10 +134,11 @@ void Game::_Broadcast(Player *p)
 	std::cout << "EXECUTING BROADCAST\n";
 	for (auto [fd, player] : this->playersfd_map)
 	{
-		if (player->get_handshake() == true && player != p)
+		if (player->get_handshake() && !player->is_graphic_client() && player != p)
 		{
 			player->set_send_buffer("message " + std::to_string(get_sound_direction(p, player)) + "," + msg + "\n");
 		}
 	}
 	p->set_send_buffer("ok\n");
+	send2grclients(gr_player_broadcast(p->get_id(), msg));
 }
