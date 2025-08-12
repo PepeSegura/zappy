@@ -20,6 +20,17 @@ struct Incantation_Reqs {
 			deraumere_req, sibur_req,
 			mendiane_req, phiras_req,
 			thystame_req;
+
+	Incantation_Reqs() {};
+	Incantation_Reqs(int players, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) {
+		this->nbr_of_players = players;
+		this->linemate_req = linemate;
+		this->deraumere_req = deraumere;
+		this->sibur_req = sibur;
+		this->mendiane_req = mendiane;
+		this->phiras_req = phiras;
+		this->thystame_req = thystame;
+	};
 };
 
 # define FOOD_SPAWN_RATE 20
@@ -68,7 +79,6 @@ class Game
 		~Game();
 
 		std::map<int, Player *>	&get_players_map();
-		Player&					get_player_by_id(int player_id);
 
 		void					add_player_to_fdmap(int, Player *);
 		void					add_player_to_team(std::string, Player *);

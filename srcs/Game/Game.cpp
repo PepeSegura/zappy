@@ -40,16 +40,12 @@ void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(i
 		(random_tile.*adder)(1);
 		(world_resources.*adder)(1);
 
-		/* std::cout << "(" << random_height << ", " << random_width << ") -> "
-				  << item_string.at(item)
-				  << std::endl; */
+		send2grclients(gr_content_tile(random_height, random_width));
 	}
 }
 
 void Game::gen_map_resources()
 {
-	//std::cout << "Generating new resources" << std::endl;
-
 	gen_item(&Inventory::get_nourriture, &Inventory::add_nourriture, Item::NOURRITURE);
     gen_item(&Inventory::get_linemate, &Inventory::add_linemate, Item::LINEMATE);
     gen_item(&Inventory::get_deraumere, &Inventory::add_deraumere, Item::DERAUMERE);
@@ -57,8 +53,6 @@ void Game::gen_map_resources()
     gen_item(&Inventory::get_mendiane, &Inventory::add_mendiane, Item::MENDIANE);
     gen_item(&Inventory::get_phiras, &Inventory::add_phiras, Item::PHIRAS);
     gen_item(&Inventory::get_thystame, &Inventory::add_thystame, Item::THYSTAME);
-
-	//std::cout << "---\nTotal World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
@@ -105,63 +99,13 @@ void Game::init_action_time_map() {
 
 void Game::init_encantation_reqs_map()
 {
-	Incantation_Reqs tmp;
-	tmp.nbr_of_players = 1;
-	tmp.linemate_req = 1;
-	tmp.deraumere_req = 0;
-	tmp.sibur_req = 0;
-	tmp.mendiane_req = 0;
-	tmp.phiras_req = 0;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[1] = tmp;
-	tmp.nbr_of_players = 2;
-	tmp.linemate_req = 1;
-	tmp.deraumere_req = 1;
-	tmp.sibur_req = 1;
-	tmp.mendiane_req = 0;
-	tmp.phiras_req = 0;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[2] = tmp;
-	tmp.nbr_of_players = 2;
-	tmp.linemate_req = 2;
-	tmp.deraumere_req = 0;
-	tmp.sibur_req = 1;
-	tmp.mendiane_req = 0;
-	tmp.phiras_req = 2;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[3] = tmp;
-	tmp.nbr_of_players = 4;
-	tmp.linemate_req = 1;
-	tmp.deraumere_req = 1;
-	tmp.sibur_req = 2;
-	tmp.mendiane_req = 0;
-	tmp.phiras_req = 1;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[4] = tmp;
-	tmp.nbr_of_players = 4;
-	tmp.linemate_req = 1;
-	tmp.deraumere_req = 2;
-	tmp.sibur_req = 1;
-	tmp.mendiane_req = 3;
-	tmp.phiras_req = 0;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[5] = tmp;
-	tmp.nbr_of_players = 6;
-	tmp.linemate_req = 1;
-	tmp.deraumere_req = 2;
-	tmp.sibur_req = 3;
-	tmp.mendiane_req = 0;
-	tmp.phiras_req = 1;
-	tmp.thystame_req = 0;
-	incantation_lvl_reqs[6] = tmp;
-	tmp.nbr_of_players = 6;
-	tmp.linemate_req = 2;
-	tmp.deraumere_req = 2;
-	tmp.sibur_req = 2;
-	tmp.mendiane_req = 2;
-	tmp.phiras_req = 2;
-	tmp.thystame_req = 1;
-	incantation_lvl_reqs[7] = tmp;
+	incantation_lvl_reqs[1] = Incantation_Reqs(1, 1, 0, 0, 0, 0, 0);
+	incantation_lvl_reqs[2] = Incantation_Reqs(2, 1, 1, 1, 0, 0, 0);
+	incantation_lvl_reqs[3] = Incantation_Reqs(2, 2, 0, 1, 0, 2, 0);
+	incantation_lvl_reqs[4] = Incantation_Reqs(4, 1, 1, 2, 0, 1, 0);
+	incantation_lvl_reqs[5] = Incantation_Reqs(4, 1, 2, 1, 3, 0, 0);
+	incantation_lvl_reqs[6] = Incantation_Reqs(6, 1, 2, 3, 0, 1, 0);
+	incantation_lvl_reqs[7] = Incantation_Reqs(6, 2, 2, 2, 2, 2, 1);
 	std::cout << "Reqs lvl n:pl;li;de;si;me;ph;th\n";
 	for (auto [i, reqs] : incantation_lvl_reqs) {
 		std::cout << "Reqs lvl " << std::to_string(i) << ": " 
