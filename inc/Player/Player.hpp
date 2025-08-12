@@ -42,7 +42,7 @@ class Player
 		uint8_t		dir; // N, S, W, E
 		int			x;
 		int			y;
-		bool		dead;
+		bool		dead, already_hatched;
 		bool		handshake_finished;
 		bool		is_disconnected, is_encantating, encantation_prechecked;
 
@@ -58,7 +58,7 @@ class Player
 		int64_t		ticks_until_eat;
 
 	public:
-		Player();
+		//Player();
 		Player(std::string, std::chrono::high_resolution_clock::time_point, Game *, int id);
 		Player(Game*);
 		~Player();
@@ -85,6 +85,7 @@ class Player
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
 		bool		get_dead() const;
+		bool		get_already_hatched() const;
 		int			get_id() const;
 		bool		is_hatched() const;
 
@@ -104,6 +105,7 @@ class Player
 		void		set_disconnect(bool);
 		void		set_encantation_precheck(bool);
 		void		set_dead(bool);
+		void		set_already_hatched(bool);
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
@@ -120,5 +122,5 @@ class Player
 		void		IncantationEnd();
 		void		handshake(Player *);
 
-		void		check_food_and_eat();
+		void		check_hatch_and_eat();
 };
