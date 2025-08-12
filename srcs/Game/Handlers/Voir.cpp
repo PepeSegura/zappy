@@ -2,6 +2,11 @@
 
 void Game::_Voir(Player *p)
 {
+	std::string args = p->get_current_command().args;
+	if (args.empty() == false) {
+		this->_Unknown(p);
+		return ;
+	}
 	std::cout << "EXECUTING VOIR\n";
 	// std::cout << "---------------------\n";
 	// std::cout << "Looking at: " << p->get_dir() << std::endl;

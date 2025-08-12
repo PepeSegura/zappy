@@ -2,6 +2,11 @@
 
 void Game::_Fork(Player *p)
 {
+	std::string args = p->get_current_command().args;
+	if (args.empty() == false) {
+		this->_Unknown(p);
+		return ;
+	}
 	std::cout << "EXECUTING FORK\n";
 
 	Player *egg = new Player(p->get_team_name(), now, this, get_new_id());
