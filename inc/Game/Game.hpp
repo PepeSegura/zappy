@@ -165,4 +165,5 @@ class Game
 
 		void 		send2grclients(std::string str);
 		std::string	welcome_graphic();
+		void		check_end();
 };

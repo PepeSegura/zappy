@@ -8,7 +8,7 @@ Game::Game()
 
 Game::~Game() {
 	for (auto& [fd, p] : playersfd_map) {
-		if (p)
+		if (p && (!p->get_handshake() || p->is_graphic_client()))
 			delete p;
 	}
 
@@ -157,6 +157,7 @@ void Game::init_g_handlers_map()
 
 Game::Game(Parser *parser)
 {
+	this->id_ctr = 0;
 	init_map(parser);
 	init_teams(parser);
 	init_action_time_map();
@@ -166,7 +167,6 @@ Game::Game(Parser *parser)
 	
 	this->end = false;
 	this->debug = parser->getDebug();
-	this->id_ctr = 0;
 	this->winner_team = "";
 	set_tick_millis(parser->getTimeFreq());
 }
@@ -217,16 +217,17 @@ void Game::run_tick() {
 	now = std::chrono::high_resolution_clock::now();
     auto elapsed = now - last_tick;
 	if (elapsed >= tick_interval) { //enough time has passed, run tick logic
-    	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); } 
+    	if (++ticks_count == FOOD_SPAWN_RATE) { ticks_count = 0, gen_map_resources(); }
 		for (auto &[key, team] : teams) {
 			auto players = team.get_team_players();
 			for (auto player : players) {
-				if (player->get_handshake()) {
-					player->check_food_and_eat();
-				}
+				player->check_hatch_and_eat();
 				if (player->get_dead()) {
 					player->set_send_buffer("mort\n");
-					send2grclients(gr_player_mort(player->get_id()));
+					if (player->get_handshake())
+						send2grclients(gr_player_mort(player->get_id()));
+					else
+						send2grclients(gr_egg_mort(player->get_id()));
 					if (player->get_disconnected()) { remove_player(player); }
 					continue;
 				}
@@ -249,6 +250,7 @@ void Game::run_tick() {
 				try2handshake(player);
 			}
 		}
+		check_end();
 		last_tick = now; // update last_tick timestamp
 	}
 }
@@ -286,6 +288,7 @@ void	Game::try2handshake(Player *p) {
 	}
 	if (teams[p->get_current_command().cmd_name].get_avail_conns() > 0) {
 		Player *connected_player = teams[p->get_current_command().cmd_name].player2egg(p);
+		send2grclients(gr_egg_to_player(connected_player->get_id()));
 		send2grclients(gr_player_new_conn(connected_player));
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
@@ -370,4 +373,23 @@ std::string	Game::welcome_graphic() {
 		}
 	}
 	return welcome;
+}
+
+void	Game::check_end() {
+	int max_level_ctr;
+	for (auto &[key, team] : teams) {
+		auto players = team.get_team_players();
+		max_level_ctr = 0;
+		for (auto player : players) {
+			if (player->get_level() == 8)
+				++max_level_ctr;
+		}
+		if (max_level_ctr >= 6) {
+			end = true;
+			winner_team = key;
+			send2grclients(gr_game_end());
+			std::cout << "Team " << winner_team << " wins the game.\n";
+			break ;
+		}
+	}
 }

@@ -17,8 +17,7 @@ Team::Team(std::string _name, int _max_conns, Game *game)
 Team::~Team()
 {
 	for (auto player : players) {
-		if (!player->get_handshake())
-			delete player;
+		delete player;
 	}
 }
 

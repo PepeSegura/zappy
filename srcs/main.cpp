@@ -17,8 +17,8 @@ int main(int argc, char **argv) {
 	TCPServer server(parser.getPort(), game);
 
 	while (!game.get_end()) {
-		server.inputOutputComms();
 		game.run_tick();
+		server.inputOutputComms();
 	}
 	
 	return 0;
