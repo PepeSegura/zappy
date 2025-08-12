@@ -2,6 +2,11 @@
 
 void Game::_Gauche(Player *p)
 {
+	std::string args = p->get_current_command().args;
+	if (args.empty() == false) {
+		this->_Unknown(p);
+		return ;
+	}
 	std::cout << "EXECUTING GAUCHE\n";
 
 	p->Gauche();

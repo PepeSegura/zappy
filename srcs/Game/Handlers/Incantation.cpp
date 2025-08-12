@@ -2,6 +2,11 @@
 
 void Game::_IncantationBgn(Player *p)
 {
+	std::string args = p->get_current_command().args;
+	if (args.empty() == false) {
+		this->_Unknown(p);
+		return ;
+	}
 	std::cout << "EXECUTING INCANTATION\n";
 
 	std::cout << "Checking prerequisites...\n";

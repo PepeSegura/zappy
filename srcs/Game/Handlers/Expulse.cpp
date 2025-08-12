@@ -2,6 +2,11 @@
 
 void Game::_Expulse(Player *p)
 {
+	std::string args = p->get_current_command().args;
+	if (args.empty() == false) {
+		this->_Unknown(p);
+		return ;
+	}
 	std::cout << "EXECUTING EXPULSE\n";
 	int player_y = p->get_y(), player_x = p->get_x();
 	int new_y = player_y, new_x = player_x;
