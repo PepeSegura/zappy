@@ -27,6 +27,7 @@ Player::Player(Game *game)
 	this->is_encantating = false;
 	this->encantation_prechecked = false;
 	this->already_hatched = false;
+	this->was_forked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = std::chrono::system_clock::from_time_t(0);
@@ -55,6 +56,7 @@ Player::Player(std::string team, std::chrono::high_resolution_clock::time_point 
 	this->is_encantating = false;
 	this->encantation_prechecked = false;
 	this->already_hatched = false;
+	this->was_forked = false;
 	this->inv.add_nourriture(10);
 	this->ticks_until_eat = 0;
 	this->egg_creation = egg_creation;
@@ -73,6 +75,7 @@ Player&  Player::operator=(const Player &other)
 	this->y = other.y;
 	this->dead = other.dead;
 	this->handshake_finished = other.handshake_finished;
+	this->was_forked = other.was_forked;
 
 	this->sock_fd = other.sock_fd;
 	this->state = other.state;
@@ -198,6 +201,10 @@ bool Player::get_dead() const {
 	return this->dead;
 }
 
+bool Player::get_was_forked() const {
+	return this->was_forked;
+}
+
 bool Player::get_already_hatched() const {
 	return this->already_hatched;
 }
@@ -273,6 +280,11 @@ void	Player::set_already_hatched(bool hatched)
 	this->already_hatched = hatched;
 }
 
+void	Player::set_was_forked(bool flag)
+{
+	this->was_forked = flag;
+}
+
 void	Player::add_command(std::string trimmed_cmd) {
 	size_t size_queue;
 	(this->game_ptr->get_debug()) ? size_queue = QUEUE_SIZE_DBG : size_queue = QUEUE_SIZE;
@@ -324,13 +336,14 @@ void	Player::handshake(Player *connected_player) {
 	this->handshake_finished = true;
 	this->game_ptr = connected_player->game_ptr;
 	this->is_disconnected = false;
+	this->was_forked = true;
 	this->command_queue = connected_player->command_queue;
 	this->command_queue.pop_front();
 }
 
 void	Player::check_hatch_and_eat() {
 	if (!already_hatched) {
-		if (is_hatched()) {
+		if (is_hatched() && was_forked) {
 			already_hatched = true;
 			this->game_ptr->send2grclients(this->game_ptr->gr_egg_hatch(this->id));
 		} else {
