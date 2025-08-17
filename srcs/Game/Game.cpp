@@ -40,7 +40,7 @@ void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(i
 		(random_tile.*adder)(1);
 		(world_resources.*adder)(1);
 
-		std::cout << "Added: " << item_string.at(item) << " - (" << random_height << ", " << random_width << ")\n";
+		std::cerr << "Added: " << item_string.at(item) << " - (" << random_height << ", " << random_width << ")\n";
 		send2grclients(gr_content_tile(random_height, random_width));
 	}
 }
@@ -54,7 +54,7 @@ void Game::gen_map_resources()
     gen_item(&Inventory::get_mendiane, &Inventory::add_mendiane, Item::MENDIANE);
     gen_item(&Inventory::get_phiras, &Inventory::add_phiras, Item::PHIRAS);
     gen_item(&Inventory::get_thystame, &Inventory::add_thystame, Item::THYSTAME);
-	std::cout << "World resources:\n" << this->world_resources;
+	std::cerr << "World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
