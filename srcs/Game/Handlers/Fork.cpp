@@ -17,6 +17,8 @@ void Game::_Fork(Player *p)
 	this->teams[p->get_team_name()].inc_max_conns();
 	this->teams[p->get_team_name()].add_player(egg);
 	this->map[p->get_y()][p->get_x()].add_player_to_team(egg);
+	
+	egg->set_was_forked(true);
 
 	p->set_send_buffer("ok\n");
 	send2grclients(gr_player_fork(p->get_id()));

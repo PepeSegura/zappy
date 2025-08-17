@@ -42,6 +42,7 @@ class Player
 		uint8_t		dir; // N, S, W, E
 		int			x;
 		int			y;
+		bool		was_forked;
 		bool		dead, already_hatched;
 		bool		handshake_finished;
 		bool		is_disconnected, is_encantating, encantation_prechecked;
@@ -85,6 +86,7 @@ class Player
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
 		bool		get_dead() const;
+		bool		get_was_forked() const;
 		bool		get_already_hatched() const;
 		int			get_id() const;
 		bool		is_hatched() const;
@@ -106,6 +108,7 @@ class Player
 		void		set_encantation_precheck(bool);
 		void		set_dead(bool);
 		void		set_already_hatched(bool);
+		void		set_was_forked(bool);
 
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
