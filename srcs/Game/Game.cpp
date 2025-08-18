@@ -29,7 +29,7 @@ void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(i
 
 	while (1)
 	{
-		if ((this->world_resources.*getter)() >= item_max_count)
+		if ((this->world_resources.*getter)() >= item_max_count && (this->world_resources.*getter)() > 0)
 			return ;
 	
 		int random_height = Utils::random_between(0, this->map_height - 1);
