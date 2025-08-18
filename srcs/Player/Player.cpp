@@ -32,7 +32,8 @@ Player::Player(Game *game)
 	this->ticks_until_eat = 0;
 	this->egg_creation = std::chrono::system_clock::from_time_t(0);
 	id = -1;
-	incantationFailed = false;
+	this->incantationFailed = false;
+	this->firstPrecheck = false;
 }
 
 Player::Player(std::string team, timePoint egg_creation, Game *game, int id)
@@ -62,7 +63,8 @@ Player::Player(std::string team, timePoint egg_creation, Game *game, int id)
 	this->ticks_until_eat = 0;
 	this->egg_creation = egg_creation;
 	this->id = id;
-	incantationFailed = false;
+	this->incantationFailed = false;
+	this->firstPrecheck = false;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -87,6 +89,7 @@ Player&  Player::operator=(const Player &other)
 	this->last_action_start_time = other.last_action_start_time;
 	this->command_queue = other.command_queue;
 	this->incantationFailed = other.incantationFailed;
+	this->firstPrecheck = other.firstPrecheck;
 	return (*this);
 }
 

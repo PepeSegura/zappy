@@ -64,12 +64,20 @@ void Game::_IncantationStart(Player *p)
 {
 	std::cout << "EXECUTING INCANTATION_START\n";
 	if (p->incantationFailed) {
+		std::cout << "incantation checked by other player; failed...\n";
 		p->set_send_buffer("ko\n");
 		p->incantationFailed = false;
 		return ;
 	}
+	if (p->firstPrecheck) {
+		std::cout << "incantation checked by other player\n";
+		p->firstPrecheck = false;
+		p->IncantationStart();
+		return ;
+	}
+	std::cout << "Checking that all players have joined...\n";
 	if (p->incantation->players.size() != (size_t)p->incantation->requirements.nbr_of_players) { // incantation failed
-		std::cout << "incantation failed...\n";
+		std::cout << "incantation failed... not enough players\n";
 		IncantationList &incantations = map[p->incantation->y][p->incantation->x].incantations[p->get_level()];
 		size_t pos = 0;
 		for (Incantation &incantation: incantations) {
@@ -91,6 +99,7 @@ void Game::_IncantationStart(Player *p)
 			++pos;
 		}
 	}
+	mark_first_precheck(p);
 	std::string playerIds;
 	for (auto player : p->incantation->players) {
 		playerIds += std::to_string(player->get_id()) + " ";
@@ -258,5 +267,14 @@ void Game::mark_all_enchanting_players_failed(Player *p) {
 	for (auto other_p : players) {
 		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
 			other_p->incantationFailed = true;
+	}
+}
+
+void Game::mark_first_precheck(Player *p) {
+	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
+
+	for (auto other_p : players) {
+		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
+			other_p->firstPrecheck = true;
 	}
 }

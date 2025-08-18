@@ -54,6 +54,7 @@ class Game
 		bool	check_incantation_players_bgn(Player *);
 		bool	check_incantation_players_end(Player *);
 		void	remove_incantation_materials(Player *);
+		void 	mark_first_precheck(Player *p);
 		void	mark_all_enchanting_players(Player *);
 		void 	mark_all_enchanting_players_failed(Player *p);
 		void	handle_graphic_client(Player *);
