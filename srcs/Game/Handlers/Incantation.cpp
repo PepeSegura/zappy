@@ -129,14 +129,14 @@ void Game::_IncantationEnd(Player *p)
 					manage_incantation_inventory(tile_inv, p->incantation->requirements, 1);
 					mark_players_incantationfailed(p);
 					p->set_send_buffer("ko\n");
-					auto it = incantations.begin();
-					std::advance(it, pos);
-					incantations.erase(it);
 					send2grclients(gr_incantation_res(p->incantation->y, p->incantation->x, 0));
 					for (auto player : p->incantation->players) {
 						send2grclients(gr_player_lvl(player->get_id(), false));
 					}
 					send2grclients(gr_content_tile(p->incantation->y, p->incantation->x));
+					auto it = incantations.begin();
+					std::advance(it, pos);
+					incantations.erase(it);
 					return ;
 				}
 				
