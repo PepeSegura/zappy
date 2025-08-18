@@ -213,7 +213,7 @@ void Game::mark_all_enchanting_players(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
-		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
+		if (p != other_p &&  p->incantation == other_p->incantation)
 			other_p->set_encantation_precheck(true);
 	}
 }
@@ -222,7 +222,7 @@ void Game::mark_players_incantationfailed(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
-		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
+		if (p != other_p &&  p->incantation == other_p->incantation)
 			other_p->incantationFailed = true;
 	}
 }
@@ -231,7 +231,7 @@ void Game::mark_first_precheck(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
-		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
+		if (p != other_p &&  p->incantation == other_p->incantation)
 			other_p->firstPrecheck = true;
 	}
 	p->incantation->in_course = true;
