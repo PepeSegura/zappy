@@ -64,7 +64,7 @@ uint32_t	Team::get_avail_conns() const {
 	int cnt = 0;
 	for (uint32_t i = 0; i < max_conns; ++i) {
 		Player *p = players[i];
-		if (!p->get_handshake() && p->is_hatched())
+		if (!p->get_handshake() && (p->is_hatched() || p->get_already_hatched()))
 			++cnt;
 	}
 	return cnt;
