@@ -127,6 +127,13 @@ void	Player::pop_command() {
 	this->command_queue.pop_front();
 }
 
+void	Player::pop_all_commands() {
+	if (this->command_queue.empty())
+		return ;
+	this->command_queue.clear();
+	this->handshakeNotified = false;
+}
+
 /*_____GETTERS_____*/
 
 bool	Player::is_graphic_client() const

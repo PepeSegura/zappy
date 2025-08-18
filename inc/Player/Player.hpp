@@ -118,6 +118,7 @@ class Player
 		bool			has_queued_actions() const;
 		Command_Data	get_current_command() const;
 		void			pop_command();
+		void			pop_all_commands();
 
 		void		Eat();
 		void		Avance();
