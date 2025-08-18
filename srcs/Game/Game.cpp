@@ -29,7 +29,7 @@ void Game::gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(i
 
 	while (1)
 	{
-		if ((this->world_resources.*getter)() >= item_max_count)
+		if ((this->world_resources.*getter)() >= item_max_count && (this->world_resources.*getter)() > 0)
 			return ;
 	
 		int random_height = Utils::random_between(0, this->map_height - 1);
@@ -54,7 +54,7 @@ void Game::gen_map_resources()
     gen_item(&Inventory::get_mendiane, &Inventory::add_mendiane, Item::MENDIANE);
     gen_item(&Inventory::get_phiras, &Inventory::add_phiras, Item::PHIRAS);
     gen_item(&Inventory::get_thystame, &Inventory::add_thystame, Item::THYSTAME);
-	std::cerr << "World resources:\n" << this->world_resources;
+	//std::cerr << "World resources:\n" << this->world_resources;
 }
 
 void Game::init_map(Parser *parser)
@@ -92,6 +92,7 @@ void Game::init_action_time_map() {
 	action_time_table[Expulse] = 7;
 	action_time_table[Broadcast] = 7;
 	action_time_table[IncantationBgn] = 0;
+	action_time_table[IncantationStart] = 14;
 	action_time_table[IncantationEnd] = 300;
 	action_time_table[Fork] = 42;
 	action_time_table[ConnectNbr] = 0;
@@ -133,6 +134,7 @@ void Game::init_p_handlers_map()
 	p_handlers[Expulse] = &Game::_Expulse;
 	p_handlers[Broadcast] = &Game::_Broadcast;
 	p_handlers[IncantationBgn] = &Game::_IncantationBgn;
+	p_handlers[IncantationStart] = &Game::_IncantationStart;
 	p_handlers[IncantationEnd] = &Game::_IncantationEnd;
 	p_handlers[Fork] = &Game::_Fork;
 	p_handlers[ConnectNbr] = &Game::_ConnectNbr;
@@ -300,10 +302,12 @@ void	Game::try2handshake(Player *p) {
 		connected_player->set_send_buffer(response);
 		return ;
 	}
-	std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
-	p->set_send_buffer(response);
-	p->pop_command();
-	//p->set_dead(true); //kick players that try to connect to teams without free spaces
+	if (!p->handshakeNotified) {	
+		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
+		p->set_send_buffer(response);
+		p->handshakeNotified = true;
+		//p->set_dead(true); //kick players that try to connect to teams without free spaces
+	}
 }
 
 void	Game::check_player_action(Player *player) {
@@ -319,6 +323,8 @@ void	Game::check_player_action(Player *player) {
 void Game::try2start_action(Player *player) {
 	if (player->has_queued_actions()) {
 		player->set_last_start_time(now);
+		if (player->get_current_command().cmd == Command::Incantation_start)
+			player->set_last_start_time(player->getIncantationStartTime());
 		player->set_state(Player_States::ExecutingAction);
 	}
 }

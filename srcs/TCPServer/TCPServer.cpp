@@ -85,6 +85,9 @@ void	TCPServer::readClientData(size_t *idx) {
 		disconnectClient(idx);
 	} else { //data received
 		// std::cout << "Received from clientFd " << pollFds[*idx].fd << ": [[" << buffer << "]]\n";
+		if (players[pollFds[*idx].fd]->get_state() == Player_States::Handshake) {
+			players[pollFds[*idx].fd]->pop_all_commands();
+		}
 		players[pollFds[*idx].fd]->add_buffer_or_parse_msg(std::string(buffer));
 		// players[pollFds[*idx].fd]->set_recv_buffer(tmp);
 	}

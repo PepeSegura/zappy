@@ -32,9 +32,12 @@ Player::Player(Game *game)
 	this->ticks_until_eat = 0;
 	this->egg_creation = std::chrono::system_clock::from_time_t(0);
 	id = -1;
+	this->incantationFailed = false;
+	this->firstPrecheck = false;
+	this->handshakeNotified = false;
 }
 
-Player::Player(std::string team, std::chrono::high_resolution_clock::time_point egg_creation, Game *game, int id)
+Player::Player(std::string team, timePoint egg_creation, Game *game, int id)
 {
 	// std::cout << "PLAYER(std::string team)\n";
 	this->graphic_client = false;
@@ -61,6 +64,9 @@ Player::Player(std::string team, std::chrono::high_resolution_clock::time_point 
 	this->ticks_until_eat = 0;
 	this->egg_creation = egg_creation;
 	this->id = id;
+	this->incantationFailed = false;
+	this->firstPrecheck = false;
+	this->handshakeNotified = false;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -84,6 +90,9 @@ Player&  Player::operator=(const Player &other)
 	this->recv_buffer = other.recv_buffer;
 	this->last_action_start_time = other.last_action_start_time;
 	this->command_queue = other.command_queue;
+	this->incantationFailed = other.incantationFailed;
+	this->firstPrecheck = other.firstPrecheck;
+	this->handshakeNotified = other.handshakeNotified;
 	return (*this);
 }
 
@@ -116,6 +125,13 @@ void	Player::pop_command() {
 	if (this->command_queue.empty())
 		return ;
 	this->command_queue.pop_front();
+}
+
+void	Player::pop_all_commands() {
+	if (this->command_queue.empty())
+		return ;
+	this->command_queue.clear();
+	this->handshakeNotified = false;
 }
 
 /*_____GETTERS_____*/
@@ -181,7 +197,7 @@ bool	Player::get_handshake() const
 	return (this->handshake_finished);
 }
 
-std::chrono::high_resolution_clock::time_point Player::get_last_start_time() const {
+timePoint Player::get_last_start_time() const {
 	return this->last_action_start_time;
 }
 
@@ -306,7 +322,7 @@ void	Player::add_command(std::string trimmed_cmd) {
 	} */
 }
 
-void	Player::set_last_start_time(std::chrono::high_resolution_clock::time_point now) {
+void	Player::set_last_start_time(timePoint now) {
 	this->last_action_start_time = now;
 }
 

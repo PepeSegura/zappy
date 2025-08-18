@@ -1,10 +1,11 @@
 #pragma once
 
-# include <vector>
+# include <list>
 # include <unordered_map>
 # include <random>
 # include "Inventory.hpp"
 # include "Player.hpp"
+# include "Incantation.hpp"
 
 enum class Item {
     NOURRITURE,
@@ -36,12 +37,16 @@ const std::unordered_map<Item, const std::string> item_string = {
     {Item::THYSTAME,	"Thystame"}
 };
 
+typedef std::list<Incantation> IncantationList;
+typedef std::map<int, IncantationList> IncantationMap;
+
 class Tile {
 	private:
 		Inventory				inv;
 		std::vector<Player*>	players;
 
 	public:
+		IncantationMap incantations;
 		Tile() = default;
 		~Tile() = default;
 		Tile& operator=(const Tile& other) = default;
