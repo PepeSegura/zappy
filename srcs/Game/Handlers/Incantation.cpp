@@ -234,6 +234,7 @@ void Game::mark_first_precheck(Player *p) {
 		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
 			other_p->firstPrecheck = true;
 	}
+	p->incantation->in_course = true;
 }
 
 void Game::manage_incantation_inventory(Inventory &inv, Incantation_Reqs &requirements,int sign) {
