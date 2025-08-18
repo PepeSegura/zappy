@@ -302,10 +302,12 @@ void	Game::try2handshake(Player *p) {
 		connected_player->set_send_buffer(response);
 		return ;
 	}
-	std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
-	p->set_send_buffer(response);
-	p->pop_command();
-	//p->set_dead(true); //kick players that try to connect to teams without free spaces
+	if (!p->handshakeNotified) {	
+		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
+		p->set_send_buffer(response);
+		p->handshakeNotified = true;
+		//p->set_dead(true); //kick players that try to connect to teams without free spaces
+	}
 }
 
 void	Game::check_player_action(Player *player) {

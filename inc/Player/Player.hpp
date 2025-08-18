@@ -133,5 +133,5 @@ class Player
 
 		void		check_hatch_and_eat();
 		Incantation *incantation;
-		bool		incantationFailed, firstPrecheck;
+		bool		incantationFailed, firstPrecheck, handshakeNotified;
 };

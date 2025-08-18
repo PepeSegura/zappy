@@ -34,6 +34,7 @@ Player::Player(Game *game)
 	id = -1;
 	this->incantationFailed = false;
 	this->firstPrecheck = false;
+	this->handshakeNotified = false;
 }
 
 Player::Player(std::string team, timePoint egg_creation, Game *game, int id)
@@ -65,6 +66,7 @@ Player::Player(std::string team, timePoint egg_creation, Game *game, int id)
 	this->id = id;
 	this->incantationFailed = false;
 	this->firstPrecheck = false;
+	this->handshakeNotified = false;
 }
 
 Player&  Player::operator=(const Player &other)
@@ -90,6 +92,7 @@ Player&  Player::operator=(const Player &other)
 	this->command_queue = other.command_queue;
 	this->incantationFailed = other.incantationFailed;
 	this->firstPrecheck = other.firstPrecheck;
+	this->handshakeNotified = other.handshakeNotified;
 	return (*this);
 }
 
