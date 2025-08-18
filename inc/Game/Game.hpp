@@ -8,6 +8,7 @@
 # include "Team.hpp"
 # include "Parser.hpp"
 # include "Tile.hpp"
+# include "Incantation.hpp"
 
 class Game;
 
@@ -15,23 +16,6 @@ typedef void		(Game::*ActionPHandler)(Player *);
 typedef std::string	(Game::*ActionGHandler)(Player *);
 typedef std::vector<std::vector<Tile>> Tile_Map;
 
-struct Incantation_Reqs {
-	int		nbr_of_players, linemate_req,
-			deraumere_req, sibur_req,
-			mendiane_req, phiras_req,
-			thystame_req;
-
-	Incantation_Reqs() {};
-	Incantation_Reqs(int players, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) {
-		this->nbr_of_players = players;
-		this->linemate_req = linemate;
-		this->deraumere_req = deraumere;
-		this->sibur_req = sibur;
-		this->mendiane_req = mendiane;
-		this->phiras_req = phiras;
-		this->thystame_req = thystame;
-	};
-};
 
 # define FOOD_SPAWN_RATE 20
 
@@ -71,6 +55,7 @@ class Game
 		bool	check_incantation_players_end(Player *);
 		void	remove_incantation_materials(Player *);
 		void	mark_all_enchanting_players(Player *);
+		void 	mark_all_enchanting_players_failed(Player *p);
 		void	handle_graphic_client(Player *);
 
 	public:
@@ -118,6 +103,7 @@ class Game
 		uint8_t	get_sound_direction(Player *origin, Player *dest);
 		void	_Broadcast(Player*);
 		void	_IncantationBgn(Player*);
+		void	_IncantationStart(Player*);
 		void	_IncantationEnd(Player*);
 		void	_Fork(Player*);
 		void	_ConnectNbr(Player*);
@@ -142,11 +128,11 @@ class Game
 		std::string	gr_team_names();
 		std::string	gr_player_new_conn(Player *player);
 		std::string	gr_player_pos(int n);
-		std::string	gr_player_lvl(int n);
+		std::string	gr_player_lvl(int n, bool levelup);
 		std::string	gr_player_inv(int n);
 		std::string	gr_player_expelled(int n);
 		std::string	gr_player_broadcast(int n, std::string msg);
-		std::string	gr_incantation_start(int y, int x, int L, std::vector<int> ids);
+		std::string	gr_incantation_start(int y, int x, int L, std::string ids);
 		std::string	gr_incantation_res(int y, int x, int R);
 		std::string	gr_player_fork(int n);
 		std::string	gr_player_pose_resource(int n, std::string item);

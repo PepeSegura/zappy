@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-std::string	Game::gr_player_lvl(int player_id)
+std::string	Game::gr_player_lvl(int player_id, bool addone)
 {
 	int lvl, found = 0;
 
@@ -10,6 +10,8 @@ std::string	Game::gr_player_lvl(int player_id)
 		{
 			found = 1;
 			lvl = player->get_level();
+			if (addone)
+				++lvl;
 			break ;
 		}
 	}
@@ -40,5 +42,5 @@ std::string	Game::gr_player_lvl(Player *p)
 		return gr_wrong_params();
 	}
 
-	return gr_player_lvl(player_id);
+	return gr_player_lvl(player_id, false);
 }

@@ -16,6 +16,7 @@ enum Command {
 	Expulse,
 	Broadcast,
 	IncantationBgn,
+	IncantationStart,
 	IncantationEnd,
 	Fork,
 	ConnectNbr,
