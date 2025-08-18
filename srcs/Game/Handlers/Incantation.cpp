@@ -95,7 +95,7 @@ void Game::_IncantationStart(Player *p)
 		playerIds += std::to_string(player->get_id()) + " ";
 	}
 	playerIds.pop_back();
-	send2grclients(gr_incantation_start(p->incantation->y, p->incantation->y, p->incantation->level, playerIds));
+	send2grclients(gr_incantation_start(p->incantation->y, p->incantation->x, p->incantation->level, playerIds));
 	p->IncantationStart();
 }
 
