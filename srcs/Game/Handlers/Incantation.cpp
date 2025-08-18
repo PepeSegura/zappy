@@ -13,17 +13,16 @@ void Game::_IncantationBgn(Player *p)
 	bool joined = false;
 	IncantationList &incantations = map[p->get_y()][p->get_x()].incantations[p->get_level()];
 	for (auto &incantation : incantations) {
-		if (!incantation.isFilled() && !incantation.in_course) {
+		if (!incantation.isFilled() && !incantation.in_course) { //join available incantation
 			incantation.join(p);
 			p->incantation = &incantation;
-			p->setIncantationStartTime(incantation.start);
 			joined = true;
 			std::cout << "Joined an existing incantation(skiping materials check)\n";
 			break ;
 		}
 	}
 
-	if (!joined) {
+	if (!joined) { //if couldnt join, create a new one
 		std::cout << "Checking materials...\n";
 		if (!check_incantation_materials(p)){
 			std::cout << "error: incantation: not enough materials\n";
@@ -37,6 +36,8 @@ void Game::_IncantationBgn(Player *p)
 			return ;
 		}
 		std::cout << "All preliminary checks passed!\n";
+
+		//create new incantation
 		Incantation_Reqs &requirements = incantation_lvl_reqs[p->get_level()];
 		Incantation incantation(p, requirements, now);
 		incantation.join(p);
@@ -47,13 +48,7 @@ void Game::_IncantationBgn(Player *p)
 		p->incantation = &(*it); //incantations[pos]
 		Inventory &tile_inv = map[p->get_y()][p->get_x()].get_inv();
 		
-		tile_inv.add_linemate(-requirements.linemate_req);
-		tile_inv.add_deraumere(-requirements.deraumere_req);
-		tile_inv.add_phiras(-requirements.phiras_req);
-		tile_inv.add_sibur(-requirements.sibur_req);
-		tile_inv.add_thystame(-requirements.thystame_req);
-		tile_inv.add_mendiane(-requirements.mendiane_req);
-		p->setIncantationStartTime(incantation.start);
+		manage_incantation_inventory(tile_inv, requirements, -1);
 		std::cout << "Created and joined a new incantation\n";
 	}
 
@@ -83,13 +78,8 @@ void Game::_IncantationStart(Player *p)
 		for (Incantation &incantation: incantations) {
 			if (&incantation == p->incantation) {
 				Inventory &tile_inv = map[p->incantation->y][p->incantation->x].get_inv();
-				tile_inv.add_linemate(p->incantation->requirements.linemate_req);
-				tile_inv.add_deraumere(p->incantation->requirements.deraumere_req);
-				tile_inv.add_phiras(p->incantation->requirements.phiras_req);
-				tile_inv.add_sibur(p->incantation->requirements.sibur_req);
-				tile_inv.add_thystame(p->incantation->requirements.thystame_req);
-				tile_inv.add_mendiane(p->incantation->requirements.mendiane_req);
-				mark_all_enchanting_players_failed(p);
+				manage_incantation_inventory(tile_inv, p->incantation->requirements, 1);
+				mark_players_incantationfailed(p);
 				p->set_send_buffer("ko\n");
 				auto it = incantations.begin();
 				std::advance(it, pos);
@@ -136,13 +126,8 @@ void Game::_IncantationEnd(Player *p)
 			if (&incantation == p->incantation) {
 				if (!success) {
 					Inventory &tile_inv = map[p->incantation->y][p->incantation->x].get_inv();
-					tile_inv.add_linemate(p->incantation->requirements.linemate_req);
-					tile_inv.add_deraumere(p->incantation->requirements.deraumere_req);
-					tile_inv.add_phiras(p->incantation->requirements.phiras_req);
-					tile_inv.add_sibur(p->incantation->requirements.sibur_req);
-					tile_inv.add_thystame(p->incantation->requirements.thystame_req);
-					tile_inv.add_mendiane(p->incantation->requirements.mendiane_req);
-					mark_all_enchanting_players_failed(p);
+					manage_incantation_inventory(tile_inv, p->incantation->requirements, 1);
+					mark_players_incantationfailed(p);
 					p->set_send_buffer("ko\n");
 					auto it = incantations.begin();
 					std::advance(it, pos);
@@ -154,12 +139,8 @@ void Game::_IncantationEnd(Player *p)
 					send2grclients(gr_content_tile(p->incantation->y, p->incantation->x));
 					return ;
 				}
-				world_resources.add_linemate(-p->incantation->requirements.linemate_req);
-				world_resources.add_deraumere(-p->incantation->requirements.deraumere_req);
-				world_resources.add_phiras(-p->incantation->requirements.phiras_req);
-				world_resources.add_sibur(-p->incantation->requirements.sibur_req);
-				world_resources.add_thystame(-p->incantation->requirements.thystame_req);
-				world_resources.add_mendiane(-p->incantation->requirements.mendiane_req);
+				
+				manage_incantation_inventory(world_resources, p->incantation->requirements, -1);
 				send2grclients(gr_incantation_res(p->incantation->y, p->incantation->x, 1));
 				for (auto player : p->incantation->players) {
 					send2grclients(gr_player_lvl(player->get_id(), true));
@@ -172,7 +153,6 @@ void Game::_IncantationEnd(Player *p)
 			}
 			++pos;
 		}
-		//remove_incantation_materials(p);
 		mark_all_enchanting_players(p);
 	} else if (p->get_encantation_precheck()) {
 		std::cout << "Checks already done by another player\n";
@@ -229,29 +209,6 @@ bool Game::check_incantation_players_end(Player *p) {
 	return true;
 }
 
-void Game::remove_incantation_materials(Player *p) {
-	Inventory &inv = map[p->get_y()][p->get_x()].get_inv();
-
-	if (incantation_lvl_reqs[p->get_level()].linemate_req) {
-		inv.add_linemate(-incantation_lvl_reqs[p->get_level()].linemate_req);
-	}
-	if (incantation_lvl_reqs[p->get_level()].deraumere_req) {
-		inv.add_deraumere(-incantation_lvl_reqs[p->get_level()].deraumere_req);
-	}
-	if (incantation_lvl_reqs[p->get_level()].sibur_req) {
-		inv.add_sibur(-incantation_lvl_reqs[p->get_level()].sibur_req);
-	}
-	if (incantation_lvl_reqs[p->get_level()].mendiane_req) {
-		inv.add_mendiane(-incantation_lvl_reqs[p->get_level()].mendiane_req);
-	}
-	if (incantation_lvl_reqs[p->get_level()].phiras_req) {
-		inv.add_phiras(-incantation_lvl_reqs[p->get_level()].phiras_req);
-	}
-	if (incantation_lvl_reqs[p->get_level()].thystame_req) {
-		inv.add_thystame(-incantation_lvl_reqs[p->get_level()].thystame_req);
-	}
-}
-
 void Game::mark_all_enchanting_players(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
@@ -261,7 +218,7 @@ void Game::mark_all_enchanting_players(Player *p) {
 	}
 }
 
-void Game::mark_all_enchanting_players_failed(Player *p) {
+void Game::mark_players_incantationfailed(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
@@ -277,4 +234,13 @@ void Game::mark_first_precheck(Player *p) {
 		if (p != other_p && other_p->get_is_encantating() && p->get_level() == other_p->get_level() && p->incantation == other_p->incantation)
 			other_p->firstPrecheck = true;
 	}
+}
+
+void Game::manage_incantation_inventory(Inventory &inv, Incantation_Reqs &requirements,int sign) {
+	inv.add_linemate(sign * requirements.linemate_req);
+	inv.add_deraumere(sign * requirements.deraumere_req);
+	inv.add_phiras(sign * requirements.phiras_req);
+	inv.add_sibur(sign * requirements.sibur_req);
+	inv.add_thystame(sign * requirements.thystame_req);
+	inv.add_mendiane(sign * requirements.mendiane_req);
 }
