@@ -2,7 +2,7 @@
 
 void	TCPServer::addAdminToPoll() {
 	int	fd = STDIN_FILENO;
-	addToPoll(fd, POLLIN | POLLNVAL);	
+	addToPoll(fd, POLLIN);
 	game.add_player_to_fdmap(fd, new Player(&this->game));
 	players = game.get_players_map();
 	players[fd]->set_sock_fd(fd);
