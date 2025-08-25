@@ -70,14 +70,15 @@ class Game
 		void					add_player_to_team(std::string, Player *);
 		void					remove_player(Player *);
 
+		void					set_end(bool);
 		bool					get_end() const;
-
 		void					run_tick();
 
 		void					gen_item(int (Inventory::*getter)() const, void (Inventory::*adder)(int), Item);
 		void					gen_map_resources();
 
 		void					set_tick_millis(int64_t);
+		int64_t					get_tick_millis();
 		void					try2handshake(Player *);
 
 		int		get_map_width() const { return (this->map_width); };

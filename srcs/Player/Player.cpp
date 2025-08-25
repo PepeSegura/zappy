@@ -316,10 +316,10 @@ void	Player::add_command(std::string trimmed_cmd) {
 		tmp.cmd = hashString(tmp.cmd_name, this->graphic_client);
 		command_queue.emplace_back(tmp);
 	}
-	/* std::cout << "After adding: \n";
-	for (auto action : command_queue){
-		std::cout << action.cmd << "(" << action.cmd_name << ")" << ";" << action.args << std::endl;
-	} */
+	// std::cout << "After adding: \n";
+	// for (auto action : command_queue){
+	// 	std::cout << action.cmd << "(" << action.cmd_name << ")" << ";" << action.args << std::endl;
+	// }
 }
 
 void	Player::set_last_start_time(timePoint now) {

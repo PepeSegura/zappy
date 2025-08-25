@@ -12,6 +12,9 @@
 # include <cstdlib>
 # include <cstring>
 # include <iostream>
+# include <sstream>
+# include <signal.h>
+
 
 # include "Player.hpp"
 # include "Game.hpp"
@@ -31,10 +34,13 @@ class TCPServer {
 		
 
 		void	acceptClient();
+		bool	readAdminData(size_t *idx);
+		void	processAdminCommand(const std::string& command);
 		void	readClientData(size_t *idx);
 		void	disconnectClient(size_t *idx);
 		void	createBindSocket(int port);
 		void	addToPoll(int fd, int flags);
+		void	addAdminToPoll();
 
 	public:
 		TCPServer(int port, Game &);

@@ -84,8 +84,8 @@ class Player
 		std::string	get_recv_buffer() const;
 		std::string	get_send_buffer() const;
 		bool		get_handshake() const;
-		timePoint		get_last_start_time() const;
-		timePoint		getIncantationStartTime() const { return incantationStartTime ; }
+		timePoint	get_last_start_time() const;
+		timePoint	getIncantationStartTime() const { return incantationStartTime ; }
 		bool		get_disconnected() const;
 		bool		get_encantation_precheck() const;
 		bool		get_is_encantating() const;
