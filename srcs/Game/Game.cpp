@@ -211,6 +211,10 @@ void Game::remove_player(Player *p)
 	}
 }
 
+void Game::set_end(bool flag) {
+	this->end = flag;
+}
+
 bool Game::get_end() const {
 	return this->end;
 }
@@ -266,6 +270,10 @@ void	Game::set_tick_millis(int64_t t) {
 	}
 	this->time_unit = t;
 	this->tick_interval = std::chrono::nanoseconds(1000000000 / t);
+}
+
+int64_t	Game::get_tick_millis() {
+	return this->time_unit;
 }
 
 void	Game::try2handshake(Player *p) {

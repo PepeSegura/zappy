@@ -5,6 +5,7 @@ TCPServer::TCPServer(int port, Game &game): game(game), players(game.get_players
 	createBindSocket(port);
 
 	addToPoll(socketFd, POLLIN);
+	addAdminToPoll();
 
 	std::cout << "Server listening on port " << port << std::endl;
 }
@@ -23,7 +24,10 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 	int	pollRet = poll(pollFds.data(), pollFds.size(), 0);
 	if (pollRet == -1)
 	{
-		std::cerr << "Error: server: error in POLL.\n";
+		if (errno == EINTR) {
+			this->game.set_end(true);
+			return ;
+		}
 		exit(EXIT_FAILURE);
 	}
 	else if (pollRet == 0)
@@ -35,6 +39,8 @@ void	TCPServer::inputOutputComms() { //manages network comms with clients throug
 			if (pollFds[i].revents & POLLIN) { //read event
 				if (pollFds[i].fd == socketFd) { //new connection
 					acceptClient();
+				} else if (pollFds[i].fd == STDIN_FILENO) { //admin input from stdin
+					if (!readAdminData(&i)) return ;
 				} else { //received client message
 					readClientData(&i);
 				}
@@ -89,7 +95,6 @@ void	TCPServer::readClientData(size_t *idx) {
 			players[pollFds[*idx].fd]->pop_all_commands();
 		}
 		players[pollFds[*idx].fd]->add_buffer_or_parse_msg(std::string(buffer));
-		// players[pollFds[*idx].fd]->set_recv_buffer(tmp);
 	}
 }
 
