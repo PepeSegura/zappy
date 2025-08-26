@@ -127,13 +127,13 @@ void Game::_IncantationEnd(Player *p)
 				if (!success) {
 					Inventory &tile_inv = map[p->incantation->y][p->incantation->x].get_inv();
 					manage_incantation_inventory(tile_inv, p->incantation->requirements, 1);
-					mark_players_incantationfailed(p);
 					p->set_send_buffer("ko\n");
 					send2grclients(gr_incantation_res(p->incantation->y, p->incantation->x, 0));
 					for (auto player : p->incantation->players) {
 						send2grclients(gr_player_lvl(player->get_id(), false));
 					}
 					send2grclients(gr_content_tile(p->incantation->y, p->incantation->x));
+					mark_players_incantationfailed(p);
 					auto it = incantations.begin();
 					std::advance(it, pos);
 					incantations.erase(it);
@@ -213,18 +213,24 @@ void Game::mark_all_enchanting_players(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
-		if (p != other_p &&  p->incantation == other_p->incantation)
+		if (p != other_p &&  p->incantation == other_p->incantation) {
 			other_p->set_encantation_precheck(true);
+			other_p->incantation = nullptr;
+		}
 	}
+	p->incantation = nullptr;
 }
 
 void Game::mark_players_incantationfailed(Player *p) {
 	std::vector<Player *> players = map[p->get_y()][p->get_x()].get_players_list();
 
 	for (auto other_p : players) {
-		if (p != other_p &&  p->incantation == other_p->incantation)
+		if (p != other_p &&  p->incantation == other_p->incantation) {
 			other_p->incantationFailed = true;
+			other_p->incantation = nullptr;
+		}
 	}
+	p->incantation = nullptr;
 }
 
 void Game::mark_first_precheck(Player *p) {

@@ -21,7 +21,7 @@ double Utils::get_distance(int ay, int ax, int by, int bx)
 	int dx = abs(ax - bx);
 
 	double distance = sqrt((dy * dy) + (dx * dx));
-	std::cout << "Distance: " << distance << std::endl;
+	// std::cout << "Distance: " << distance << std::endl;
 	return (distance);
 }
 

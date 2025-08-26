@@ -48,3 +48,9 @@ void Incantation::join(Player *p) {
 	players.push_back(p);
 }
 
+void Incantation::remove(Player *p) {
+	auto it = std::find(players.begin(), players.end(), p);
+	if (it != players.end()) {
+		players.erase(it);
+	}
+}
