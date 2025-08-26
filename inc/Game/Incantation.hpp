@@ -1,6 +1,7 @@
 #pragma once
 
 # include <vector>
+# include <algorithm>
 # include "Player.hpp"
 # include "Inventory.hpp"
 
@@ -41,4 +42,5 @@ class Incantation {
 		Incantation &operator=(const Incantation &other);
 		bool	isFilled() const;
 		void	join(Player *p);
+		void	remove(Player *p);
 };

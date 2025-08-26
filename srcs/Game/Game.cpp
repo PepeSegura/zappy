@@ -198,11 +198,13 @@ void Game::remove_player(Player *p)
 	/* for (auto& [name, team] : teams)
 		team.remove_player(p); */
 	
-	if (!p->get_handshake() || p->get_dead()) { //delete players that havent completed handshake (incomplate players) and dead players
+	if (!p->get_handshake() || p->get_dead()) { //delete players that havent completed handshake (incomplete players) and dead players
 		for (auto& [name, team] : teams)
 			team.remove_player(p);
 		//remove from tile
 		map[p->get_y()][p->get_x()].remove_player_from_team(p);
+		if (p->incantation)
+			p->incantation->remove(p);
 		delete p;
 	} else {
 		teams[p->get_team_name()].dec_conns_nbr();
