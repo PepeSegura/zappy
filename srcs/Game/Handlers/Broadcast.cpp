@@ -6,7 +6,7 @@ double	Game::dist_copy_pos(Player *origin, Player *dest, int y, int x)
 	int ax = origin->get_x();
 	int by = dest->get_y();
 	int bx = dest->get_x();
-	std::cout << "Getting distance from: (" << ay <<", "<< ax << ") to -> (" << by << ", " << bx <<")"<< std::endl;
+	// std::cout << "Getting distance from: (" << ay <<", "<< ax << ") to -> (" << by << ", " << bx <<")"<< std::endl;
 
 	return (Utils::get_distance(ay, ax, (by + (y * this->map_height)), (bx + (x * this->map_width))));
 }
@@ -31,16 +31,16 @@ std::pair<int, int>	Game::dda(Player *origin, Player *dest, int y_mod, int x_mod
 
 	for (int i = 0; i < step - 1; i++)
 	{
-		std::cout << "(" << y << ", " << x << ")" << std::endl;
+		// std::cout << "(" << y << ", " << x << ")" << std::endl;
 		y += inc_y;
 		x += inc_x;
 	}
-	std::cout << "BEFORE CONVERSION: (" << y << ", " << x << ") with map ("<< y_mod << ", " << x_mod << ")" << std::endl;
+	//std::cout << "BEFORE CONVERSION: (" << y << ", " << x << ") with map ("<< y_mod << ", " << x_mod << ")" << std::endl;
 	if (y < 0 || y >= map_height)
 		y -= (y_mod * this->map_height);
 	if (x < 0 || x >= map_width)
 		x -= (x_mod * this->map_width);
-	std::cout << "AFTER CONVERSION: (" << y << ", " << x << ")" << std::endl;
+	//std::cout << "AFTER CONVERSION: (" << y << ", " << x << ")" << std::endl;
 	return (std::pair<int, int>(y, x));
 }
 
@@ -63,7 +63,7 @@ uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 			}
 		}
 	}
-	std::cout << "Nearest enemie is in map: (" << closest_y << ", " << closest_x << ")" << std::endl;
+	//std::cout << "Nearest enemie is in map: (" << closest_y << ", " << closest_x << ")" << std::endl;
 	std::pair<int,int> coords = dda(origin, dest, closest_y, closest_x);
 
 	int cnt = 2;
@@ -92,16 +92,16 @@ uint8_t Game::get_sound_direction(Player *origin, Player *dest)
 	py = dest->get_y();
 	px = dest->get_x();
 
-	std::cout << "Checking player at x,y (" << std::to_string(dest->get_x()) << ", " << std::to_string(dest->get_y()) << ") looking at " << (char)dest->get_dir() << std::endl;
+	//std::cout << "Checking player at x,y (" << std::to_string(dest->get_x()) << ", " << std::to_string(dest->get_y()) << ") looking at " << (char)dest->get_dir() << std::endl;
 
 	for (i = 0; i < 9; ++i) {
 		if (py < 0) py = map_height - 1;
 		if (px < 0) px = map_width - 1;
 		if (py == map_height) py = 0;
 		if (px == map_width) px = 0;
-		std::cout << "Checking coord x,y (" << std::to_string(px) << ", " << std::to_string(py) << "), looking for (" << std::to_string(coords.second) << ", " << std::to_string(coords.first) << ")\n";
+		//std::cout << "Checking coord x,y (" << std::to_string(px) << ", " << std::to_string(py) << "), looking for (" << std::to_string(coords.second) << ", " << std::to_string(coords.first) << ")\n";
 		if (py == coords.first && px == coords.second) {
-			std::cout << "Found!!!\n";
+			//std::cout << "Found!!!\n";
 			break ;
 		}
 		py += dy;
