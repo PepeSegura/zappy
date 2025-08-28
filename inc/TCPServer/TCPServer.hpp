@@ -13,7 +13,6 @@
 # include <cstring>
 # include <iostream>
 # include <sstream>
-# include <signal.h>
 
 
 # include "Player.hpp"
