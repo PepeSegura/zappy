@@ -306,18 +306,28 @@ void	Game::try2handshake(Player *p) {
 		send2grclients(gr_player_new_conn(connected_player));
 		playersfd_map[connected_player->get_sock_fd()] = connected_player;
 		
+
+		//opcion 2 sustituir response por:
+
+		/* std::string response;
+		if (!p->handshakeNotified) {
+			response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
+		}
+		response += std::to_string(this->map_width) + " " + std::to_string(this->map_height) + "\n"; */
+
+
 		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns())
 			+ "\n" + std::to_string(this->map_width) + " " + std::to_string(this->map_height) + "\n";
 		delete p;
 		connected_player->set_send_buffer(response);
 		return ;
 	}
-	if (!p->handshakeNotified) {	
+	/* if (!p->handshakeNotified) { // opcion 1 comentar
 		std::string response = std::to_string(teams[p->get_current_command().cmd_name].get_avail_conns()) + "\n";
 		p->set_send_buffer(response);
 		p->handshakeNotified = true;
 		//p->set_dead(true); //kick players that try to connect to teams without free spaces
-	}
+	} */
 }
 
 void	Game::check_player_action(Player *player) {

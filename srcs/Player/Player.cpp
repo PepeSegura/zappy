@@ -374,13 +374,21 @@ void	Player::check_hatch_and_eat() {
 	if (--ticks_until_eat <= 0) {
 		if (this->inv.get_nourriture() > 0) {
 			this->inv.add_nourriture(-1);
+			//notify inventory update here
+			this->game_ptr->send2grclients(game_ptr->gr_player_inv(this->id));
 			ticks_until_eat = FOOD_TICKS;
-			std::cout << "Player from team " << team_name << " is eating\n";
+			if (handshake_finished)
+				std::cout << "Player from team " << team_name << " is eating\n";
+			else
+				std::cout << "Egg    from team " << team_name << " is eating\n";
 			return ;
 		}
 		if (this->game_ptr->get_debug())
 			return ;
-		std::cout << "Player from team " << team_name << " died of hunger\n";
+		if (handshake_finished)
+			std::cout << "Player from team " << team_name << " died of hunger\n";
+		else
+			std::cout << "Egg    from team " << team_name << " died of hunger\n";
 		dead = true;
 		return ;
 	}
