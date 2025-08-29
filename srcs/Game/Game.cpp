@@ -233,12 +233,7 @@ void Game::run_tick() {
 			for (auto player : players) {
 				player->check_hatch_and_eat();
 				if (player->get_dead()) {
-					player->set_send_buffer("mort\n");
-					if (player->get_handshake())
-						send2grclients(gr_player_mort(player->get_id()));
-					else
-						send2grclients(gr_egg_mort(player->get_id()));
-					if (player->get_disconnected()) { remove_player(player); }
+					_Mort(player);
 					continue;
 				}
 				if (player->get_state() == Player_States::Free) {
@@ -246,7 +241,6 @@ void Game::run_tick() {
 				}
 				if (player->get_state() == Player_States::ExecutingAction) {
 					check_player_action(player);
-					continue; 
 				}
 			}
 		}
@@ -405,12 +399,15 @@ std::string	Game::welcome_graphic() {
 
 void	Game::check_end() {
 	int max_level_ctr;
+	bool	any_alive = false;
 	for (auto &[key, team] : teams) {
 		auto players = team.get_team_players();
 		max_level_ctr = 0;
 		for (auto player : players) {
-			if (player->get_level() == 8)
+			if (player->get_level() == 8){
 				++max_level_ctr;
+			}
+			any_alive = true;
 		}
 		if (max_level_ctr >= 6) {
 			end = true;
@@ -419,5 +416,11 @@ void	Game::check_end() {
 			std::cout << "Team " << winner_team << " wins the game.\n";
 			break ;
 		}
+	}
+	if (!any_alive) {
+		end = true;
+		winner_team = "stagnation";
+		send2grclients(gr_game_end());
+		std::cout << "Game ended by stagnation.\n";
 	}
 }
