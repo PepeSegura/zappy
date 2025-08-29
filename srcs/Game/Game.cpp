@@ -404,9 +404,8 @@ void	Game::check_end() {
 		auto players = team.get_team_players();
 		max_level_ctr = 0;
 		for (auto player : players) {
-			if (player->get_level() == 8){
+			if (player->get_level() == 8)
 				++max_level_ctr;
-			}
 			any_alive = true;
 		}
 		if (max_level_ctr >= 6) {
