@@ -127,12 +127,6 @@ void	TCPServer::createBindSocket(int port) { //create and configure socket
 	server_addr.sin_port = htons(port);
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	std::string hostname = "127.0.0.1";
-	if (inet_aton(hostname.c_str(), &server_addr.sin_addr) == 0) {
-		std::cerr << "Invalid address/Address not supported: " << hostname << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
 	//upon successful socket creation, bind and start listening
 
 	if (bind(socketFd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
