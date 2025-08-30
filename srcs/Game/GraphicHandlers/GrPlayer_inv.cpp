@@ -5,7 +5,20 @@ std::string	Game::gr_player_inv(int player_id)
 	Inventory inv;
 	int x, y, found = 0;
 
-	for (auto [fd, player] : this->playersfd_map)
+	for (auto &[team_name, team]: teams) {
+		auto players = team.get_team_players();
+		for (auto player: players) {
+			if (player->get_id() == player_id)
+			{
+				found = 1;
+				inv = player->get_inv();
+				x = player->get_x();
+				y = player->get_y();
+				break ;
+			}
+		}
+	}
+	/* for (auto [fd, player] : this->playersfd_map) //buscar en los teams
 	{
 		if (player->get_id() == player_id)
 		{
@@ -15,7 +28,7 @@ std::string	Game::gr_player_inv(int player_id)
 			y = player->get_y();
 			break ;
 		}
-	}
+	} */
 	if (!found)
 		return gr_wrong_params();
 	return "pin " + std::to_string(player_id) + " " 
