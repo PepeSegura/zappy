@@ -18,17 +18,6 @@ std::string	Game::gr_player_inv(int player_id)
 			}
 		}
 	}
-	/* for (auto [fd, player] : this->playersfd_map) //buscar en los teams
-	{
-		if (player->get_id() == player_id)
-		{
-			found = 1;
-			inv = player->get_inv();
-			x = player->get_x();
-			y = player->get_y();
-			break ;
-		}
-	} */
 	if (!found)
 		return gr_wrong_params();
 	return "pin " + std::to_string(player_id) + " " 
