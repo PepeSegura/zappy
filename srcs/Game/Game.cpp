@@ -193,18 +193,21 @@ void Game::remove_player(Player *p)
 		delete p;
 		return;
 	}
-	//remove player from tile
-	
-	/* for (auto& [name, team] : teams)
-		team.remove_player(p); */
 	
 	if (!p->get_handshake() || p->get_dead()) { //delete players that havent completed handshake (incomplete players) and dead players
 		for (auto& [name, team] : teams)
 			team.remove_player(p);
 		//remove from tile
 		map[p->get_y()][p->get_x()].remove_player_from_team(p);
-		if (p->incantation)
-			p->incantation->remove(p);
+		if (p->incantation) {
+			p->incantation->remove(p); //remove from incantation players list
+			if (p->incantation->players.empty()) { //if incantation is empty after removing player
+				manage_incantation_inventory(map[p->incantation->y][p->incantation->x].get_inv(), p->incantation->requirements, 1); // restore tile inventory
+				send2grclients(gr_incantation_res(p->incantation->y, p->incantation->x, 0));
+				send2grclients(gr_content_tile(p->incantation->y, p->incantation->x));
+				map[p->incantation->y][p->incantation->x].remove_incantation(p->incantation); //remove incantation from tile and delete it
+			}
+		}
 		delete p;
 	} else {
 		teams[p->get_team_name()].dec_conns_nbr();

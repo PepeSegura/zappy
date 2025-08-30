@@ -84,3 +84,20 @@ int	Tile::players_at_level_and_enchating(int lvl) {
 	}
 	return ctr;
 }
+
+void Tile::remove_incantation(Incantation *incantation) {
+	long unsigned int pos = 0;
+
+	for (auto inc : incantations[incantation->level]) {
+		if (&inc == incantation)
+			break ;
+		++pos;
+	}
+
+	if (pos == incantations[incantation->level].size())
+		return ;
+
+	auto it = incantations.begin();
+	std::advance(it, pos);
+	incantations.erase(it);
+}
