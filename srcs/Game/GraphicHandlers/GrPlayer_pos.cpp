@@ -5,15 +5,16 @@ std::string	Game::gr_player_pos(int player_id)
 	char dir;
 	int x, y, found = 0;
 
-	for (auto [fd, player] : this->playersfd_map)
-	{
-		if (player->get_id() == player_id)
-		{
-			found = 1;
-			dir = (char)player->get_dir();
-			x = player->get_x();
-			y = player->get_y();
-			break ;
+	for (auto &[team_name, team]: teams) {
+		auto players = team.get_team_players();
+		for (auto player: players) {
+			if (player->get_id() == player_id) {
+				found = 1;
+				dir = (char)player->get_dir();
+				x = player->get_x();
+				y = player->get_y();
+				break ;
+			}
 		}
 	}
 	if (!found)
