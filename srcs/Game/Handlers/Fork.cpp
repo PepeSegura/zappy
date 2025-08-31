@@ -22,4 +22,5 @@ void Game::_Fork(Player *p)
 
 	p->set_send_buffer("ok\n");
 	send2grclients(gr_player_fork(p->get_id()));
+	send2grclients(gr_egg_laid_by_player(egg->get_id(), p->get_id(), p->get_y(), p->get_x()));
 }
